@@ -14,6 +14,7 @@ public class Category {
 
     public String title;
     public int icon;
+
     public TransactionType type;
 
     public Category(String title, int icon, TransactionType type) {

@@ -1,27 +1,24 @@
 package com.chtima.wallettracker;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.CategoryWithTransactions;
 import com.chtima.wallettracker.models.Transaction;
-import com.chtima.wallettracker.models.TransactionType;
 
 
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.FlowableSubscriber;
 import io.reactivex.rxjava3.core.MaybeObserver;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -29,21 +26,23 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String FIRST_RUN = "first-run";
+
+    SharedPreferences prefs = null;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        prefs = getSharedPreferences(this.getPackageName(), MODE_PRIVATE);
+        boolean f = prefs.getBoolean("FIRST_RUN", true);
+
         setContentView(R.layout.activity_main);
 
-        AppDatabase db = Room.databaseBuilder(this, AppDatabase.class, "wallet-tracker.db").build();
+        AppDatabase db = AppDatabase.getInstance(this.getApplicationContext());
 
-        //temp code
-        //insertCategory(db, new Category("first", 1, TransactionType.INCOME));
-        //insertCategory(db, new Category("second-i", 23, TransactionType.INCOME));
-        //insertCategory(db, new Category("second-e", 2, TransactionType.EXPENSE));
-        //getAllCategory(db);
-
-        //insertTransaction(db, new Transaction(2, 22.2, "first", "note-23e"));
-        //getCategoryWithTransactions(db);
+        getAllCategory(db);
 
     }
 
@@ -184,5 +183,4 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-
 }
