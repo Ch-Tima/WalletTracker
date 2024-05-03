@@ -1,15 +1,12 @@
 package com.chtima.wallettracker;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
-import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.chtima.wallettracker.dao.AppDatabase;
+import com.chtima.wallettracker.fragments.HomeFragment;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.CategoryWithTransactions;
 import com.chtima.wallettracker.models.Transaction;
@@ -26,23 +23,19 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String FIRST_RUN = "first-run";
-
-    SharedPreferences prefs = null;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        prefs = getSharedPreferences(this.getPackageName(), MODE_PRIVATE);
-        boolean f = prefs.getBoolean("FIRST_RUN", true);
 
         setContentView(R.layout.activity_main);
 
         AppDatabase db = AppDatabase.getInstance(this.getApplicationContext());
 
         getAllCategory(db);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_fragment_container, HomeFragment.newInstance(), HomeFragment.class.getName())
+                .commit();
 
     }
 
