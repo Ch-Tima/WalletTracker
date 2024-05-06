@@ -1,6 +1,7 @@
 package com.chtima.wallettracker.dao;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -12,10 +13,11 @@ import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.User;
 
-@Database(entities = {Category.class, User.class, Transaction.class}, version = 1)
+@Database(entities = {Category.class, User.class, Transaction.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CategoryDao categoryDao();
     public abstract TransactionDao transactionDao();
+    public abstract UserDao userDao();
 
     private static final String DATABASE_NAME = "wallettracker.db";
     private static final Object LOCK = new Object();
@@ -51,6 +53,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     }
 
-
+    public interface OnCreateListener{
+        void onCreated();
+    }
 
 }

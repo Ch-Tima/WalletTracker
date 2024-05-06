@@ -12,13 +12,19 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.chtima.wallettracker.R;
+import com.chtima.wallettracker.models.User;
 
 public class HomeFragment extends Fragment {
 
+    private User user;
 
-    public static HomeFragment newInstance() {
+    private static final String USER_PARCELABLE = "USER_PARCELABLE";
+
+
+    public static HomeFragment newInstance(User user) {
         HomeFragment fragment = new HomeFragment();
         Bundle args = new Bundle();
+        args.putParcelable(USER_PARCELABLE, user);
         fragment.setArguments(args);
         return fragment;
     }
@@ -35,14 +41,11 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         ((ImageButton)view.findViewById(R.id.btn_add)).setOnClickListener(x -> {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-//            builder.setView(R.layout.fragment_add_transaction_dialog);
-//            builder.set
-//            builder.create().show();
-
             AddTransactionDialogFragment dialogFragment = AddTransactionDialogFragment.newInstance();
             dialogFragment.show(getChildFragmentManager(), AddTransactionDialogFragment.class.getName());
         });
+
+        user = getArguments().getParcelable(USER_PARCELABLE);
 
         return view;
     }

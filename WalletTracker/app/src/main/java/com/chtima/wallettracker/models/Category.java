@@ -1,8 +1,11 @@
 package com.chtima.wallettracker.models;
 
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.Relation;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
