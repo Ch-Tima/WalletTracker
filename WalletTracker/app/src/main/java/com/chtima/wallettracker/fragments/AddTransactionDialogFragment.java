@@ -83,6 +83,7 @@ public class AddTransactionDialogFragment extends DialogFragment {
         (view.findViewById(R.id.cancel_button)).setOnClickListener(l -> {
             if (dialogObserver != null)
                 dialogObserver.onCancel();
+            dismiss();
         });
         (view.findViewById(R.id.add_button)).setOnClickListener(l -> {
             if (dialogObserver == null)
@@ -127,6 +128,7 @@ public class AddTransactionDialogFragment extends DialogFragment {
         });
         view.findViewById(R.id.date_picker_transaction).setOnClickListener(x -> datePickerDialog.show());
 
+
         return view;
     }
 
@@ -155,7 +157,7 @@ public class AddTransactionDialogFragment extends DialogFragment {
             Toast.makeText(getContext(), R.string.please_select_a_category, Toast.LENGTH_SHORT).show();
             return null;
         }
-
+        dismiss();
         return new Transaction(selectedCategory.id,
                 Double.parseDouble(sum.getText().toString()),
                 title.getText().toString(),
@@ -167,21 +169,15 @@ public class AddTransactionDialogFragment extends DialogFragment {
 
 
     private void loadCategories(){
-
         Disposable subscribed = database.categoryDao().getAll()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categoryList ->
-                {
+                .subscribe(categoryList ->{
                     this.categories.addAll(categoryList);
                     this.categorySpinnerAdapter.notifyDataSetChanged();
-
-
                 }, e -> {
                     System.out.println("RoomWithRx: " +e.getMessage());
-                });
-
-        disposable.add(subscribed);
+                }, () -> {}, disposable);
     }
 
 

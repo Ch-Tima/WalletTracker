@@ -1,5 +1,6 @@
 package com.chtima.wallettracker;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -29,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private User user;
     private AppDatabase db;
-    private List<Category> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,28 +42,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @SuppressLint("CheckResult")
     private void loadUser(){
         db.userDao().getFirst()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<User>() {
-                    @Override
-                    public void onSubscribe(@NonNull Disposable d) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(@NonNull User user) {
-                        MainActivity.this.user = user;
+                .subscribe(user -> {
+                    MainActivity.this.user = user;
+                    if(!getSupportFragmentManager().isDestroyed()) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.main_fragment_container, HomeFragment.newInstance(user), HomeFragment.class.getName())
                                 .commit();
                     }
-
-                    @Override
-                    public void onError(@NonNull Throwable e) {
-
-                    }
+                }, er -> {
+                    Log.e("er", er.toString());
                 });
     }
 }
