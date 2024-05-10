@@ -12,4 +12,6 @@
     <string name="add">add</string>
     <string name="cancel">cancel</string>
     <string name="create_transaction">create transaction</string>
+    <string name="categories">categories</string>
+    <string name="please_select_a_category">Please select a category</string>
 </resources>

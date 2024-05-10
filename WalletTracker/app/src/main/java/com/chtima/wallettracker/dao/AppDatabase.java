@@ -13,7 +13,7 @@ import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.User;
 
-@Database(entities = {Category.class, User.class, Transaction.class}, version = 2)
+@Database(entities = {Category.class, User.class, Transaction.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract CategoryDao categoryDao();
     public abstract TransactionDao transactionDao();

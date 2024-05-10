@@ -29,19 +29,20 @@ public class MainActivity extends AppCompatActivity {
 
     private User user;
     private AppDatabase db;
+    private List<Category> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         db = AppDatabase.getInstance(this.getApplicationContext());
-        getUser(db);
+        loadUser();
         //LOADING...
     }
 
 
 
-    private void getUser(AppDatabase db){
+    private void loadUser(){
         db.userDao().getFirst()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
