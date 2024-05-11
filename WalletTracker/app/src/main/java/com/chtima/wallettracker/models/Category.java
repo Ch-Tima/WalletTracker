@@ -2,9 +2,7 @@ package com.chtima.wallettracker.models;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
-import androidx.room.Relation;
 
-import java.util.List;
 
 @Entity(tableName = "categories")
 public class Category {
@@ -15,11 +13,9 @@ public class Category {
     public String title;
     public int icon;
 
-    public TransactionType type;
 
-    public Category(String title, int icon, TransactionType type) {
+    public Category(String title, int icon) {
         this.title = title;
         this.icon = icon;
-        this.type = type;
     }
 }

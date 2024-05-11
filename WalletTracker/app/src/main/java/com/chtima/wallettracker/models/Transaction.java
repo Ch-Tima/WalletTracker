@@ -25,11 +25,15 @@ public class Transaction {
     @TypeConverters(DateConverter.class)
     public Date dateTime;
 
-    public Transaction(long categoryId, double sum, String title, String note) {
+    public TransactionType type;
+
+
+    public Transaction(long categoryId, double sum, String title, String note, Date dateTime, TransactionType type) {
         this.categoryId = categoryId;
         this.sum = sum;
         this.title = title;
         this.note = note;
-        this.dateTime = new Date(System.currentTimeMillis());
+        this.dateTime = dateTime;
+        this.type = type;
     }
 }
