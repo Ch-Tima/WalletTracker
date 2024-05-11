@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
+import com.chtima.wallettracker.adapters.TransactionAdapter;
 import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.DialogObserver;
@@ -41,6 +43,12 @@ public class HomeFragment extends Fragment {
     private final List<Transaction> transactions = new ArrayList<>();
 
     private static final String USER_PARCELABLE = "USER_PARCELABLE";
+
+
+    //ui
+    private RecyclerView recyclerView;
+    //Adapters
+    private TransactionAdapter transactionAdapter;
 
 
     public static HomeFragment newInstance(User user) {
@@ -91,6 +99,12 @@ public class HomeFragment extends Fragment {
             dialogFragment.show(getChildFragmentManager(), AddTransactionDialogFragment.class.getName());
         });
 
+        //recyclerView
+        transactionAdapter = new TransactionAdapter(getContext(), this.transactions);
+        recyclerView = view.findViewById(R.id.transaction_recycle);
+        recyclerView.setAdapter(transactionAdapter);
+
+        //user
         user = getArguments().getParcelable(USER_PARCELABLE);
 
         return view;
@@ -103,8 +117,7 @@ public class HomeFragment extends Fragment {
                 .subscribe(list -> {
                     transactions.clear();
                     transactions.addAll(list);
-                    Toast.makeText(getContext(), list.size() + "", Toast.LENGTH_SHORT).show();
-                    //...notifyDataSetChanged
+                    transactionAdapter.notifyDataSetChanged();
                 }, er -> {
                     Log.e("er", er.toString());
                 }, () ->{}, compositeDisposable);
