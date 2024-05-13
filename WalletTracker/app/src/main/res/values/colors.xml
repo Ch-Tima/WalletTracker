@@ -3,5 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#000000FF</color>
-    <color name="light_green">#0CFF07</color>
+    <color name="light_green">#FF0CFF07</color>
+
+    <color name="light_ashen">#FFE6E1DC</color>
+    <color name="light_ashen_35">#FFF1EEE4</color>
+    <color name="dark_midnight_blue">#FF37374E</color>
+    <color name="dark_midnight_blue_35">#232339</color>
+    <color name="light_slate_blue">#7A80F0</color>
 </resources>

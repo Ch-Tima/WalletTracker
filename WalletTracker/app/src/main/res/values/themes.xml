@@ -2,8 +2,12 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.WalletTracker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="android:windowBackground">@color/light_ashen</item>
     </style>
 
-    <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker" />
+    <style name="AppButton" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/dark_midnight_blue</item>
+    </style>
+
+    <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker"/>
 </resources>
