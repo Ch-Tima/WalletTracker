@@ -10,4 +10,9 @@
     <color name="dark_midnight_blue">#FF37374E</color>
     <color name="dark_midnight_blue_35">#232339</color>
     <color name="light_slate_blue">#7A80F0</color>
+
+    <color name="lilac_grey">#AC9BB1</color>
+    <color name="saffron">#FDC330</color>
+    <color name="silver_sand">#BBBDBE</color>
+    <color name="peach">#FFA775</color>
 </resources>

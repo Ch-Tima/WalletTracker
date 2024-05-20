@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,23 +13,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.TransactionAdapter;
+import com.chtima.wallettracker.components.Swicher;
 import com.chtima.wallettracker.dao.AppDatabase;
-import com.chtima.wallettracker.models.Category;
+import com.chtima.wallettracker.models.CategoryWithTransactions;
 import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
+import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.LargeValueFormatter;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.MaybeObserver;
-import io.reactivex.rxjava3.core.Observer;
-import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -40,13 +45,18 @@ public class HomeFragment extends Fragment {
     private User user;
     private AppDatabase database;
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private final List<Transaction> transactions = new ArrayList<>();
+    private final List<CategoryWithTransactions> categoryWithTransactions = new ArrayList<>();
 
     private static final String USER_PARCELABLE = "USER_PARCELABLE";
 
 
     //ui
     private RecyclerView recyclerView;
+    private PieChart pieChart;
+    private Button btnBalance;
+
+    private Swicher swicher;
+
     //Adapters
     private TransactionAdapter transactionAdapter;
 
@@ -63,6 +73,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         database = AppDatabase.getInstance(getContext());
+        user = getArguments().getParcelable(USER_PARCELABLE);
     }
 
     @Override
@@ -73,8 +84,7 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -100,27 +110,76 @@ public class HomeFragment extends Fragment {
         });
 
         //recyclerView
-        transactionAdapter = new TransactionAdapter(getContext(), this.transactions);
+        transactionAdapter = new TransactionAdapter(getContext(), toTransactionList());
         recyclerView = view.findViewById(R.id.transaction_recycle);
         recyclerView.setAdapter(transactionAdapter);
 
-        //user
-        user = getArguments().getParcelable(USER_PARCELABLE);
+        //pieChart
+        pieChart = (PieChart) view.findViewById(R.id.pieChart);
+
+        //swicher_transaction_type
+        swicher = view.findViewById(R.id.swicher_transaction_type);
+
+        //btns
+        btnBalance = view.findViewById(R.id.balance_btn);
+        btnBalance.setText(String.valueOf(user.balance));//set user balance to "balance_btn"
 
         return view;
     }
 
     private void loadTransactions(){
-        database.transactionDao().getAll()
+        database.categoryDao().getCategoriesWithTransactions()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(list -> {
-                    transactions.clear();
-                    transactions.addAll(list);
-                    transactionAdapter.notifyDataSetChanged();
+                    categoryWithTransactions.clear();
+                    categoryWithTransactions.addAll(list);
+
+                    transactionAdapter.updateList(toTransactionList());
+
+                    List<PieEntry> entries1 = new ArrayList<>();
+
+                    list.stream().map(item -> {
+                        double sum = item.transactions.stream()
+                                .filter(x -> x.type == TransactionType.EXPENSE)
+                                .mapToDouble(t -> t.sum)
+                                .sum();
+                        return new AbstractMap.SimpleEntry<>(item, sum);
+                    }).filter(x -> x.getValue() > 0)
+                            .sorted((s1, s2) -> Double.compare(s2.getValue(), s1.getValue()))
+                            .limit(4)
+                            .forEach(x -> {
+                                entries1.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title));
+                            });
+
+
+                    PieDataSet ds1 = new PieDataSet(entries1, "my_lable");
+
+                    ds1.setSliceSpace(3f);
+                    ds1.setSelectionShift(5f);
+                    ds1.setColors(getResources().getColor(R.color.saffron, null),
+                            getResources().getColor(R.color.peach, null),
+                            getResources().getColor(R.color.silver_sand, null),
+                            getResources().getColor(R.color.lilac_grey, null));
+
+                    PieData pieData = new PieData(ds1);
+                    pieData.setValueTextSize(16f);
+                    pieData.setValueTextColor(getResources().getColor(R.color.white, null));
+                    pieData.setValueFormatter(new LargeValueFormatter());
+
+                    pieChart.setData(pieData);
+                    pieChart.invalidate();
+
                 }, er -> {
                     Log.e("er", er.toString());
                 }, () ->{}, compositeDisposable);
+    }
+
+    private List<Transaction> toTransactionList() {
+        return categoryWithTransactions.stream()
+                .map(x -> x.transactions)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     @Override

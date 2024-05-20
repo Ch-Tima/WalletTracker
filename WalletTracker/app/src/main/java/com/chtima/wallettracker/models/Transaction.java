@@ -17,6 +17,7 @@ public class Transaction {
 
     public long categoryId;
 
+
     public double sum;
     public String title;
 
