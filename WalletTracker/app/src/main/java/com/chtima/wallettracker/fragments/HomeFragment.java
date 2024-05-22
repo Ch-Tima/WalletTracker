@@ -1,5 +1,8 @@
 package com.chtima.wallettracker.fragments;
 
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -116,13 +119,16 @@ public class HomeFragment extends Fragment {
 
         //pieChart
         pieChart = (PieChart) view.findViewById(R.id.pieChart);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setHoleColor(getResources().getColor(R.color.transparent, null));
 
         //swicher_transaction_type
         swicher = view.findViewById(R.id.swicher_transaction_type);
 
         //btns
         btnBalance = view.findViewById(R.id.balance_btn);
-        btnBalance.setText(String.valueOf(user.balance));//set user balance to "balance_btn"
+        btnBalance.setText(user.balance + "$");//set user balance to "balance_btn"
 
         return view;
     }
@@ -153,7 +159,7 @@ public class HomeFragment extends Fragment {
                             });
 
 
-                    PieDataSet ds1 = new PieDataSet(entries1, "my_lable");
+                    PieDataSet ds1 = new PieDataSet(entries1, "transaction");
 
                     ds1.setSliceSpace(3f);
                     ds1.setSelectionShift(5f);
@@ -163,9 +169,11 @@ public class HomeFragment extends Fragment {
                             getResources().getColor(R.color.lilac_grey, null));
 
                     PieData pieData = new PieData(ds1);
+                    pieData.setValueTypeface(getResources().getFont(R.font.outfit_medium));
                     pieData.setValueTextSize(16f);
                     pieData.setValueTextColor(getResources().getColor(R.color.white, null));
-                    pieData.setValueFormatter(new LargeValueFormatter());
+
+                    pieChart.setEntryLabelTypeface(getResources().getFont(R.font.nunito_regular));
 
                     pieChart.setData(pieData);
                     pieChart.invalidate();

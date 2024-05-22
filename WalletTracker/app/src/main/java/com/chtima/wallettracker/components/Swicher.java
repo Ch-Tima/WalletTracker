@@ -24,25 +24,26 @@ public class Swicher extends ViewGroup {
     private TextView income;
     private TextView expanse;
     private boolean isChecked = false;
+    private Context context;
 
     public Swicher(Context context) {
         super(context);
-        init();
+        init(context);
     }
 
     public Swicher(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init();
+        init(context);
     }
 
     public Swicher(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
+        init(context);
     }
 
     public Swicher(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        init(context);
     }
 
     @Override
@@ -99,7 +100,8 @@ public class Swicher extends ViewGroup {
 
     }
 
-    private void init(){
+    private void init(Context context){
+        this.context = context;
         this.setBackgroundResource(R.drawable.swicher_background);
 
         thumb = new View(getContext());
@@ -107,6 +109,7 @@ public class Swicher extends ViewGroup {
         addView(thumb);
 
         income = new TextView(getContext());
+        income.setTypeface(context.getResources().getFont(R.font.nunito_medium));
         income.setText(R.string.income);
         income.setTextColor(getResources().getColor(R.color.white, null));
         income.setGravity(Gravity.CENTER);
@@ -114,6 +117,7 @@ public class Swicher extends ViewGroup {
 
         expanse = new TextView(getContext());
         expanse.setText(R.string.expanse);
+        expanse.setTypeface(context.getResources().getFont(R.font.nunito_medium));
         expanse.setTextColor(getResources().getColor(R.color.white, null));
         expanse.setGravity(Gravity.CENTER);
         addView(expanse);
