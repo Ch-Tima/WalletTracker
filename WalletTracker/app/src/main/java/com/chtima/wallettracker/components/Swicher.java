@@ -1,11 +1,7 @@
 package com.chtima.wallettracker.components;
 
-import android.animation.Animator;
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -13,10 +9,11 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.chtima.wallettracker.R;
+import com.chtima.wallettracker.models.TransactionType;
 
 public class Swicher extends ViewGroup {
 
@@ -25,6 +22,8 @@ public class Swicher extends ViewGroup {
     private TextView expanse;
     private boolean isChecked = false;
     private Context context;
+
+    private SwicherListener listener = transactionType -> {};
 
     public Swicher(Context context) {
         super(context);
@@ -58,7 +57,7 @@ public class Swicher extends ViewGroup {
         int thumbHeight = (int) (parentHeight * 0.85);
 
         //Place your thumb in the vertical center and horizontally along the left edge.
-        int thumbLeft = (int)((parentWidth - thumbWidth) * 0.05);
+        int thumbLeft = (int) ((parentWidth - thumbWidth) * 0.05);
         int thumbRight = thumbLeft + thumbWidth;
 
         int thumbTop = (parentHeight - thumbHeight) / 2;
@@ -74,8 +73,8 @@ public class Swicher extends ViewGroup {
         int incomeHeight = parentHeight / 2;
 
         //Place your thumb in the vertical center and horizontally along the left edge.
-        int incomeLeft = (int)((parentWidth - incomeWidth) * 0.1);
-        int incomeRight = (int)((incomeLeft + incomeWidth) * 0.9);
+        int incomeLeft = (int) ((parentWidth - incomeWidth) * 0.1);
+        int incomeRight = (int) ((incomeLeft + incomeWidth) * 0.9);
 
         int incomeTop = (parentHeight - incomeHeight) / 2;
         int incomeBottom = incomeTop + incomeHeight;
@@ -90,8 +89,8 @@ public class Swicher extends ViewGroup {
         int expanseHeight = parentHeight / 2;
 
         //Place your thumb in the vertical center and horizontally along the left edge.
-        int expanseLeft = (int)((parentWidth - expanseWidth) * 0.95);
-        int expanseRight = (int)((expanseLeft + expanseWidth));
+        int expanseLeft = (int) ((parentWidth - expanseWidth) * 0.95);
+        int expanseRight = (int) ((expanseLeft + expanseWidth));
 
         int expanseTop = (parentHeight - expanseHeight) / 2;
         int expanseBottom = expanseTop + expanseHeight;
@@ -100,7 +99,7 @@ public class Swicher extends ViewGroup {
 
     }
 
-    private void init(Context context){
+    private void init(Context context) {
         this.context = context;
         this.setBackgroundResource(R.drawable.swicher_background);
 
@@ -110,13 +109,13 @@ public class Swicher extends ViewGroup {
 
         income = new TextView(getContext());
         income.setTypeface(context.getResources().getFont(R.font.nunito_medium));
-        income.setText(R.string.income);
+        income.setText(R.string.expanse);
         income.setTextColor(getResources().getColor(R.color.white, null));
         income.setGravity(Gravity.CENTER);
         addView(income);
 
         expanse = new TextView(getContext());
-        expanse.setText(R.string.expanse);
+        expanse.setText(R.string.income);
         expanse.setTypeface(context.getResources().getFont(R.font.nunito_medium));
         expanse.setTextColor(getResources().getColor(R.color.white, null));
         expanse.setGravity(Gravity.CENTER);
@@ -130,12 +129,12 @@ public class Swicher extends ViewGroup {
             int endX = 0;
 
             //Place your thumb in the vertical center and horizontally along the left edge.
-            if(isChecked){
+            if (isChecked) {
                 startX = thumb.getLeft();
-                endX = (int)((getWidth() - thumb.getWidth()) * 0.05);
-            }else {
+                endX = (int) ((getWidth() - thumb.getWidth()) * 0.05);
+            } else {
                 startX = thumb.getLeft();
-                endX = (int )((getWidth() - thumb.getWidth()) * 0.95);
+                endX = (int) ((getWidth() - thumb.getWidth()) * 0.95);
             }
 
             ValueAnimator animator = ValueAnimator.ofInt(startX, endX);
@@ -149,9 +148,18 @@ public class Swicher extends ViewGroup {
             animator.start();
 
             isChecked = !isChecked;
+            listener.onChangedSelection(isChecked ? TransactionType.INCOME : TransactionType.EXPENSE);
         });
 
     }
 
+    public void setOnChangedSelectionListener(SwicherListener listener) {
+        this.listener = listener;
+        listener.onChangedSelection(isChecked ? TransactionType.INCOME : TransactionType.EXPENSE);
+    }
+
+    public interface SwicherListener{
+        void onChangedSelection(TransactionType transactionType);
+    }
 
 }

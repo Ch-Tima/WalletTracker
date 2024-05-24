@@ -47,6 +47,9 @@ public class HomeFragment extends Fragment {
 
     private User user;
     private AppDatabase database;
+
+    private TransactionType transactionType; // transactionType is used in "filterTransactionWithUpdateUI"
+
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final List<CategoryWithTransactions> categoryWithTransactions = new ArrayList<>();
 
@@ -125,12 +128,66 @@ public class HomeFragment extends Fragment {
 
         //swicher_transaction_type
         swicher = view.findViewById(R.id.swicher_transaction_type);
+        swicher.setOnChangedSelectionListener(transactionType -> {
+            this.transactionType = transactionType;
+            this.filterTransactionWithUpdateUI();
+        });
 
         //btns
         btnBalance = view.findViewById(R.id.balance_btn);
         btnBalance.setText(user.balance + "$");//set user balance to "balance_btn"
 
         return view;
+    }
+
+    private void filterTransactionWithUpdateUI(){
+        if(categoryWithTransactions.isEmpty()) return;
+
+        List<Transaction> transactionsFilterType = categoryWithTransactions.stream()
+                .map(x -> x.transactions)
+                .flatMap(Collection::stream)
+                .filter(x -> x.type == HomeFragment.this.transactionType)
+                .sorted((s1, s2) -> s1.dateTime.compareTo(s2.dateTime))
+                .collect(Collectors.toList());
+
+        transactionAdapter.updateList(transactionsFilterType);
+
+        List<PieEntry> entries1 = new ArrayList<>();
+
+        categoryWithTransactions.stream().map(item -> {
+                    double sum = item.transactions.stream()
+                            .filter(x -> x.type == HomeFragment.this.transactionType)
+                            .mapToDouble(t -> t.sum)
+                            .sum();
+                    return new AbstractMap.SimpleEntry<>(item, sum);
+                }).filter(x -> x.getValue() > 0)
+                .sorted((s1, s2) -> Double.compare(s2.getValue(), s1.getValue()))
+                .limit(4)
+                .forEach(x -> {
+                    entries1.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title));
+                });
+
+
+        PieDataSet ds1 = new PieDataSet(entries1, "transaction");
+
+        ds1.setSliceSpace(3f);
+        ds1.setSelectionShift(5f);
+        ds1.setColors(getResources().getColor(R.color.saffron, null),
+                getResources().getColor(R.color.peach, null),
+                getResources().getColor(R.color.silver_sand, null),
+                getResources().getColor(R.color.lilac_grey, null));
+
+        PieData pieData = new PieData(ds1);
+        pieData.setValueTypeface(getResources().getFont(R.font.outfit_medium));
+        pieData.setValueTextSize(16f);
+        pieData.setValueTextColor(getResources().getColor(R.color.white, null));
+
+        pieChart.setEntryLabelTypeface(getResources().getFont(R.font.nunito_regular));
+
+        pieChart.setData(pieData);
+        pieChart.invalidate();
+
+
     }
 
     private void loadTransactions(){
@@ -140,44 +197,7 @@ public class HomeFragment extends Fragment {
                 .subscribe(list -> {
                     categoryWithTransactions.clear();
                     categoryWithTransactions.addAll(list);
-
-                    transactionAdapter.updateList(toTransactionList());
-
-                    List<PieEntry> entries1 = new ArrayList<>();
-
-                    list.stream().map(item -> {
-                        double sum = item.transactions.stream()
-                                .filter(x -> x.type == TransactionType.EXPENSE)
-                                .mapToDouble(t -> t.sum)
-                                .sum();
-                        return new AbstractMap.SimpleEntry<>(item, sum);
-                    }).filter(x -> x.getValue() > 0)
-                            .sorted((s1, s2) -> Double.compare(s2.getValue(), s1.getValue()))
-                            .limit(4)
-                            .forEach(x -> {
-                                entries1.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title));
-                            });
-
-
-                    PieDataSet ds1 = new PieDataSet(entries1, "transaction");
-
-                    ds1.setSliceSpace(3f);
-                    ds1.setSelectionShift(5f);
-                    ds1.setColors(getResources().getColor(R.color.saffron, null),
-                            getResources().getColor(R.color.peach, null),
-                            getResources().getColor(R.color.silver_sand, null),
-                            getResources().getColor(R.color.lilac_grey, null));
-
-                    PieData pieData = new PieData(ds1);
-                    pieData.setValueTypeface(getResources().getFont(R.font.outfit_medium));
-                    pieData.setValueTextSize(16f);
-                    pieData.setValueTextColor(getResources().getColor(R.color.white, null));
-
-                    pieChart.setEntryLabelTypeface(getResources().getFont(R.font.nunito_regular));
-
-                    pieChart.setData(pieData);
-                    pieChart.invalidate();
-
+                    filterTransactionWithUpdateUI();
                 }, er -> {
                     Log.e("er", er.toString());
                 }, () ->{}, compositeDisposable);

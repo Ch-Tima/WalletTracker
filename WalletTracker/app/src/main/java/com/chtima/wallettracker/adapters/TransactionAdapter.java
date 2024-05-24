@@ -14,7 +14,9 @@ import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
 
@@ -37,6 +39,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaction item = list.get(position);
+
         holder.title.setText(item.title);
 
         if(item.type == TransactionType.EXPENSE){

@@ -4,7 +4,9 @@ import androidx.room.*;
 
 import com.chtima.wallettracker.converters.DateConverter;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 
 @Entity(tableName = "transactions", foreignKeys = {
@@ -37,4 +39,11 @@ public class Transaction {
         this.dateTime = dateTime;
         this.type = type;
     }
+
+    public String getDate(){
+        if(this.dateTime == null) return "";
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return dateFormat.format(this.dateTime.getTime()*1000);
+    }
+
 }
