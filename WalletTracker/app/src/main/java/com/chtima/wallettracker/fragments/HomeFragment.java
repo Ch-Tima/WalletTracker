@@ -7,11 +7,14 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,6 +29,7 @@ import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -48,6 +52,8 @@ public class HomeFragment extends Fragment {
     private User user;
     private AppDatabase database;
 
+    private GestureDetector gestureDetector;
+
     private TransactionType transactionType; // transactionType is used in "filterTransactionWithUpdateUI"
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -59,9 +65,13 @@ public class HomeFragment extends Fragment {
     //ui
     private RecyclerView recyclerView;
     private PieChart pieChart;
+    private BarChart barChart;
+
     private Button btnBalance;
 
     private Swicher swicher;
+
+    private SliderChartFragment sliderChartFragment;
 
     //Adapters
     private TransactionAdapter transactionAdapter;
@@ -120,11 +130,15 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.transaction_recycle);
         recyclerView.setAdapter(transactionAdapter);
 
-        //pieChart
-        pieChart = (PieChart) view.findViewById(R.id.pieChart);
-        pieChart.getLegend().setEnabled(false);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setHoleColor(getResources().getColor(R.color.transparent, null));
+        //barChart
+        barChart = new BarChart(getContext());//view.findViewById(R.id.barChart);
+
+        sliderChartFragment =  SliderChartFragment.newInstance();
+
+        getChildFragmentManager().beginTransaction()
+                .replace(R.id.slide_chart_fragment, sliderChartFragment, SliderChartFragment.class.getName())
+                .commit();
+
 
         //swicher_transaction_type
         swicher = view.findViewById(R.id.swicher_transaction_type);
@@ -152,7 +166,7 @@ public class HomeFragment extends Fragment {
 
         transactionAdapter.updateList(transactionsFilterType);
 
-        List<PieEntry> entries1 = new ArrayList<>();
+        List<PieEntry> pieChartToday = new ArrayList<>();
 
         categoryWithTransactions.stream().map(item -> {
                     double sum = item.transactions.stream()
@@ -164,29 +178,10 @@ public class HomeFragment extends Fragment {
                 .sorted((s1, s2) -> Double.compare(s2.getValue(), s1.getValue()))
                 .limit(4)
                 .forEach(x -> {
-                    entries1.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title));
+                    pieChartToday.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title));
                 });
 
-
-        PieDataSet ds1 = new PieDataSet(entries1, "transaction");
-
-        ds1.setSliceSpace(3f);
-        ds1.setSelectionShift(5f);
-        ds1.setColors(getResources().getColor(R.color.saffron, null),
-                getResources().getColor(R.color.peach, null),
-                getResources().getColor(R.color.silver_sand, null),
-                getResources().getColor(R.color.lilac_grey, null));
-
-        PieData pieData = new PieData(ds1);
-        pieData.setValueTypeface(getResources().getFont(R.font.outfit_medium));
-        pieData.setValueTextSize(16f);
-        pieData.setValueTextColor(getResources().getColor(R.color.white, null));
-
-        pieChart.setEntryLabelTypeface(getResources().getFont(R.font.nunito_regular));
-
-        pieChart.setData(pieData);
-        pieChart.invalidate();
-
+        this.sliderChartFragment.setPieChartToday(pieChartToday);
 
     }
 
