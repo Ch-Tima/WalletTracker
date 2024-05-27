@@ -40,7 +40,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaction item = list.get(position);
 
-        holder.title.setText(item.title);
+        holder.title.setText(item.getDate());
 
         if(item.type == TransactionType.EXPENSE){
             holder.sum.setText("-" + item.sum);

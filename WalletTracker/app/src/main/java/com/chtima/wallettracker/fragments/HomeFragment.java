@@ -3,6 +3,7 @@ package com.chtima.wallettracker.fragments;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.icu.util.LocaleData;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import com.chtima.wallettracker.MainActivity;
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.TransactionAdapter;
 import com.chtima.wallettracker.components.Swicher;
@@ -31,16 +33,26 @@ import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -154,6 +166,7 @@ public class HomeFragment extends Fragment {
         return view;
     }
 
+    //Method to filter transactions based on the transaction type and update the UI
     private void filterTransactionWithUpdateUI(){
         if(categoryWithTransactions.isEmpty()) return;
 
@@ -166,11 +179,19 @@ public class HomeFragment extends Fragment {
 
         transactionAdapter.updateList(transactionsFilterType);
 
-        List<PieEntry> pieChartToday = new ArrayList<>();
 
+        //setPieChartToday
+        List<PieEntry> pieChartToday = new ArrayList<>();
         categoryWithTransactions.stream().map(item -> {
                     double sum = item.transactions.stream()
-                            .filter(x -> x.type == HomeFragment.this.transactionType)
+                            .filter(
+                                    x -> x.type == HomeFragment.this.transactionType &&
+                                            x.dateTime.toInstant()
+                                                    .atZone(ZoneId.systemDefault())
+                                                    .toLocalDate().equals(
+                                                            MainActivity.nowDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                                                    )
+                            )
                             .mapToDouble(t -> t.sum)
                             .sum();
                     return new AbstractMap.SimpleEntry<>(item, sum);
@@ -180,8 +201,29 @@ public class HomeFragment extends Fragment {
                 .forEach(x -> {
                     pieChartToday.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title));
                 });
-
         this.sliderChartFragment.setPieChartToday(pieChartToday);
+
+        //LAST_WEEK
+
+        List<BarEntry> pieBarChartLastWeek = new ArrayList<>();
+
+        getSumTransactionLastWeek().forEach(x -> pieBarChartLastWeek.add(new BarEntry(
+                        (float)LocalDate.parse(x.getKey()).getDayOfWeek().getValue(),
+                        x.getValue().floatValue())
+                )
+        );
+
+        this.sliderChartFragment.setBarChartLastWeek(pieBarChartLastWeek);
+
+        //date now 2024-05-23 23:34:36
+        //this week 20 - 26
+        //setBarChartThisWeek
+        List<BarEntry> pieBarChartThisWeek = new ArrayList<>();
+        getSumTransactionThisWeek()
+                .forEach(x -> pieBarChartThisWeek.add(new BarEntry(
+                        (float)LocalDate.parse(x.getKey()).getDayOfWeek().getValue(), x.getValue().floatValue())
+                ));
+        this.sliderChartFragment.setBarChartThisWeek(pieBarChartThisWeek);
 
     }
 
@@ -198,6 +240,56 @@ public class HomeFragment extends Fragment {
                 }, () ->{}, compositeDisposable);
     }
 
+
+    /**
+     * @return SimpleEntry, where KEY is the date and VALUE is the sum of all completed transactions. Over the this week.
+    * */
+    private List<AbstractMap.SimpleEntry<String, Double>> getSumTransactionThisWeek(){
+        Calendar startThisWeek = Calendar.getInstance();
+        startThisWeek.setTime(MainActivity.nowDate);
+        startThisWeek.add(Calendar.DAY_OF_WEEK, -startThisWeek.get(Calendar.DAY_OF_WEEK) + 1);
+
+        Calendar endThisWeek = (Calendar) startThisWeek.clone();
+        endThisWeek.add(Calendar.DATE, 7);
+
+        //search for all transactions for the THIS week
+        return getSumTransactionForPeriod(startThisWeek.getTime(), endThisWeek.getTime());
+
+    }
+
+    /**
+     * @return SimpleEntry, where KEY is the date and VALUE is the sum of all completed transactions. Over the past week.
+     * */
+    private List<AbstractMap.SimpleEntry<String, Double>>  getSumTransactionLastWeek(){
+        Calendar startLastWeek = Calendar.getInstance();//last week 13 - 19
+        startLastWeek.setTime(MainActivity.nowDate);
+        startLastWeek.add(Calendar.DAY_OF_WEEK, -startLastWeek.get(Calendar.DAY_OF_WEEK) + 1);
+        startLastWeek.add(Calendar.DAY_OF_MONTH, -7);
+
+        Calendar endLastWeek = (Calendar) startLastWeek.clone();
+        endLastWeek.add(Calendar.DATE, 7);
+
+        //search for all transactions for the LAST week
+        return getSumTransactionForPeriod(startLastWeek.getTime(), endLastWeek.getTime());
+    }
+
+
+    /**
+     * @param start filtering start date.
+     * @param end filtering end date.
+     * @return SimpleEntry, where KEY is the date and VALUE is the sum of all completed transactions. For the period specified in the date parameters.
+     * */
+    private List<AbstractMap.SimpleEntry<String, Double>> getSumTransactionForPeriod(Date start, Date end){
+        return toTransactionList().stream().filter(x -> x.type == transactionType && (x.dateTime.before(end) && x.dateTime.after(start)))
+                .collect(Collectors.groupingBy(Transaction::getDate))//grouping by date
+                .entrySet().stream()//Calculation of the amount on a specific day of the week
+                .map(x -> new AbstractMap.SimpleEntry<String, Double>(x.getKey(), x.getValue().stream().mapToDouble(y -> y.sum).sum()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * @return all Transaction from List&lt;CategoryWithTransactions&gt;
+     * @see HomeFragment#categoryWithTransactions */
     private List<Transaction> toTransactionList() {
         return categoryWithTransactions.stream()
                 .map(x -> x.transactions)

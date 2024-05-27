@@ -5,6 +5,7 @@ import androidx.room.*;
 import com.chtima.wallettracker.converters.DateConverter;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -36,14 +37,24 @@ public class Transaction {
         this.sum = sum;
         this.title = title;
         this.note = note;
-        this.dateTime = dateTime;
+        this.dateTime = normalizeDate(dateTime);
         this.type = type;
     }
 
     public String getDate(){
         if(this.dateTime == null) return "";
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        return dateFormat.format(this.dateTime.getTime()*1000);
+        return dateFormat.format(this.dateTime.getTime());
+    }
+
+    private Date normalizeDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 
 }
