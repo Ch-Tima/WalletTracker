@@ -1,5 +1,6 @@
 package com.chtima.wallettracker.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,16 +33,32 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 .inflate(R.layout.transaction_card_line, parent, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Transaction item = list.get(position);
+
         holder.title.setText(item.title);
-        holder.sum.setText((item.type == TransactionType.INCOME ? "+" : "-") + item.sum);
+
+        if(item.type == TransactionType.EXPENSE){
+            holder.sum.setText("-" + item.sum);
+            holder.sum.setTextColor(context.getResources().getColor(R.color.coral, null));
+        }else {
+            holder.sum.setText("+" + item.sum);
+            holder.sum.setTextColor(context.getResources().getColor(R.color.lime, null));
+        }
     }
 
     @Override
     public int getItemCount() {
         return list.size();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateList(List<Transaction> list){
+        this.list.clear();
+        this.list.addAll(list);
+        this.notifyDataSetChanged();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{

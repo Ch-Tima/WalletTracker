@@ -48,4 +48,6 @@ dependencies {
     implementation("androidx.room:room-rxjava3:$room_version")
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
 
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
 }

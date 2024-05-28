@@ -14,5 +14,9 @@
     <string name="create_transaction">create transaction</string>
     <string name="categories">categories</string>
     <string name="please_select_a_category">Please select a category</string>
-    <string name="plus_number">+256.98</string>
+    <string name="plus_number">+25624.98$</string>
+    <string name="today">Today</string>
+    <string name="last_week">Last week</string>
+    <string name="this_week">This week</string>
+    <string name="no_completed_transactions_for_today">No completed transactions for today</string>
 </resources>

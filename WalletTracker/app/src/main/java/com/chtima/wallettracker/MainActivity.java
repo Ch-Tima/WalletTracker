@@ -16,6 +16,7 @@ import com.chtima.wallettracker.models.User;
 
 import org.reactivestreams.Subscriber;
 
+import java.util.Date;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private User user;
     private AppDatabase db;
+
+    public static final Date nowDate = new Date((1716500076L*1000));//2024-05-23 23:34:36; // only test
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

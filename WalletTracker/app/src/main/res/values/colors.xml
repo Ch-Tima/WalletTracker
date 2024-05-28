@@ -3,5 +3,18 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent">#000000FF</color>
-    <color name="light_green">#0CFF07</color>
+
+    <color name="light_ashen">#E6E1DC</color>
+    <color name="light_ashen_35">#F1EEE4</color>
+    <color name="dark_midnight_blue">#37374E</color>
+    <color name="dark_midnight_blue_35">#4C4C6B</color>
+    <color name="light_slate_blue">#7A80F0</color>
+
+    <color name="lilac_grey">#AC9BB1</color>
+    <color name="saffron">#FDC330</color>
+    <color name="silver_sand">#BBBDBE</color>
+    <color name="peach">#FFA775</color>
+
+    <color name="lime">#14DE6E</color>
+    <color name="coral">#F2887E</color>
 </resources>
