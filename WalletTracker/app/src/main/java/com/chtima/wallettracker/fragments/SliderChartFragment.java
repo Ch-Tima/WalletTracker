@@ -6,9 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -28,9 +26,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 public class SliderChartFragment extends Fragment {
 
@@ -99,9 +95,9 @@ public class SliderChartFragment extends Fragment {
         list.get(2).setTranslationX(+1000);
 
         list.forEach(x -> x.setOnTouchListener((v, event) ->  {
-            boolean result = x.onTouchEvent(event);
+            x.onTouchEvent(event);
             onSwipeTouchListener.onTouch(v, event);
-            return result;
+            return true;
         }));
 
         return view;
@@ -109,7 +105,14 @@ public class SliderChartFragment extends Fragment {
 
     public void setPieChartToday(List<PieEntry> pieChartToday){
 
+        PieChart pieChart = (PieChart) list.get(1);
         PieDataSet ds1 = new PieDataSet(pieChartToday, "transaction");
+
+        if(pieChartToday == null || pieChartToday.isEmpty() || pieChartToday.stream().mapToDouble(PieEntry::getValue).sum() == 0)
+        {
+            setNullToChart(pieChart);
+            return;
+        }
 
         ds1.setSliceSpace(3f);
         ds1.setSelectionShift(5f);
@@ -123,9 +126,8 @@ public class SliderChartFragment extends Fragment {
         pieData.setValueTextSize(16f);
         pieData.setValueTextColor(getResources().getColor(R.color.white, null));
 
-        PieChart pieChart = (PieChart) list.get(1);
-
         pieChart.setEntryLabelTypeface(getResources().getFont(R.font.nunito_regular));
+
 
         pieChart.setData(pieData);
         pieChart.invalidate();
@@ -134,6 +136,11 @@ public class SliderChartFragment extends Fragment {
     public void setBarChartLastWeek(List<BarEntry> barChartLastWeek){
 
         BarChart barChart = (BarChart) list.get(0);
+
+        if(barChartLastWeek == null || barChartLastWeek.isEmpty() || barChartLastWeek.stream().mapToDouble(BarEntry::getY).sum() == 0) {
+            setNullToChart(barChart);
+            return;
+        }
 
         BarDataSet dataSet = new BarDataSet(barChartLastWeek, "transaction");
         BarData barData = new BarData(dataSet);
@@ -147,10 +154,14 @@ public class SliderChartFragment extends Fragment {
         barChart.invalidate();
 
     }
-
     public void setBarChartThisWeek(List<BarEntry> barChartThisWeek){
 
         BarChart barChart = (BarChart) list.get(2);
+
+        if(barChartThisWeek == null || barChartThisWeek.isEmpty() || barChartThisWeek.stream().mapToDouble(BarEntry::getY).sum() == 0) {
+            setNullToChart(barChart);
+            return;
+        }
 
         BarDataSet dataSet = new BarDataSet(barChartThisWeek, "transaction");
         BarData barData = new BarData(dataSet);
@@ -162,6 +173,12 @@ public class SliderChartFragment extends Fragment {
         xAxis.setValueFormatter(new IndexAxisValueFormatter(new String[]{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}));
 
         barChart.invalidate();
+    }
+
+    private void setNullToChart(Chart<?> chart){
+        chart.setData(null);
+        chart.setNoDataText(getString(R.string.no_completed_transactions_for_today));
+        chart.invalidate();
     }
 
     private void updateChartPositions() {

@@ -1,21 +1,14 @@
 package com.chtima.wallettracker.fragments;
 
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.icu.util.LocaleData;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,28 +24,19 @@ import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.LargeValueFormatter;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -64,8 +48,6 @@ public class HomeFragment extends Fragment {
     private User user;
     private AppDatabase database;
 
-    private GestureDetector gestureDetector;
-
     private TransactionType transactionType; // transactionType is used in "filterTransactionWithUpdateUI"
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -76,8 +58,6 @@ public class HomeFragment extends Fragment {
 
     //ui
     private RecyclerView recyclerView;
-    private PieChart pieChart;
-    private BarChart barChart;
 
     private Button btnBalance;
 
@@ -142,9 +122,6 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.transaction_recycle);
         recyclerView.setAdapter(transactionAdapter);
 
-        //barChart
-        barChart = new BarChart(getContext());//view.findViewById(R.id.barChart);
-
         sliderChartFragment =  SliderChartFragment.newInstance();
 
         getChildFragmentManager().beginTransaction()
@@ -174,28 +151,27 @@ public class HomeFragment extends Fragment {
                 .map(x -> x.transactions)
                 .flatMap(Collection::stream)
                 .filter(x -> x.type == HomeFragment.this.transactionType)
-                .sorted((s1, s2) -> s1.dateTime.compareTo(s2.dateTime))
+                .sorted(Comparator.comparing((Transaction s) -> s.dateTime).reversed())
                 .collect(Collectors.toList());
 
         transactionAdapter.updateList(transactionsFilterType);
 
-
         //setPieChartToday
         List<PieEntry> pieChartToday = new ArrayList<>();
         categoryWithTransactions.stream().map(item -> {
-                    double sum = item.transactions.stream()
-                            .filter(
-                                    x -> x.type == HomeFragment.this.transactionType &&
-                                            x.dateTime.toInstant()
-                                                    .atZone(ZoneId.systemDefault())
-                                                    .toLocalDate().equals(
-                                                            MainActivity.nowDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-                                                    )
-                            )
-                            .mapToDouble(t -> t.sum)
-                            .sum();
-                    return new AbstractMap.SimpleEntry<>(item, sum);
-                }).filter(x -> x.getValue() > 0)
+            double sum = item.transactions.stream()
+                    .filter(
+                            x -> x.type == HomeFragment.this.transactionType &&
+                                    x.dateTime.toInstant()
+                                            .atZone(ZoneId.systemDefault())
+                                            .toLocalDate().equals(
+                                                    MainActivity.nowDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                                            )
+                    )
+                    .mapToDouble(t -> t.sum)
+                    .sum();
+            return new AbstractMap.SimpleEntry<>(item, sum);
+        }).filter(x -> x.getValue() > 0)
                 .sorted((s1, s2) -> Double.compare(s2.getValue(), s1.getValue()))
                 .limit(4)
                 .forEach(x -> {
@@ -204,15 +180,12 @@ public class HomeFragment extends Fragment {
         this.sliderChartFragment.setPieChartToday(pieChartToday);
 
         //LAST_WEEK
-
         List<BarEntry> pieBarChartLastWeek = new ArrayList<>();
-
         getSumTransactionLastWeek().forEach(x -> pieBarChartLastWeek.add(new BarEntry(
                         (float)LocalDate.parse(x.getKey()).getDayOfWeek().getValue(),
                         x.getValue().floatValue())
                 )
         );
-
         this.sliderChartFragment.setBarChartLastWeek(pieBarChartLastWeek);
 
         //date now 2024-05-23 23:34:36
