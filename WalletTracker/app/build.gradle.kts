@@ -50,4 +50,11 @@ dependencies {
 
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 
+    //implementation("android.arch.lifecycle:reactivestreams:1.1.1")
+
+    // Lifecycle components
+    implementation("androidx.lifecycle:lifecycle-livedata:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-reactivestreams:2.4.0")
+
 }

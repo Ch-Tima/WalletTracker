@@ -1,12 +1,12 @@
 package com.chtima.wallettracker.fragments;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,38 +14,26 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.chtima.wallettracker.MainActivity;
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.CategorySpinnerAdapter;
-import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
-import com.chtima.wallettracker.models.User;
-
-import org.reactivestreams.Subscription;
+import com.chtima.wallettracker.vm.CategoryViewModel;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.FlowableSubscriber;
-import io.reactivex.rxjava3.core.SingleObserver;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.observers.DisposableObserver;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class AddTransactionDialogFragment extends DialogFragment {
 
@@ -54,7 +42,6 @@ public class AddTransactionDialogFragment extends DialogFragment {
     private DialogObserver<Transaction> dialogObserver = null;
     private CategorySpinnerAdapter categorySpinnerAdapter;
     private Category selectedCategory;
-    private AppDatabase database;
 
     //UI
     private EditText title;
@@ -65,9 +52,17 @@ public class AddTransactionDialogFragment extends DialogFragment {
     private DatePickerDialog datePickerDialog;
     private Date dateFromPicker;
 
+
+    private CategoryViewModel categoryViewModel;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
+        categoryViewModel.getAll().observe(this, categories -> {
+            this.categories.addAll(categories);
+            this.categorySpinnerAdapter.notifyDataSetChanged();
+        });
     }
 
     @Override
@@ -75,10 +70,6 @@ public class AddTransactionDialogFragment extends DialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_transaction_dialog, container, false);
-
-        database = AppDatabase.getInstance(this.getContext());
-        //categories.add(new Category("mTitle", 12));
-        loadCategories();
 
         (view.findViewById(R.id.cancel_button)).setOnClickListener(l -> {
             if (dialogObserver != null)
@@ -128,7 +119,6 @@ public class AddTransactionDialogFragment extends DialogFragment {
         });
         view.findViewById(R.id.date_picker_transaction).setOnClickListener(x -> datePickerDialog.show());
 
-
         return view;
     }
 
@@ -166,24 +156,10 @@ public class AddTransactionDialogFragment extends DialogFragment {
                 (type.isChecked() ? TransactionType.EXPENSE : TransactionType.INCOME));
     }
 
-
-
-    private void loadCategories(){
-        Disposable subscribed = database.categoryDao().getAll()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categoryList ->{
-                    this.categories.addAll(categoryList);
-                    this.categorySpinnerAdapter.notifyDataSetChanged();
-                }, e -> {
-                    System.out.println("RoomWithRx: " +e.getMessage());
-                }, () -> {}, disposable);
-    }
-
-
     @Override
     public void onDestroy() {
         super.onDestroy();
         disposable.clear();
     }
+
 }

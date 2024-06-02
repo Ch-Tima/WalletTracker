@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.fragments.HomeFragment;
@@ -12,6 +13,7 @@ import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.CategoryWithTransactions;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.User;
+import com.chtima.wallettracker.vm.CategoryViewModel;
 
 
 import org.reactivestreams.Subscriber;
