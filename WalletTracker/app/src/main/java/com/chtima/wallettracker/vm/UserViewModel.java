@@ -10,9 +10,8 @@ import androidx.lifecycle.LiveDataReactiveStreams;
 import com.chtima.wallettracker.dao.repositories.UserRepository;
 import com.chtima.wallettracker.models.User;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
+import io.reactivex.rxjava3.core.Single;
 
 public class UserViewModel extends AndroidViewModel {
 
@@ -22,17 +21,19 @@ public class UserViewModel extends AndroidViewModel {
     public UserViewModel(@NonNull Application application) {
         super(application);
         repository = new UserRepository(application);
-        liveData = LiveDataReactiveStreams.fromPublisher(repository.getFirst().toFlowable());
+        liveData = LiveDataReactiveStreams.fromPublisher(repository.getFirst().toFlowable().onErrorReturnItem(User.empty()));
     }
 
     public LiveData<User> getUser(){
         return liveData;
     }
 
+    public Single<User> getFirst(){
+        return repository.getFirst();
+    }
+
     public Completable update(User user){
-        return repository.update(user)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread());
+        return repository.update(user);
     }
 
 }

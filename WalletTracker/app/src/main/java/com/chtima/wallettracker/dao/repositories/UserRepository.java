@@ -6,8 +6,10 @@ import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.dao.UserDao;
 import com.chtima.wallettracker.models.User;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class UserRepository {
 
@@ -20,11 +22,15 @@ public class UserRepository {
     }
 
     public Single<User> getFirst (){
-        return userDao.getFirst();
+        return userDao.getFirst()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Completable update(User user){
-        return userDao.update(user);
+        return userDao.update(user)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
 }

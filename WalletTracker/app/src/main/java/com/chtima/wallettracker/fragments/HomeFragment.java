@@ -1,10 +1,7 @@
 package com.chtima.wallettracker.fragments;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,7 +17,6 @@ import com.chtima.wallettracker.MainActivity;
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.TransactionAdapter;
 import com.chtima.wallettracker.components.Swicher;
-import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.models.CategoryWithTransactions;
 import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
@@ -45,10 +41,7 @@ import java.util.stream.Collectors;
 
 import autodispose2.AutoDispose;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment {
 
@@ -59,7 +52,6 @@ public class HomeFragment extends Fragment {
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final List<CategoryWithTransactions> categoryWithTransactions = new ArrayList<>();
 
-    private static final String USER_PARCELABLE = "USER_PARCELABLE";
 
     //ViewModels
     private TransactionViewModel transactionVM;
@@ -81,12 +73,8 @@ public class HomeFragment extends Fragment {
 
     private HomeFragment(){}
 
-    public static HomeFragment newInstance(User user) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(USER_PARCELABLE, user);
-        fragment.setArguments(args);
-        return fragment;
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
     }
 
     @Override
@@ -97,9 +85,7 @@ public class HomeFragment extends Fragment {
         transactionVM = new ViewModelProvider(this).get(TransactionViewModel.class);
         userVM = new ViewModelProvider(this).get(UserViewModel.class);
 
-        user = getArguments().getParcelable(USER_PARCELABLE);
-
-        updateCategoriesWithTransactions();
+        updateCategoriesWithTransactions(); //only once!
     }
 
     @Override
@@ -131,7 +117,7 @@ public class HomeFragment extends Fragment {
                                                e -> Log.e("WW-INFO-E", e.getMessage())
                                        );
 
-                               updateCategoriesWithTransactions();
+                               //updateCategoriesWithTransactions();
                            }, ex -> Log.e("ERR", ex.getMessage()));
                 }
 
@@ -292,5 +278,9 @@ public class HomeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         this.compositeDisposable.clear();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
