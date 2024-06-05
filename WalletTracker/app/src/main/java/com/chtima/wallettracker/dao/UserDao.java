@@ -3,9 +3,11 @@ package com.chtima.wallettracker.dao;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.chtima.wallettracker.models.User;
 
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 
@@ -17,5 +19,8 @@ public interface UserDao {
 
     @Query("SELECT * FROM users LIMIT 1")
     Single<User> getFirst ();
+
+    @Update
+    Completable update(User user);
 
 }

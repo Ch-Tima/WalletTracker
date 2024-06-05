@@ -41,6 +41,14 @@ public class User implements Parcelable {
         currency = in.readString();
     }
 
+    public void addToBalance(double val){
+        balance = balance + val;
+    }
+
+    public void deductFromBalance(double val){
+        balance = balance - val;
+    }
+
     @Override
     public int describeContents() {
         return 0;

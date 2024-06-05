@@ -1,5 +1,6 @@
 package com.chtima.wallettracker.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -27,6 +28,7 @@ import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
 import com.chtima.wallettracker.vm.CategoryViewModel;
 import com.chtima.wallettracker.vm.TransactionViewModel;
+import com.chtima.wallettracker.vm.UserViewModel;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieEntry;
 
@@ -41,6 +43,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -60,6 +64,7 @@ public class HomeFragment extends Fragment {
     //ViewModels
     private TransactionViewModel transactionVM;
     private CategoryViewModel categoryVM;
+    private UserViewModel userVM;
 
     //ui
     private RecyclerView recyclerView;
@@ -90,6 +95,7 @@ public class HomeFragment extends Fragment {
 
         categoryVM = new ViewModelProvider(this).get(CategoryViewModel.class);
         transactionVM = new ViewModelProvider(this).get(TransactionViewModel.class);
+        userVM = new ViewModelProvider(this).get(UserViewModel.class);
 
         user = getArguments().getParcelable(USER_PARCELABLE);
 
@@ -107,12 +113,26 @@ public class HomeFragment extends Fragment {
             addTransactionDialogFragment.setSubscribe(new DialogObserver<Transaction>() {
                 @Override
                 public void onSuccess(Transaction obj) {
-                    Disposable disposable = transactionVM.insert(obj).subscribe(id -> {
-                        obj.id = id;
-                        updateCategoriesWithTransactions();
-                    }, ex -> {
-                        Log.e("ERR", ex.getMessage());
-                    });
+                   transactionVM.insert(obj)
+                           .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(HomeFragment.this)))
+                           .subscribe(id -> {
+                               obj.id = id;
+                               if (TransactionType.EXPENSE == obj.type)
+                                   user.deductFromBalance(obj.sum);
+                               else
+                                   user.addToBalance(obj.sum);
+
+                               btnBalance.setText(String.valueOf(user.balance));
+
+                               userVM.update(HomeFragment.this.user)
+                                       .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(HomeFragment.this)))
+                                       .subscribe(
+                                               () -> Log.i("WW-INFO-C", "OK"),
+                                               e -> Log.e("WW-INFO-E", e.getMessage())
+                                       );
+
+                               updateCategoriesWithTransactions();
+                           }, ex -> Log.e("ERR", ex.getMessage()));
                 }
 
                 @Override

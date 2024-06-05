@@ -46,15 +46,22 @@ dependencies {
     implementation("androidx.room:room-runtime:$room_version")
     annotationProcessor("androidx.room:room-compiler:$room_version")
     implementation("androidx.room:room-rxjava3:$room_version")
+
+    // RxJava and RxAndroid
     implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
 
+    //MPAndroidChart
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
-    //implementation("android.arch.lifecycle:reactivestreams:1.1.1")
 
     // Lifecycle components
     implementation("androidx.lifecycle:lifecycle-livedata:2.4.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
     implementation("androidx.lifecycle:lifecycle-reactivestreams:2.4.0")
+
+    val autodispose = "2.2.1"
+    implementation("com.uber.autodispose2:autodispose:$autodispose")
+    implementation("com.uber.autodispose2:autodispose-lifecycle:$autodispose")
+    implementation("com.uber.autodispose2:autodispose-android:$autodispose")
+    implementation("com.uber.autodispose2:autodispose-androidx-lifecycle:$autodispose")
 
 }
