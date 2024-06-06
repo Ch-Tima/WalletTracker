@@ -21,6 +21,6 @@ public interface CategoryDao {
     Flowable<List<Category>> getAll();
 
     @Query("SELECT * FROM categories")
-    Observable<List<CategoryWithTransactions>> getCategoriesWithTransactions();
+    Flowable<List<CategoryWithTransactions>> getCategoriesWithTransactions();
 
 }

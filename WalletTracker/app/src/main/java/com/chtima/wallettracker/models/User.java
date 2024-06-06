@@ -9,7 +9,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "users")
-public class User implements Parcelable {
+public class User {
 
     @PrimaryKey(autoGenerate = true)
     public long id;
@@ -33,37 +33,19 @@ public class User implements Parcelable {
         this.currency = currency;
     }
 
-    protected User(Parcel in) {
-        id = in.readLong();
-        firstname = in.readString();
-        lastname = in.readString();
-        balance = in.readDouble();
-        currency = in.readString();
+    public static User empty(){
+        return new User("", "", 0.0, "");
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public static boolean isEmpty(User user){
+        return  user.firstname.isEmpty() &&  user.lastname.isEmpty() && user.currency.isEmpty();
     }
 
-    @Override
-    public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(firstname);
-        dest.writeString(lastname);
-        dest.writeDouble(balance);
-        dest.writeString(currency);
+    public void addToBalance(double val){
+        balance = balance + val;
     }
 
-    public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
-        @Override
-        public User createFromParcel(Parcel in) {
-            return new User(in);
-        }
-
-        @Override
-        public User[] newArray(int size) {
-            return new User[size];
-        }
-    };
+    public void deductFromBalance(double val){
+        balance = balance - val;
+    }
 }

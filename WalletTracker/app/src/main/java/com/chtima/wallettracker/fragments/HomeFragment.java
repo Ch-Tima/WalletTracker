@@ -2,9 +2,8 @@ package com.chtima.wallettracker.fragments;
 
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -18,12 +17,14 @@ import com.chtima.wallettracker.MainActivity;
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.TransactionAdapter;
 import com.chtima.wallettracker.components.Swicher;
-import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.models.CategoryWithTransactions;
 import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
+import com.chtima.wallettracker.vm.CategoryViewModel;
+import com.chtima.wallettracker.vm.TransactionViewModel;
+import com.chtima.wallettracker.vm.UserViewModel;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieEntry;
 
@@ -38,23 +39,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class HomeFragment extends Fragment {
 
     private User user;
-    private AppDatabase database;
 
     private TransactionType transactionType; // transactionType is used in "filterTransactionWithUpdateUI"
 
     private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final List<CategoryWithTransactions> categoryWithTransactions = new ArrayList<>();
 
-    private static final String USER_PARCELABLE = "USER_PARCELABLE";
 
+    //ViewModels
+    private TransactionViewModel transactionVM;
+    private CategoryViewModel categoryVM;
+    private UserViewModel userVM;
 
     //ui
     private RecyclerView recyclerView;
@@ -67,28 +69,23 @@ public class HomeFragment extends Fragment {
 
     //Adapters
     private TransactionAdapter transactionAdapter;
+    private AddTransactionDialogFragment addTransactionDialogFragment;
 
+    private HomeFragment(){}
 
-    public static HomeFragment newInstance(User user) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(USER_PARCELABLE, user);
-        fragment.setArguments(args);
-        return fragment;
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        database = AppDatabase.getInstance(getContext());
-        user = getArguments().getParcelable(USER_PARCELABLE);
-    }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //load_data
-        loadTransactions();
+        categoryVM = new ViewModelProvider(this).get(CategoryViewModel.class);
+        transactionVM = new ViewModelProvider(this).get(TransactionViewModel.class);
+        userVM = new ViewModelProvider(this).get(UserViewModel.class);
+
+        updateCategoriesWithTransactions(); //only once!
     }
 
     @Override
@@ -98,23 +95,36 @@ public class HomeFragment extends Fragment {
 
         //ui
         ((ImageButton)view.findViewById(R.id.btn_add)).setOnClickListener(x -> {
-            AddTransactionDialogFragment dialogFragment = AddTransactionDialogFragment.newInstance();
-            dialogFragment.setSubscribe(new DialogObserver<Transaction>() {
+            addTransactionDialogFragment = AddTransactionDialogFragment.newInstance();
+            addTransactionDialogFragment.setSubscribe(new DialogObserver<Transaction>() {
                 @Override
                 public void onSuccess(Transaction obj) {
-                    Disposable disposable = database.transactionDao().insert(obj)
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(id -> {
-                            }, er ->{
-                                Log.e("Er", er.toString());
-                            }, () -> {}, compositeDisposable);
+                   transactionVM.insert(obj)
+                           .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(HomeFragment.this)))
+                           .subscribe(id -> {
+                               obj.id = id;
+                               if (TransactionType.EXPENSE == obj.type)
+                                   user.deductFromBalance(obj.sum);
+                               else
+                                   user.addToBalance(obj.sum);
+
+                               btnBalance.setText(String.valueOf(user.balance));
+
+                               userVM.update(HomeFragment.this.user)
+                                       .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(HomeFragment.this)))
+                                       .subscribe(
+                                               () -> Log.i("WW-INFO-C", "OK"),
+                                               e -> Log.e("WW-INFO-E", e.getMessage())
+                                       );
+
+                               //updateCategoriesWithTransactions();
+                           }, ex -> Log.e("ERR", ex.getMessage()));
                 }
 
                 @Override
                 public void onCancel() {}
             });
-            dialogFragment.show(getChildFragmentManager(), AddTransactionDialogFragment.class.getName());
+            addTransactionDialogFragment.show(getChildFragmentManager(), AddTransactionDialogFragment.class.getName());
         });
 
         //recyclerView
@@ -122,7 +132,7 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.transaction_recycle);
         recyclerView.setAdapter(transactionAdapter);
 
-        sliderChartFragment =  SliderChartFragment.newInstance();
+        sliderChartFragment = SliderChartFragment.newInstance();
 
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.slide_chart_fragment, sliderChartFragment, SliderChartFragment.class.getName())
@@ -200,19 +210,13 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void loadTransactions(){
-        database.categoryDao().getCategoriesWithTransactions()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(list -> {
-                    categoryWithTransactions.clear();
-                    categoryWithTransactions.addAll(list);
-                    filterTransactionWithUpdateUI();
-                }, er -> {
-                    Log.e("er", er.toString());
-                }, () ->{}, compositeDisposable);
+    private void updateCategoriesWithTransactions() {
+        categoryVM.getCategoriesWithTransactions().observe(this, list -> {
+            categoryWithTransactions.clear();
+            categoryWithTransactions.addAll(list);
+            filterTransactionWithUpdateUI();
+        });
     }
-
 
     /**
      * @return SimpleEntry, where KEY is the date and VALUE is the sum of all completed transactions. Over the this week.
@@ -274,5 +278,9 @@ public class HomeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         this.compositeDisposable.clear();
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
