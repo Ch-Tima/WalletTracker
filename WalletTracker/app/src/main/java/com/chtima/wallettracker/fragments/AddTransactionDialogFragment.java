@@ -1,11 +1,16 @@
 package com.chtima.wallettracker.fragments;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +25,13 @@ import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.CategorySpinnerAdapter;
+import com.chtima.wallettracker.components.Swicher;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.vm.CategoryViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -33,7 +40,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
-public class AddTransactionDialogFragment extends DialogFragment {
+public class AddTransactionDialogFragment extends BottomSheetDialogFragment {
 
     private final CompositeDisposable disposable = new CompositeDisposable();
     private final List<Category> categories = new ArrayList<>();
@@ -45,7 +52,7 @@ public class AddTransactionDialogFragment extends DialogFragment {
     private EditText title;
     private EditText note;
     private EditText sum;
-    private Switch type;
+    private Swicher type;
     private Spinner spinnerCategories;
     private DatePickerDialog datePickerDialog;
     private Date dateFromPicker;
@@ -69,11 +76,12 @@ public class AddTransactionDialogFragment extends DialogFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_transaction_dialog, container, false);
 
-        (view.findViewById(R.id.cancel_button)).setOnClickListener(l -> {
+        getDialog().setOnCancelListener(dialog -> {
             if (dialogObserver != null)
                 dialogObserver.onCancel();
             dismiss();
         });
+
         (view.findViewById(R.id.add_button)).setOnClickListener(l -> {
             if (dialogObserver == null)
                 return;

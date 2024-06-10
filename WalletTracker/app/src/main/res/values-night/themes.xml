@@ -4,16 +4,11 @@
         <!-- Customize your light theme here. -->
         <item name="android:statusBarColor">@color/dark_midnight_blue</item>
         <item name="android:windowBackground">@color/light_ashen</item>
+
         <item name="android:textViewStyle">@style/AppTextView</item>
-    </style>
+        <item name="editTextStyle">@style/AppEditText</item>
+        <item name="buttonStyle">@style/AppButton</item>
 
-    <style name="AppButton" parent="Widget.Material3.Button">
-        <item name="android:backgroundTint">@color/dark_midnight_blue_35</item>
-        <item name="android:fontFamily">@font/outfit_medium</item>
-    </style>
-
-    <style name="AppTextView" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/nunito_medium</item>
     </style>
 
     <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker"/>

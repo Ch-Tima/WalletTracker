@@ -46,7 +46,6 @@
 
             <Button
                 android:id="@+id/balance_btn"
-                style="@style/AppButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:minWidth="100dp"

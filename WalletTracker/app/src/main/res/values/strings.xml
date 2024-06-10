@@ -11,7 +11,7 @@
     <string name="time">time</string>
     <string name="add">add</string>
     <string name="cancel">cancel</string>
-    <string name="create_transaction">create transaction</string>
+    <string name="create_transaction">Create Transaction</string>
     <string name="categories">categories</string>
     <string name="please_select_a_category">Please select a category</string>
     <string name="plus_number">+25624.98$</string>

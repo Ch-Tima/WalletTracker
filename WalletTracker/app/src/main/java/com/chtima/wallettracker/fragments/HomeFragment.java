@@ -2,6 +2,7 @@ package com.chtima.wallettracker.fragments;
 
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -95,6 +96,7 @@ public class HomeFragment extends Fragment {
 
         //ui
         ((ImageButton)view.findViewById(R.id.btn_add)).setOnClickListener(x -> {
+
             addTransactionDialogFragment = AddTransactionDialogFragment.newInstance();
             addTransactionDialogFragment.setSubscribe(new DialogObserver<Transaction>() {
                 @Override
