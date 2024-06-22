@@ -11,6 +11,7 @@ import com.chtima.wallettracker.dao.repositories.UserRepository;
 import com.chtima.wallettracker.models.User;
 
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 
 public class UserViewModel extends AndroidViewModel {
@@ -34,6 +35,10 @@ public class UserViewModel extends AndroidViewModel {
 
     public Completable update(User user){
         return repository.update(user);
+    }
+
+    public Maybe<Long> insert(User user){
+        return repository.insert(user);
     }
 
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/nunito_medium</item>
+    </style>
+
+    <style name="AppEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/custom_input</item>
+        <item name="android:paddingLeft">18dp</item>
+        <item name="android:height">55dp</item>
+        <item name="fontFamily">@font/outfit_medium</item>
+    </style>
+
+    <style name="AppButton" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/dark_midnight_blue</item>
+        <item name="android:fontFamily">@font/outfit_medium</item>
+    </style>
+
+    <style name="AppBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
+        <item name="materialButtonStyle">@style/AppButton</item>
+    </style>
+
+    <!--AppEditTextMaterialLayoutStyle-->
+    <style name="AppEditTextMaterialLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="fontFamily">@font/outfit_medium</item>
+        <item name="errorEnabled">true</item>
+        <item name="hintEnabled">false</item>
+        <item name="materialThemeOverlay">@style/AppThemeOverlayTextInputEditTextOutlinedBox</item>
+        <item name="editTextStyle">@style/AppEditTextMaterial</item>
+        <item name="cursorErrorColor">@color/coral</item>
+        <item name="cursorColor">@color/dark_midnight_blue</item>
+    </style>
+
+    <style name="AppThemeOverlayTextInputEditTextOutlinedBox">
+        <item name="editTextStyle">@style/AppEditTextMaterial</item>
+    </style>
+    
+    <style name="AppEditTextMaterial" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:background">@drawable/custom_input</item>
+        <item name="fontFamily">@font/outfit_medium</item>
+    </style>
+
+</resources>

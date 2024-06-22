@@ -108,7 +108,7 @@ public class Swicher extends ViewGroup {
         addView(thumb);
 
         income = new TextView(getContext());
-        income.setTypeface(context.getResources().getFont(R.font.nunito_medium));
+        income.setTypeface(context.getResources().getFont(R.font.outfit_medium));
         income.setText(R.string.expanse);
         income.setTextColor(getResources().getColor(R.color.white, null));
         income.setGravity(Gravity.CENTER);
@@ -116,7 +116,7 @@ public class Swicher extends ViewGroup {
 
         expanse = new TextView(getContext());
         expanse.setText(R.string.income);
-        expanse.setTypeface(context.getResources().getFont(R.font.nunito_medium));
+        expanse.setTypeface(context.getResources().getFont(R.font.outfit_medium));
         expanse.setTextColor(getResources().getColor(R.color.white, null));
         expanse.setGravity(Gravity.CENTER);
         addView(expanse);
@@ -156,6 +156,10 @@ public class Swicher extends ViewGroup {
     public void setOnChangedSelectionListener(SwicherListener listener) {
         this.listener = listener;
         listener.onChangedSelection(isChecked ? TransactionType.INCOME : TransactionType.EXPENSE);
+    }
+
+    public boolean isChecked(){
+        return isChecked;
     }
 
     public interface SwicherListener{

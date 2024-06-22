@@ -9,13 +9,16 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Completable;
 
 @Dao
 public interface CategoryDao {
 
     @Insert
     Maybe<Long> insert (Category category);
+
+    @Insert()
+    Completable insertAll(Category...categories);
 
     @Query("SELECT * FROM categories")
     Flowable<List<Category>> getAll();

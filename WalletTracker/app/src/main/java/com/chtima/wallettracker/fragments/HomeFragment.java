@@ -95,6 +95,7 @@ public class HomeFragment extends Fragment {
 
         //ui
         ((ImageButton)view.findViewById(R.id.btn_add)).setOnClickListener(x -> {
+
             addTransactionDialogFragment = AddTransactionDialogFragment.newInstance();
             addTransactionDialogFragment.setSubscribe(new DialogObserver<Transaction>() {
                 @Override
