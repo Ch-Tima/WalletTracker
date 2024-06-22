@@ -6,9 +6,10 @@
         <item name="android:windowBackground">@color/light_ashen</item>
 
         <item name="android:textViewStyle">@style/AppTextView</item>
-        <item name="editTextStyle">@style/AppEditText</item>
-        <item name="buttonStyle">@style/AppButton</item>
+        <item name="materialButtonStyle">@style/AppButton</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialog</item>
 
+        <item name="textInputStyle">@style/AppEditTextMaterialLayoutStyle</item>
     </style>
 
     <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker"/>

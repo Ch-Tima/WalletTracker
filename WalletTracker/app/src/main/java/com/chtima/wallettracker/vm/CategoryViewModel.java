@@ -14,6 +14,8 @@ import com.chtima.wallettracker.models.CategoryWithTransactions;
 import java.io.Closeable;
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Completable;
+
 public class CategoryViewModel extends AndroidViewModel {
 
     private final CategoryRepository repository;
@@ -25,6 +27,10 @@ public class CategoryViewModel extends AndroidViewModel {
         repository = new CategoryRepository(application);
         categoriesLiveData = LiveDataReactiveStreams.fromPublisher(repository.getAll());
         categoriesWithTransactionsLiveData = LiveDataReactiveStreams.fromPublisher(repository.getCategoriesWithTransactions());
+    }
+
+    public Completable insertAll(Category...categories){
+        return repository.insertAll(categories);
     }
 
     public LiveData<List<Category>> getAll() {

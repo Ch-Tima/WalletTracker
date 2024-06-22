@@ -8,6 +8,7 @@ import com.chtima.wallettracker.models.User;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -19,6 +20,12 @@ public class UserRepository {
     public UserRepository(Application application) {
         this.database = AppDatabase.getInstance(application);
         this.userDao = database.userDao();
+    }
+
+    public Maybe<Long> insert(User user){
+        return this.userDao.insert(user)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Single<User> getFirst (){

@@ -10,6 +10,7 @@ import com.chtima.wallettracker.models.CategoryWithTransactions;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -20,6 +21,12 @@ public class CategoryRepository {
     public CategoryRepository(Application application) {
         this.database = AppDatabase.getInstance(application);
         this.categoryDao = database.categoryDao();
+    }
+
+    public Completable insertAll(Category...categories){
+        return categoryDao.insertAll(categories)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public Flowable<List<Category>> getAll(){
