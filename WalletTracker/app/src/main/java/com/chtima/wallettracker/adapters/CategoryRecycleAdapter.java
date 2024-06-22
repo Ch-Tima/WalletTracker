@@ -22,6 +22,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Adapter for RecyclerView to display a list of categories.
+ */
 public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycleAdapter.ViewHolder> {
 
     private Context context;
@@ -56,13 +59,23 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         return this.list.size();
     }
 
+    /**
+     * Update the RecyclerView's data list with a new list of categories.
+     * @param list The new list of categories to display.
+     */
     @SuppressLint("NotifyDataSetChanged")
     public void updateList(List<Category> list){
-        this.list.clear();
-        this.list.addAll(list);
-        this.notifyDataSetChanged();
+        this.list.clear(); // Clear current list
+        this.list.addAll(list); // Add new list
+        this.notifyDataSetChanged(); // Notify RecyclerView of data change
     }
 
+    /**
+     * Get the Drawable icon for a category.
+     *
+     * @param category The category object containing icon information.
+     * @return Drawable representing the category icon.
+     */
     @SuppressLint("UseCompatLoadingForDrawables")
     public Drawable getCategoryIcon(Category category) {
         String uri = category.icon;
@@ -85,6 +98,9 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         this.onClickListener = onClickListener;
     }
 
+    /**
+     * ViewHolder class for caching views in each RecyclerView item.
+     */
     class ViewHolder extends RecyclerView.ViewHolder{
 
         private final ImageView icon;
@@ -97,6 +113,9 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         }
     }
 
+    /**
+     * ItemDecoration for adding spacing between grid items in RecyclerView.
+     */
     public static class GridSpacingItemDecoration extends RecyclerView.ItemDecoration{
 
         private final int spanCount;
@@ -135,6 +154,9 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         }
     }
 
+    /**
+     * Interface definition for a callback to be invoked when a category item is clicked.
+     */
     public interface OnClickListener{
         void onClick(Category category);
     }

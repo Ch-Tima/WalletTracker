@@ -1,6 +1,5 @@
 package com.chtima.wallettracker.fragments;
 
-import android.os.Binder;
 import android.os.Bundle;
 
 import androidx.fragment.app.DialogFragment;
@@ -13,13 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.CategoryRecycleAdapter;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.vm.CategoryViewModel;
 
+/**
+ * DialogFragment for selecting a category.
+ */
 public class SelectCategoryDialogFragment extends DialogFragment {
 
     private RecyclerView recyclerView;
@@ -30,6 +31,10 @@ public class SelectCategoryDialogFragment extends DialogFragment {
     private SelectCategoryDialogFragment() {
     }
 
+    /**
+     * Static factory method to create a new instance of SelectCategoryDialogFragment.
+     * @return A new instance of SelectCategoryDialogFragment.
+     */
     public static SelectCategoryDialogFragment newInstance() {
         return new SelectCategoryDialogFragment();
     }
@@ -56,14 +61,19 @@ public class SelectCategoryDialogFragment extends DialogFragment {
         //request
         categoryViewModel.getAll().observe(this, categories -> this.adapter.updateList(categories));
 
+        //set click listener for RecyclerView items
         adapter.setOnClickListener(category -> {
             if(selectCategoryListener != null) selectCategoryListener.onSelected(category);
-            this.getDialog().dismiss();
+            this.getDialog().dismiss();//dismiss the dialog after category selection
         });
 
         return view;
     }
 
+    /**
+     * Setter method for setting the SelectCategoryListener.
+     * @param selectCategoryListener The listener to be set.
+     */
     public void setSelectCategoryListener(SelectCategoryListener selectCategoryListener) {
         this.selectCategoryListener = selectCategoryListener;
     }
@@ -71,6 +81,7 @@ public class SelectCategoryDialogFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+        //adjust dialog window attributes on dialog start
         if (getDialog() != null) {
             Window window = getDialog().getWindow();
             WindowManager.LayoutParams params = window.getAttributes();
@@ -80,6 +91,7 @@ public class SelectCategoryDialogFragment extends DialogFragment {
         }
     }
 
+    /** Interface definition for a callback to be invoked when a category is selected. */
     public interface SelectCategoryListener{
         void onSelected(Category category);
     }
