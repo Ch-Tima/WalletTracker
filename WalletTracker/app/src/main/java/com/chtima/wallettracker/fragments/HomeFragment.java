@@ -45,11 +45,10 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class HomeFragment extends Fragment {
 
-    private User user;
+    private User user = null;
 
     private TransactionType transactionType; // transactionType is used in "filterTransactionWithUpdateUI"
 
-    private final CompositeDisposable compositeDisposable = new CompositeDisposable();
     private final List<CategoryWithTransactions> categoryWithTransactions = new ArrayList<>();
 
 
@@ -134,11 +133,9 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(transactionAdapter);
 
         sliderChartFragment = SliderChartFragment.newInstance();
-
         getChildFragmentManager().beginTransaction()
                 .replace(R.id.slide_chart_fragment, sliderChartFragment, SliderChartFragment.class.getName())
                 .commit();
-
 
         //swicher_transaction_type
         swicher = view.findViewById(R.id.swicher_transaction_type);
@@ -273,12 +270,6 @@ public class HomeFragment extends Fragment {
                 .map(x -> x.transactions)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        this.compositeDisposable.clear();
     }
 
     public void setUser(User user) {
