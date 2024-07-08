@@ -22,4 +22,5 @@
     <string name="please_enter_title">Please enter a title</string>
     <string name="please_enter_sum">Please enter a sum</string>
     <string name="wrong_format">Wrong format</string>
+    <string name="search">Search</string>
 </resources>

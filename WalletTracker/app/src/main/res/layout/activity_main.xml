@@ -13,11 +13,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_menu"/>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.chtima.wallettracker.components.ShadowConstraintLayout
         android:id="@+id/bottom_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="18dp"
         android:background="@drawable/round_layout"
         android:minHeight="65dp"
         app:layout_constraintTop_toTopOf="parent"
@@ -66,6 +65,6 @@
 
         </RadioGroup>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.chtima.wallettracker.components.ShadowConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

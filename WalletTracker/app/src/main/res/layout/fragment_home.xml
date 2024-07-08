@@ -20,11 +20,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.chtima.wallettracker.components.ShadowConstraintLayout
             android:id="@+id/pie_chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
             android:background="@drawable/round_layout"
             android:minHeight="350dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -73,13 +72,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/slide_chart_fragment" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.chtima.wallettracker.components.ShadowConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.chtima.wallettracker.components.ShadowConstraintLayout
             android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="18dp"
             android:layout_marginVertical="18dp"
             android:minHeight="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -96,7 +94,7 @@
                 android:background="@drawable/round_layout"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.chtima.wallettracker.components.ShadowConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
