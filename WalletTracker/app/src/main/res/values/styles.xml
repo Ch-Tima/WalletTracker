@@ -17,8 +17,12 @@
         <item name="android:fontFamily">@font/outfit_medium</item>
     </style>
 
-    <style name="AppBottomSheetDialog" parent="ThemeOverlay.Material3.BottomSheetDialog">
-        <item name="materialButtonStyle">@style/AppButton</item>
+    <style name="AppBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+    </style>
+
+    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/dark_top_round_layout</item>
     </style>
 
     <!--AppEditTextMaterialLayoutStyle-->
@@ -39,6 +43,16 @@
     <style name="AppEditTextMaterial" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="android:background">@drawable/custom_input</item>
         <item name="fontFamily">@font/outfit_medium</item>
+    </style>
+
+    <!-- Custom MaterialDatePicker Style -->
+    <style name="CustomMaterialDatePicker" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="materialCalendarStyle">@style/CustomCalendarStyle</item>
+    </style>
+
+    <style name="CustomCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
 </resources>
