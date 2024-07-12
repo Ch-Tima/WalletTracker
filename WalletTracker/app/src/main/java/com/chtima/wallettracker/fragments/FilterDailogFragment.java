@@ -101,6 +101,8 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
         btnClear = view.findViewById(R.id.btn_clear);
 
         dateText = view.findViewById(R.id.date_text);
+        if(parameters != null && parameters.getStartData() > 0 && parameters.getEndData() > 0)
+            dateText.setText(getDateStr(new Date(parameters.getStartData()), new Date(parameters.getEndData())));
 
         swicherTransationType = (Swicher) view.findViewById(R.id.swicher_transaction_type);
 
@@ -146,8 +148,20 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
 
     public String getDateStr(Date dateTime){
         if(dateTime == null) return "";
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         return dateFormat.format(dateTime.getTime());
+    }
+
+    public String getDateStr(Date start, Date end){
+        StringBuilder builder = new StringBuilder();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+
+        builder.append(dateFormat.format(start.getTime()));
+
+        if(end.getTime() > start.getTime())
+            builder.append(" - ").append(dateFormat.format(end.getTime()));
+
+        return builder.toString();
     }
 
     private void clearFilterParameters(){
