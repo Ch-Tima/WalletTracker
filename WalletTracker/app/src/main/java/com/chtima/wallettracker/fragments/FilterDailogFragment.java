@@ -117,7 +117,7 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
 
         //initialize date picker dialog
         materialDatePicker = MaterialDatePicker.Builder.dateRangePicker()
-                .setTitleText("mDate")
+                .setTitleText("Date")
                 .setTheme(R.style.CustomMaterialDatePicker)
                 .setSelection(
                         new Pair<>(
@@ -165,11 +165,15 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
     }
 
     private void clearFilterParameters(){
-        this.parameters = new FilterParameters();
         this.swicherTransationType.setChecked(TransactionType.EXPENSE);
+
         this.dateText.setText("");
+
         this.categoryRecycleAdapter.clearSelectedCategories();
-        this.dialogObserver.onSuccess(this.parameters);
+
+        this.parameters = new FilterParameters();
+
+        this.dialogObserver.onSuccess(new FilterParameters());
     }
 
     public static class FilterParameters{
@@ -199,6 +203,10 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
 
         public TransactionType getTransactionType() {
             return transactionType;
+        }
+
+        public boolean isEmpty(){
+            return (categories == null || categories.isEmpty()) && startData == -1 && endData == -1 && transactionType == null;
         }
     }
 

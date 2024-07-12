@@ -6,9 +6,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.TransactionAdapter;
@@ -41,6 +44,7 @@ public class TransactionReportFragment extends Fragment {
     //UI
     private RecyclerView recyclerView;
     private TextInputEditText textInputEditText;
+    private ImageView filter;
 
 
     private TransactionReportFragment() {
@@ -72,16 +76,38 @@ public class TransactionReportFragment extends Fragment {
 
         textInputEditText = (TextInputEditText)view.findViewById(R.id.search_input);
 
-        view.findViewById(R.id.filter).setOnClickListener(v -> {
+        textInputEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                transactionAdapter.updateList(filter(String.valueOf(textInputEditText.getText()), filterParameters));
+            }
+        });
+
+        filter = (ImageView) view.findViewById(R.id.filter);
+
+        filter.setOnClickListener(v -> {
             DialogObserver<FilterDailogFragment.FilterParameters> dialogObserver = new DialogObserver<FilterDailogFragment.FilterParameters>() {
                 @Override
                 public void onSuccess(FilterDailogFragment.FilterParameters parameters) {
                     filterParameters = parameters;
-                    transactionAdapter.updateList(
-                            filter(String.valueOf(textInputEditText.getText()),
-                                    parameters.getCategories().stream().map(x -> x.id).collect(Collectors.toList()),
-                                    parameters.getStartData(), parameters.getEndData(), parameters.getTransactionType())
-                    );
+
+                    if(parameters.isEmpty())
+                        filter.setImageTintList(requireContext().getColorStateList(R.color.dark_midnight_blue));
+                    else
+                        filter.setImageTintList(requireContext().getColorStateList(R.color.light_slate_blue));
+
+                    transactionAdapter.updateList(filter(String.valueOf(textInputEditText.getText()), filterParameters));
+
                 }
 
                 @Override
@@ -104,6 +130,14 @@ public class TransactionReportFragment extends Fragment {
         return filter("", new ArrayList<>(), -1, -1, null);
     }
 
+    private List<Transaction> filter(String text, FilterDailogFragment.FilterParameters parameters){
+        if(parameters != null && !parameters.isEmpty()){
+            return filter(text, parameters.getCategories().stream().map(x -> x.id).collect(Collectors.toList()),
+                    parameters.getStartData(), parameters.getEndData(), parameters.getTransactionType());
+        }
+        return filter(text, new ArrayList<>(), -1, -1, null);
+    }
+
     private List<Transaction> filter(String text, List<Long> categoryIds, long startTime, long endTime, TransactionType type){
 
         Stream<CategoryWithTransactions> transactionsStream = categoryWithTransactions.stream();
@@ -121,7 +155,7 @@ public class TransactionReportFragment extends Fragment {
                 .flatMap(Collection::stream)
                 .filter(x -> {
 
-                    if(!text.isEmpty() && !(x.title + x.note).toLowerCase().contains(text))
+                    if(!text.isEmpty() && !(x.title + x.note + (x.type == TransactionType.EXPENSE ? "-" : "+") + x.sum).toLowerCase().contains(text))
                         return false;
 
                     if(type != null && x.type != type)
