@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -18,12 +20,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.CategoryRecycleAdapter;
 import com.chtima.wallettracker.adapters.MultipleCategoriesRecycleAdapter;
 import com.chtima.wallettracker.components.Swicher;
 import com.chtima.wallettracker.models.Category;
+import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.vm.CategoryViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -43,6 +47,7 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
     private MultipleCategoriesRecycleAdapter categoryRecycleAdapter;
     private FilterParameters parameters;
     private MaterialDatePicker<Pair<Long, Long>> materialDatePicker;
+    private DialogObserver<FilterParameters> dialogObserver;
 
     //UI
     private RecyclerView recyclerView;
@@ -52,24 +57,30 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
     private Swicher swicherTransationType;
     private TextView dateText;
 
-    private FilterDailogFragment() {}
 
-    public static FilterDailogFragment newInstance() {
-        FilterDailogFragment fragment = new FilterDailogFragment();
-        return fragment;
+    private FilterDailogFragment(DialogObserver<FilterParameters> dialogObserver, FilterDailogFragment.FilterParameters parameters) {
+        this.dialogObserver = dialogObserver;
+        this.parameters = parameters;
+    }
+
+    public static FilterDailogFragment newInstance(DialogObserver<FilterParameters> dialogObserver) {
+        return newInstance(dialogObserver, new FilterParameters());
+    }
+
+    public static FilterDailogFragment newInstance(DialogObserver<FilterParameters> dialogObserver, FilterDailogFragment.FilterParameters parameters) {
+        return new FilterDailogFragment(dialogObserver, parameters);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parameters = new FilterParameters();
         categoryRecycleAdapter = new MultipleCategoriesRecycleAdapter(
                 this.requireContext(),
                 (List<Category> categories) -> parameters.categories = categories
         );
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         categoryViewModel.getAll().observeForever(list -> {
-            categoryRecycleAdapter.updateList(list);
+            categoryRecycleAdapter.updateList(list, parameters.getCategories());
         });
     }
 
@@ -93,8 +104,13 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
 
         swicherTransationType = (Swicher) view.findViewById(R.id.swicher_transaction_type);
 
-        //events
+        //setup swicherTransationType
+        if(parameters.getTransactionType() != null && swicherTransationType.getTransactionType() != parameters.getTransactionType())
+            swicherTransationType.setChecked(parameters.getTransactionType());
+
         swicherTransationType.setOnChangedSelectionListener(x -> parameters.transactionType = x);
+
+        //clear event
         btnClear.setOnClickListener(x -> clearFilterParameters());
 
         //initialize date picker dialog
@@ -114,10 +130,15 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
             @SuppressLint("SetTextI18n")
             @Override
             public void onPositiveButtonClick(Pair<Long, Long> longLongPair) {
-                parameters.startData = new Date(longLongPair.first);
-                parameters.endData = new Date(longLongPair.second);
-                dateText.setText(getDateStr(parameters.startData) + ((!longLongPair.first.equals(longLongPair.second)) ?(" - " + getDateStr(parameters.endData)) : ""));
+                parameters.startData = longLongPair.first;
+                parameters.endData = longLongPair.second;
+                dateText.setText(getDateStr(new Date(parameters.startData)) + ((!longLongPair.first.equals(longLongPair.second)) ?(" - " + getDateStr(new Date(parameters.endData))) : ""));
             }
+        });
+
+        btnDone.setOnClickListener(x -> {
+            dialogObserver.onSuccess(this.parameters);
+            dismiss();
         });
 
         return view;
@@ -131,20 +152,22 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
 
     private void clearFilterParameters(){
         this.parameters = new FilterParameters();
+        this.swicherTransationType.setChecked(TransactionType.EXPENSE);
         this.dateText.setText("");
-        this.categoryRecycleAdapter.clearSelectedCategories(); 
+        this.categoryRecycleAdapter.clearSelectedCategories();
+        this.dialogObserver.onSuccess(this.parameters);
     }
 
     public static class FilterParameters{
-        List<Category> categories;
-        Date startData;
-        Date endData;
-        TransactionType transactionType;
+        private List<Category> categories;
+        private long startData;
+        private long endData;
+        private TransactionType transactionType;
 
-        FilterParameters() {
-            categories = null;
-            startData = null;
-            endData = null;
+        private FilterParameters() {
+            categories = new ArrayList<>();
+            startData = -1;
+            endData = -1;
             transactionType = null;
         }
 
@@ -152,11 +175,11 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
             return categories;
         }
 
-        public Date getStartData() {
+        public long getStartData() {
             return startData;
         }
 
-        public Date getEndData() {
+        public long getEndData() {
             return endData;
         }
 

@@ -57,7 +57,7 @@ public class Swicher extends ViewGroup {
         int thumbHeight = (int) (parentHeight * 0.85);
 
         //Place your thumb in the vertical center and horizontally along the left edge.
-        int thumbLeft = (int) ((parentWidth - thumbWidth) * 0.05);
+        int thumbLeft = (int) ((parentWidth - thumbWidth) * (isChecked ? 0.95 : 0.05));
         int thumbRight = thumbLeft + thumbWidth;
 
         int thumbTop = (parentHeight - thumbHeight) / 2;
@@ -121,46 +121,51 @@ public class Swicher extends ViewGroup {
         expanse.setGravity(Gravity.CENTER);
         addView(expanse);
 
-        this.setOnClickListener(x -> {
-            int parentWidth = getWidth();
-            int thumbWidth = parentWidth / 2;
-
-            int startX = 0;
-            int endX = 0;
-
-            //Place your thumb in the vertical center and horizontally along the left edge.
-            if (isChecked) {
-                startX = thumb.getLeft();
-                endX = (int) ((getWidth() - thumb.getWidth()) * 0.05);
-            } else {
-                startX = thumb.getLeft();
-                endX = (int) ((getWidth() - thumb.getWidth()) * 0.95);
-            }
-
-            ValueAnimator animator = ValueAnimator.ofInt(startX, endX);
-            animator.setDuration(250);
-            animator.setInterpolator(new AccelerateInterpolator());
-            animator.addUpdateListener(animation -> {
-                int value = (int) animation.getAnimatedValue();
-                thumb.layout(value, thumb.getTop(), value + thumb.getWidth(), thumb.getBottom());
-            });
-
-            animator.start();
-
-            isChecked = !isChecked;
-            listener.onChangedSelection(isChecked ? TransactionType.INCOME : TransactionType.EXPENSE);
-        });
+        this.setOnClickListener(x -> swap());
 
     }
 
     public void setOnChangedSelectionListener(SwicherListener listener) {
         this.listener = listener;
-        listener.onChangedSelection(isChecked ? TransactionType.INCOME : TransactionType.EXPENSE);
+        listener.onChangedSelection(getTransactionType());
     }
 
-    public boolean isChecked(){
-        return isChecked;
+    private void swap(){
+        int startX = 0;
+        int endX = 0;
+
+        //Place your thumb in the vertical center and horizontally along the left edge.
+        if (isChecked) {
+            startX = thumb.getLeft();
+            endX = (int) ((getWidth() - thumb.getWidth()) * 0.05);
+        } else {
+            startX = thumb.getLeft();
+            endX = (int) ((getWidth() - thumb.getWidth()) * 0.95);
+        }
+
+        ValueAnimator animator = ValueAnimator.ofInt(startX, endX);
+        animator.setDuration(250);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.addUpdateListener(animation -> {
+            int value = (int) animation.getAnimatedValue();
+            thumb.layout(value, thumb.getTop(), value + thumb.getWidth(), thumb.getBottom());
+        });
+
+        animator.start();
+
+        isChecked = !isChecked;
+        listener.onChangedSelection(getTransactionType());
     }
+
+    public void setChecked(TransactionType type) {
+        isChecked = type == TransactionType.INCOME;
+        requestLayout();
+    }
+
+    public TransactionType getTransactionType(){
+        return isChecked ? TransactionType.INCOME : TransactionType.EXPENSE;
+    }
+
 
     public interface SwicherListener{
         void onChangedSelection(TransactionType transactionType);

@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MultipleCategoriesRecycleAdapter extends RecyclerView.Adapter<MultipleCategoriesRecycleAdapter.ViewHolder>{
 
@@ -54,7 +55,7 @@ public class MultipleCategoriesRecycleAdapter extends RecyclerView.Adapter<Multi
         holder.title.setText(item.title);
         holder.icon.setImageDrawable(getCategoryIcon(item));
 
-        if(selectedCategories.contains(item))
+        if(selectedCategories.stream().map(x -> x.id).collect(Collectors.toList()).contains(item.id))
             setSelectedStyle(holder);
         else
             setNotSelectedStyle(holder);
@@ -118,10 +119,11 @@ public class MultipleCategoriesRecycleAdapter extends RecyclerView.Adapter<Multi
      * @param list The new list of categories to display.
      */
     @SuppressLint("NotifyDataSetChanged")
-    public void updateList(List<Category> list){
+    public void updateList(List<Category> list, List<Category> selectedCategories){
         this.list.clear(); // Clear current list
         this.selectedCategories.clear();
         this.list.addAll(list); // Add new list
+        this.selectedCategories.addAll(selectedCategories);
         this.notifyDataSetChanged(); // Notify RecyclerView of data change
     }
 

@@ -182,7 +182,7 @@ public class AddTransactionDialogFragment extends BottomSheetDialogFragment {
                 title.getText().toString(),
                 note.getText().toString(),
                 dateFromPicker,
-                (type.isChecked() ? TransactionType.INCOME : TransactionType.EXPENSE));
+                type.getTransactionType());
     }
 
     /** Launch SelectCategoryDialogFragment to allow user to select a category.*/
