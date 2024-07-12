@@ -104,6 +104,8 @@ public class SliderChartFragment extends Fragment {
 
     public void setPieChartToday(List<PieEntry> pieChartToday){
 
+        if(list.isEmpty()) return;
+
         PieChart pieChart = (PieChart) list.get(1);
         PieDataSet ds1 = new PieDataSet(pieChartToday, "transaction");
 
@@ -134,6 +136,8 @@ public class SliderChartFragment extends Fragment {
     }
     public void setBarChartLastWeek(List<BarEntry> barChartLastWeek){
 
+        if(list.isEmpty()) return;
+
         BarChart barChart = (BarChart) list.get(0);
 
         if(barChartLastWeek == null || barChartLastWeek.isEmpty() || barChartLastWeek.stream().mapToDouble(BarEntry::getY).sum() == 0) {
@@ -154,6 +158,8 @@ public class SliderChartFragment extends Fragment {
 
     }
     public void setBarChartThisWeek(List<BarEntry> barChartThisWeek){
+
+        if(list.isEmpty()) return;
 
         BarChart barChart = (BarChart) list.get(2);
 

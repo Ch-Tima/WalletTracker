@@ -20,11 +20,10 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.chtima.wallettracker.components.ShadowConstraintLayout
             android:id="@+id/pie_chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
             android:background="@drawable/round_layout"
             android:minHeight="350dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -63,26 +62,25 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:scaleType="fitXY"
-                android:scaleY="1.75"
                 android:scaleX="1.75"
+                android:scaleY="1.75"
                 android:src="@drawable/add_circle_24px"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.85"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/balance_btn"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/slide_chart_fragment" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.chtima.wallettracker.components.ShadowConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.chtima.wallettracker.components.ShadowConstraintLayout
             android:id="@+id/constraintLayout3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginHorizontal="18dp"
             android:layout_marginVertical="18dp"
             android:minHeight="100dp"
-            app:layout_constraintBottom_toTopOf="@+id/bottom_menu"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -96,61 +94,7 @@
                 android:background="@drawable/round_layout"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottom_menu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="18dp"
-            android:background="@drawable/round_layout"
-            android:minHeight="65dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/pie_chart"
-            app:layout_constraintVertical_bias="0.95">
-
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:checkedButton="@id/radioHome">
-
-                <RadioButton
-                    android:id="@+id/radioHome"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:button="@null"
-                    android:background="@drawable/home_btn"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-
-                <RadioButton
-                    android:id="@+id/radioActivity"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:button="@null"
-                    android:background="@drawable/activity_btn"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-
-                <RadioButton
-                    android:id="@+id/radioPerson"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:button="@null"
-                    android:background="@drawable/person_btn"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
-
-            </RadioGroup>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.chtima.wallettracker.components.ShadowConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
