@@ -1,13 +1,9 @@
 package com.chtima.wallettracker.fragments;
 
 import android.annotation.SuppressLint;
-import android.app.DatePickerDialog;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,12 +11,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.CategoryRecycleAdapter;
@@ -36,7 +28,6 @@ import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClic
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -63,10 +54,12 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
         this.parameters = parameters;
     }
 
+    //Static method to create a new instance of FilterDailogFragment with default parameters
     public static FilterDailogFragment newInstance(DialogObserver<FilterParameters> dialogObserver) {
         return newInstance(dialogObserver, new FilterParameters());
     }
 
+    //Static method to create a new instance of FilterDailogFragment with specified parameters
     public static FilterDailogFragment newInstance(DialogObserver<FilterParameters> dialogObserver, FilterDailogFragment.FilterParameters parameters) {
         return new FilterDailogFragment(dialogObserver, parameters);
     }
@@ -74,10 +67,12 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Initialize category adapter with an empty list and set a click listener to update the parameters
         categoryRecycleAdapter = new MultipleCategoriesRecycleAdapter(
                 this.requireContext(),
                 (List<Category> categories) -> parameters.categories = categories
         );
+        //Initialize the ViewModel and observe changes to update the adapter
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
         categoryViewModel.getAll().observeForever(list -> {
             categoryRecycleAdapter.updateList(list, parameters.getCategories());
@@ -95,27 +90,28 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
         recyclerView.addItemDecoration(new CategoryRecycleAdapter.GridSpacingItemDecoration (3,  Math.round(16 * this.getResources().getDisplayMetrics().density), true));
         recyclerView.setAdapter(categoryRecycleAdapter);
 
+        //Initialize UI components
         btnData = view.findViewById(R.id.btn_date);
-
         btnDone = view.findViewById(R.id.btn_done);
         btnClear = view.findViewById(R.id.btn_clear);
-
         dateText = view.findViewById(R.id.date_text);
+
+
         if(parameters != null && parameters.getStartData() > 0 && parameters.getEndData() > 0)
             dateText.setText(getDateStr(new Date(parameters.getStartData()), new Date(parameters.getEndData())));
 
         swicherTransationType = (Swicher) view.findViewById(R.id.swicher_transaction_type);
 
-        //setup swicherTransationType
+        //Setup transaction type switcher
         if(parameters.getTransactionType() != null && swicherTransationType.getTransactionType() != parameters.getTransactionType())
             swicherTransationType.setChecked(parameters.getTransactionType());
 
         swicherTransationType.setOnChangedSelectionListener(x -> parameters.transactionType = x);
 
-        //clear event
+        //Clear event listener
         btnClear.setOnClickListener(x -> clearFilterParameters());
 
-        //initialize date picker dialog
+        //Initialize date picker dialog
         materialDatePicker = MaterialDatePicker.Builder.dateRangePicker()
                 .setTitleText("Date")
                 .setTheme(R.style.CustomMaterialDatePicker)
@@ -126,8 +122,10 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
                         )
                 ).build();
 
+        //Show date picker dialog on button click
         btnData.setOnClickListener(x -> materialDatePicker.show(this.getChildFragmentManager(), materialDatePicker.getClass().getName()));
 
+        //Set date range picker positive button click listener
         materialDatePicker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
             @SuppressLint("SetTextI18n")
             @Override
@@ -138,6 +136,7 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
             }
         });
 
+        //Set done button click listener
         btnDone.setOnClickListener(x -> {
             dialogObserver.onSuccess(this.parameters);
             dismiss();
@@ -146,12 +145,14 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
         return view;
     }
 
+    //Helper method to format a date to a string
     public String getDateStr(Date dateTime){
         if(dateTime == null) return "";
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         return dateFormat.format(dateTime.getTime());
     }
 
+    //Helper method to format a date range to a string
     public String getDateStr(Date start, Date end){
         StringBuilder builder = new StringBuilder();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -164,24 +165,23 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
         return builder.toString();
     }
 
+    //Method to clear filter parameters and reset UI components
     private void clearFilterParameters(){
         this.swicherTransationType.setChecked(TransactionType.EXPENSE);
-
         this.dateText.setText("");
-
         this.categoryRecycleAdapter.clearSelectedCategories();
-
         this.parameters = new FilterParameters();
-
         this.dialogObserver.onSuccess(new FilterParameters());
     }
 
+    //Class to hold filter parameters
     public static class FilterParameters{
         private List<Category> categories;
         private long startData;
         private long endData;
         private TransactionType transactionType;
 
+        //Private constructor to initialize default values
         private FilterParameters() {
             categories = new ArrayList<>();
             startData = -1;
@@ -189,6 +189,8 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
             transactionType = null;
         }
 
+
+        //Getters for filter parameters
         public List<Category> getCategories() {
             return categories;
         }
@@ -205,6 +207,7 @@ public class FilterDailogFragment extends BottomSheetDialogFragment {
             return transactionType;
         }
 
+        //Method to check if filter parameters are empty
         public boolean isEmpty(){
             return (categories == null || categories.isEmpty()) && startData == -1 && endData == -1 && transactionType == null;
         }
