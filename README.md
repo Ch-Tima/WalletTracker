@@ -7,8 +7,10 @@
 
 ## Screenshot
 
-<img src="./assets/sr_home.png" Width="250">
+<div>
+ <img src="./assets/sr_home.png" Width="250">
 <img src="./assets/sr_activity_tab.png" Width="250">
+</div>
 
 
 ## Developer
