@@ -1,6 +1,7 @@
 package com.chtima.wallettracker;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -98,7 +99,11 @@ public class MainActivity extends AppCompatActivity {
         //TODO...
         categoryVM.insertAll(AppDatabase.defaultCategories())
                 .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-                .subscribe();
+                .subscribe(() -> {
+
+                }, throwable -> {
+                    Log.e("ERR", throwable.getMessage());
+                });
         userVM.insert(new User("Tima", "Ch", 832.34, "USD"))
                 .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
                 .subscribe(aLong -> {

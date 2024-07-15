@@ -43,6 +43,9 @@
     <style name="AppEditTextMaterial" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
         <item name="android:background">@drawable/custom_input</item>
         <item name="fontFamily">@font/outfit_medium</item>
+        <item name="android:inputType">text</item>
+        <item name="maxLines">1</item>
+        <item name="android:maxLength">99</item>
     </style>
 
     <!-- Custom MaterialDatePicker Style -->
