@@ -24,7 +24,7 @@
             android:id="@+id/pie_chart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/round_layout"
+
             android:minHeight="350dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.457"
@@ -91,7 +91,6 @@
                 android:id="@+id/transaction_recycle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/round_layout"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         </com.chtima.wallettracker.components.ShadowConstraintLayout>

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.fragments.HomeFragment;
+import com.chtima.wallettracker.fragments.ProfileFragment;
 import com.chtima.wallettracker.fragments.TransactionReportFragment;
 import com.chtima.wallettracker.models.User;
 import com.chtima.wallettracker.vm.CategoryViewModel;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentTransaction transaction;
     private HomeFragment homeFragment;
     private TransactionReportFragment activityFragment;
+    private ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
                     homeFragment = HomeFragment.newInstance();
                     activityFragment = TransactionReportFragment.newInstance();
-                    
+                    profileFragment = ProfileFragment.newInstance();
+
                     homeFragment.setUser(user);
 
                     getSupportFragmentManager().beginTransaction()
@@ -83,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             }else if(checkedId == R.id.radioActivity){
                 selectedFragment = activityFragment;
             } else if (checkedId == R.id.radioPerson) {
-
+                selectedFragment = profileFragment;
             }
 
             if (selectedFragment != null) {
@@ -99,9 +102,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO...
         categoryVM.insertAll(AppDatabase.defaultCategories())
                 .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-                .subscribe(() -> {
-
-                }, throwable -> {
+                .subscribe(() -> {}, throwable -> {
                     Log.e("ERR", throwable.getMessage());
                 });
         userVM.insert(new User("Tima", "Ch", 832.34, "USD"))

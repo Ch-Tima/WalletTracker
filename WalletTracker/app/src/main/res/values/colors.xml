@@ -12,9 +12,10 @@
     <color name="light_slate_blue">#7A80F0</color> <!--selected items-->
 
     <!--helper colors-->
-    <color name="lilac_grey">#AC9BB1</color>
-    <color name="saffron">#FDC330</color>
     <color name="silver_sand">#BBBDBE</color>
+    <color name="lilac_grey">#AC9BB1</color>
+    <color name="darkened_slate_blue">#757589</color>
+    <color name="saffron">#FDC330</color>
     <color name="peach">#FFA775</color>
 
     <color name="lime">#14DE6E</color> <!--INCOME-->
