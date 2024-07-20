@@ -67,6 +67,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/ch_tima_example_com"
+                        android:visibility="invisible"
                         android:textSize="16sp"
                         android:fontFamily="@font/outfit_medium"
                         android:textColor="@color/darkened_slate_blue"
@@ -147,11 +148,11 @@
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintRight_toRightOf="parent"
-                            app:layout_constraintBottom_toTopOf="@id/num_balance"
+                            app:layout_constraintBottom_toTopOf="@id/user_balance"
                             app:layout_constraintHorizontal_bias="0.1"/>
 
                         <TextView
-                            android:id="@+id/num_balance"
+                            android:id="@+id/user_balance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/outfit_bold"
@@ -193,7 +194,7 @@
                             android:layout_height="38dp"
                             android:backgroundTint="@color/peach"
                             android:textSize="14sp"
-                            android:text="@string/tot_up"
+                            android:text="@string/top_up"
                             app:layout_constraintLeft_toLeftOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/qr"
                             app:layout_constraintRight_toRightOf="parent"
@@ -231,7 +232,8 @@
                     android:textSize="18sp"
                     android:textAlignment="textStart"
                     app:iconSize="24dp"
-                    app:icon="@drawable/theme_24px"/>
+                    app:icon="@drawable/theme_24px"
+                    android:layout_marginVertical="4dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_generate_report"
@@ -242,7 +244,8 @@
                     android:textSize="18sp"
                     android:textAlignment="textStart"
                     app:iconSize="24dp"
-                    app:icon="@drawable/document_24px"/>
+                    app:icon="@drawable/document_24px"
+                    android:layout_marginVertical="4dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_create_backup"
@@ -253,7 +256,8 @@
                     android:textSize="18sp"
                     android:textAlignment="textStart"
                     app:iconSize="24dp"
-                    app:icon="@drawable/disk_24px"/>
+                    app:icon="@drawable/disk_24px"
+                    android:layout_marginVertical="4dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_import_backup"
@@ -264,7 +268,8 @@
                     android:textSize="18sp"
                     android:textAlignment="textStart"
                     app:iconSize="24dp"
-                    app:icon="@drawable/import_24px"/>
+                    app:icon="@drawable/import_24px"
+                    android:layout_marginVertical="4dp"/>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_help"
@@ -275,7 +280,8 @@
                     android:textSize="18sp"
                     android:textAlignment="textStart"
                     app:iconSize="24dp"
-                    app:icon="@drawable/help_24px"/>
+                    app:icon="@drawable/help_24px"
+                    android:layout_marginVertical="4dp"/>
 
             </LinearLayout>
 

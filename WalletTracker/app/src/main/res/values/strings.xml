@@ -30,7 +30,7 @@
     <string name="ch_tima_example_com">ch-tima@example.com</string>
     <string name="balance">Balance:</string>
     <string name="number">19,867.91$</string>
-    <string name="tot_up">Tot-Up</string>
+    <string name="top_up">Top-Up</string>
     <string name="theme">Theme</string>
     <string name="create_backup">Create Backup</string>
     <string name="import_backup">Import Backup</string>
