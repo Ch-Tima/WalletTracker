@@ -86,7 +86,7 @@ public class SelectCategoryDialogFragment extends DialogFragment {
             Window window = getDialog().getWindow();
             WindowManager.LayoutParams params = window.getAttributes();
             params.width = WindowManager.LayoutParams.MATCH_PARENT;
-            window.setBackgroundDrawableResource(R.drawable.dark_round_layout_m16);
+            window.setBackgroundDrawableResource(R.drawable.round_ashen_8dp_m16);
             window.setAttributes(params);
         }
     }

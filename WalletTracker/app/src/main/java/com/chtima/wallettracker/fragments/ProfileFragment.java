@@ -72,6 +72,11 @@ public class ProfileFragment extends Fragment {
         btnImportBackup = view.findViewById(R.id.btn_import_backup);
         btnHelp = view.findViewById(R.id.btn_help);
 
+        btnTotUp.setOnClickListener(i -> {
+            TopUpDialogFragment fragment = TopUpDialogFragment.newInstance();
+            fragment.show(this.getChildFragmentManager(), TopUpDialogFragment.class.getName());
+        });
+
         return view;
     }
 

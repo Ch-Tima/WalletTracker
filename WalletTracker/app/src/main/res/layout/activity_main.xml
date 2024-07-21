@@ -17,7 +17,7 @@
         android:id="@+id/bottom_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_layout"
+        android:background="@drawable/round_ashen35_8dp"
         android:minHeight="65dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
