@@ -2,6 +2,9 @@ package com.chtima.wallettracker.dao.repositories;
 
 import android.app.Application;
 
+import androidx.room.Query;
+import androidx.room.Transaction;
+
 import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.dao.CategoryDao;
 import com.chtima.wallettracker.models.Category;
@@ -35,6 +38,10 @@ public class CategoryRepository {
 
     public Flowable<List<CategoryWithTransactions>> getCategoriesWithTransactions() {
         return categoryDao.getCategoriesWithTransactions();
+    }
+
+    public Flowable<List<CategoryWithTransactions>> getCategoriesWithTransactionsByUserId(long userId){
+        return categoryDao.getCategoriesWithTransactionsByUserId(userId);
     }
 
 }

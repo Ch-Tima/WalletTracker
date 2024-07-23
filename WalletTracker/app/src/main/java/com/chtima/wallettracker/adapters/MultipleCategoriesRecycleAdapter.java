@@ -97,20 +97,8 @@ public class MultipleCategoriesRecycleAdapter extends RecyclerView.Adapter<Multi
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     public Drawable getCategoryIcon(Category category) {
-        String uri = category.icon;
-
-        if (uri.startsWith("res://")) {
-            int resourceId = Integer.parseInt(uri.substring("res://".length()));
-            return context.getDrawable(resourceId);
-        } else {
-            try {
-                InputStream inputStream = context.getContentResolver().openInputStream(Uri.parse(uri));
-                return Drawable.createFromStream(inputStream, uri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
+        int id = context.getResources().getIdentifier(category.icon, "drawable", context.getPackageName());
+        return context.getDrawable(id);
     }
 
     @Override
