@@ -11,7 +11,8 @@ import java.util.Locale;
 
 
 @Entity(tableName = "transactions", foreignKeys = {
-        @ForeignKey(entity = Category.class, parentColumns = "id", childColumns = "categoryId", onDelete = ForeignKey.CASCADE)
+        @ForeignKey(entity = Category.class, parentColumns = "id", childColumns = "categoryId", onDelete = ForeignKey.CASCADE),
+        @ForeignKey(entity = User.class, parentColumns = "id", childColumns = "userId", onDelete = ForeignKey.CASCADE)
 })
 public class Transaction {
 
@@ -19,6 +20,7 @@ public class Transaction {
     public long id;
 
     public long categoryId;
+    public long userId;
 
 
     public double sum;
@@ -32,8 +34,9 @@ public class Transaction {
     public TransactionType type;
 
 
-    public Transaction(long categoryId, double sum, String title, String note, Date dateTime, TransactionType type) {
+    public Transaction(long categoryId, long userId, double sum, String title, String note, Date dateTime, TransactionType type) {
         this.categoryId = categoryId;
+        this.userId = userId;
         this.sum = sum;
         this.title = title;
         this.note = note;
