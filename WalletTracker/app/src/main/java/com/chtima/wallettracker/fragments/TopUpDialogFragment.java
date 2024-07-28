@@ -21,7 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
+import com.chtima.wallettracker.models.Category;
+import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.User;
+import com.chtima.wallettracker.vm.TransactionViewModel;
 import com.chtima.wallettracker.vm.UserViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -35,10 +38,15 @@ import java.util.Locale;
  */
 public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
+    private User user;
+
+    //VM
+    private UserViewModel userVM;
+    private TransactionViewModel transactionVM;
+
     //UI
     private TextView textView;//input fields
-    private UserViewModel userVM;
-    private User user;
+
 
     private TopUpDialogFragment() {}
 
@@ -92,8 +100,16 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
         });
 
         view.findViewById(R.id.btn_done).setOnClickListener(x -> {
+
+            SelectCategoryDialogFragment categoryDialog = SelectCategoryDialogFragment.newInstance(Category.CategoryType.INCOME);
+            categoryDialog.show(this.getChildFragmentManager(), SelectCategoryDialogFragment.class.getName());
+            categoryDialog.setSelectCategoryListener(category -> {
+
+            });
+
             user.balance = user.balance + toDouble(textView.getText().toString());
             //update user and add Transaction
+
         });
 
         return view;
@@ -149,7 +165,7 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
         while ((indexForDelete = text.indexOf(",")) != -1)
             text.deleteCharAt(indexForDelete);
 
-        return Double.parseDouble(s);
+        return Double.parseDouble(text.toString());
     }
 
 }

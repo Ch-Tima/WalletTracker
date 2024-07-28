@@ -28,10 +28,15 @@
 
     <style name="AppBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
+        <item name="android:backgroundDimAmount">0.7</item>
     </style>
 
     <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/round_ashen_top_21dp</item>
+    </style>
+
+    <style name="DialogFragmentTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:backgroundDimAmount">0.7</item>
     </style>
 
     <!--AppEditTextMaterialLayoutStyle-->

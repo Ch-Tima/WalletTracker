@@ -36,6 +36,10 @@ public class CategoryRepository {
         return categoryDao.getAll();
     }
 
+    public Flowable<List<Category>> getByType(Category.CategoryType type){
+        return categoryDao.getByType(type);
+    }
+
     public Flowable<List<CategoryWithTransactions>> getCategoriesWithTransactions() {
         return categoryDao.getCategoriesWithTransactions();
     }

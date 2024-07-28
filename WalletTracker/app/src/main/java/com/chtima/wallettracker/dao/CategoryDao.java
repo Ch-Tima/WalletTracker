@@ -23,11 +23,15 @@ public interface CategoryDao {
     @Query("SELECT * FROM categories")
     Flowable<List<Category>> getAll();
 
+    @Query("SELECT * FROM categories WHERE categoryType = :type")
+    Flowable<List<Category>> getByType(Category.CategoryType type);
+
     @Query("SELECT * FROM categories")
     Flowable<List<CategoryWithTransactions>> getCategoriesWithTransactions();
 
     @Transaction
     @Query("SELECT * FROM categories WHERE id IN (SELECT categoryId FROM transactions WHERE userId = :userId)")
     Flowable<List<CategoryWithTransactions>> getCategoriesWithTransactionsByUserId(long userId);
+
 
 }

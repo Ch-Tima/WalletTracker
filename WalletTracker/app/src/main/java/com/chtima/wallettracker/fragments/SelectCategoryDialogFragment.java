@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.adapters.CategoryRecycleAdapter;
 import com.chtima.wallettracker.models.Category;
+import com.chtima.wallettracker.models.Category.CategoryType;
 import com.chtima.wallettracker.vm.CategoryViewModel;
 
 /**
@@ -23,10 +24,15 @@ import com.chtima.wallettracker.vm.CategoryViewModel;
  */
 public class SelectCategoryDialogFragment extends DialogFragment {
 
+    private final static String CATEGORY_TYPE = "CATEGORY_TYPE";
+
+    private CategoryRecycleAdapter adapter;//Adapter for RecyclerView
+    private CategoryViewModel categoryViewModel;//VM
+    private SelectCategoryListener selectCategoryListener;//Listener
+    private CategoryType categoryType = null;
+
+    //UI
     private RecyclerView recyclerView;
-    private CategoryRecycleAdapter adapter;
-    private CategoryViewModel categoryViewModel;
-    private SelectCategoryListener selectCategoryListener;
 
     private SelectCategoryDialogFragment() {
     }
@@ -36,12 +42,29 @@ public class SelectCategoryDialogFragment extends DialogFragment {
      * @return A new instance of SelectCategoryDialogFragment.
      */
     public static SelectCategoryDialogFragment newInstance() {
-        return new SelectCategoryDialogFragment();
+        return newInstance(null);
+    }
+
+    /**
+     * Static factory method to create a new instance of SelectCategoryDialogFragment.
+     * @param categoryType - use to filter and show only a specific type category
+     * @return A new instance of SelectCategoryDialogFragment.
+     */
+    public static SelectCategoryDialogFragment newInstance(CategoryType categoryType) {
+        SelectCategoryDialogFragment fragment = new SelectCategoryDialogFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(CATEGORY_TYPE, categoryType == null ? null : categoryType.name());
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String ct;
+        if (getArguments() != null && (ct = getArguments().getString(CATEGORY_TYPE)) != null) {
+            categoryType = CategoryType.valueOf(ct);
+        }
     }
 
     @Override
@@ -59,7 +82,7 @@ public class SelectCategoryDialogFragment extends DialogFragment {
         recyclerView.setLayoutManager(new GridLayoutManager(this.requireContext(), 3));
         recyclerView.addItemDecoration(new CategoryRecycleAdapter.GridSpacingItemDecoration (3,  Math.round(16 * this.getResources().getDisplayMetrics().density), true));
         //request
-        categoryViewModel.getAll().observe(this, categories -> this.adapter.updateList(categories));
+        categoryViewModel.getByType(this.categoryType).observe(this, categories -> this.adapter.updateList(categories));
 
         //set click listener for RecyclerView items
         adapter.setOnClickListener(category -> {

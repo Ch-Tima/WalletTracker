@@ -11,7 +11,6 @@ import com.chtima.wallettracker.dao.repositories.CategoryRepository;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.CategoryWithTransactions;
 
-import java.io.Closeable;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -39,6 +38,11 @@ public class CategoryViewModel extends AndroidViewModel {
 
     public LiveData<List<Category>> getAll() {
         return categoriesLiveData;
+    }
+
+    public LiveData<List<Category>> getByType(Category.CategoryType categoryType) {
+        if(categoryType == null) return this.categoriesLiveData;
+        return LiveDataReactiveStreams.fromPublisher(repository.getByType(categoryType));
     }
 
     public LiveData<List<CategoryWithTransactions>> getCategoriesWithTransactions() {
