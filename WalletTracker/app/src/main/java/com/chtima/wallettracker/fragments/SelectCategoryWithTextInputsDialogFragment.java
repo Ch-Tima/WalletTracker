@@ -47,14 +47,17 @@ public class SelectCategoryWithTextInputsDialogFragment extends DialogFragment {
     private TextInputLayout titleLayout;
     private EditText note;
     private TextInputLayout noteLayout;
-    private RecyclerView recyclerView;
 
+    // Private constructor to prevent instantiation from outside
     private SelectCategoryWithTextInputsDialogFragment() {}
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     * @return A new instance of fragment SelectCategoryWithTextInputsDialogFragment.
+     * Factory method to create a new instance of this fragment.
+     * <p>
+     * This method creates a new instance of {@link SelectCategoryWithTextInputsDialogFragment}
+     * with no arguments.
+     * </p>
+     * @return A new instance of {@link SelectCategoryWithTextInputsDialogFragment}.
      */
     public static SelectCategoryWithTextInputsDialogFragment newInstance() {
         SelectCategoryWithTextInputsDialogFragment fragment = new SelectCategoryWithTextInputsDialogFragment();
@@ -125,11 +128,29 @@ public class SelectCategoryWithTextInputsDialogFragment extends DialogFragment {
         }
     }
 
+    /**
+     * Set the listener to be notified when the user completes their input.
+     * @param listener An instance of {@link OnSelectCategoryWithTextInputsListener} to handle the callback.
+     */
     public void setListener(OnSelectCategoryWithTextInputsListener listener) {
         this.listener = listener;
     }
 
+    /**
+     * Listener interface to be implemented by the parent activity or fragment.
+     * <p>
+     * This interface defines a callback method that is invoked when the user
+     * completes their selection and input within the {@link SelectCategoryWithTextInputsDialogFragment}.
+     * </p>
+     */
     public interface OnSelectCategoryWithTextInputsListener{
+        /**
+         * Called when the user has completed selecting a category and entering title and note.
+         *
+         * @param category The selected {@link Category}.
+         * @param title The title entered by the user.
+         * @param note The note entered by the user.
+         */
         void onDone(Category category, String title, String note);
     }
 }

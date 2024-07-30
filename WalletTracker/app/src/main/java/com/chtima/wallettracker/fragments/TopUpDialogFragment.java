@@ -44,9 +44,15 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.functions.Action;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link TopUpDialogFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A dialog fragment for handling user top-up transactions.
+ * <p>
+ * This fragment allows users to enter an amount to top-up their balance, select a category,
+ * and provide a title and note for the transaction.
+ * </p>
+ *
+ * @see TopUpDialogFragment#newInstance()
+ * @see BottomSheetDialogFragment
+ * @see SelectCategoryWithTextInputsDialogFragment
  */
 public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
@@ -61,8 +67,13 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
     private Button btnDot;
     private Button btnDone;
 
+    //Private constructor to prevent instantiation without arguments.
     private TopUpDialogFragment() {}
 
+    /**
+     * Factory method to create a new instance of this fragment.
+     * @return A new instance of {@link TopUpDialogFragment}.
+     */
     public static TopUpDialogFragment newInstance() {
         TopUpDialogFragment fragment = new TopUpDialogFragment();
         return fragment;
@@ -81,7 +92,7 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
         GridLayout numpad = view.findViewById(R.id.numpad_grid);
 
-        //numpad btns
+        // Initialize numpad buttons and set click listeners
         View v = null;
         for (int i = 0; i < numpad.getChildCount(); i++) {
             v = numpad.getChildAt(i);
@@ -91,6 +102,7 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
             }
         }
 
+        // Initialize input fields
         textView = view.findViewById(R.id.number_text);//input fields
         textView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -100,18 +112,19 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable s) {// Enable or disable the 'Done' button based on input
                 btnDone.setEnabled(!s.toString().isEmpty() && s.charAt(s.length() - 1) != '.' && toDouble(s.toString()) > 0.009);
             }
         });
 
-        //dot
+        // Initialize 'Dot' button for adding decimal point
         btnDot = view.findViewById(R.id.btn_dot);
         btnDot.setOnClickListener(x -> {
             if(!textView.getText().toString().contains(".") && !textView.getText().toString().isEmpty())
                 textView.setText(textView.getText() + ".");
         });
 
+        // Initialize 'Clear' button for removing the last character
         view.findViewById(R.id.btn_clear).setOnClickListener(x -> {
             StringBuilder text = new StringBuilder(textView.getText().toString());
             if (text.toString().isEmpty()) return;
@@ -126,9 +139,10 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
             textView.setText(toFormat(text.toString()));
         });
 
+        // Initialize 'Done' button for finalizing the transaction
         btnDone = view.findViewById(R.id.btn_done);
         btnDone.setEnabled(false);
-        btnDone.setOnClickListener(x -> {
+        btnDone.setOnClickListener(x -> {// Show category selection dialog
             SelectCategoryWithTextInputsDialogFragment fragment = SelectCategoryWithTextInputsDialogFragment.newInstance();
             fragment.show(this.getChildFragmentManager(), fragment.getClass().getName());
             fragment.setListener(new SelectCategoryWithTextInputsDialogFragment.OnSelectCategoryWithTextInputsListener() {
@@ -141,6 +155,7 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
                             Calendar.getInstance().getTime(),
                             TransactionType.INCOME);
 
+                    // Insert transaction and update user balance
                     TransactionViewModel transactionVM = new ViewModelProvider(TopUpDialogFragment.this).get(TransactionViewModel.class);
                     transactionVM.insert(transaction)
                             .flatMapCompletable(aLong -> {
@@ -149,7 +164,7 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
                             })
                             .subscribe();
 
-                    dismiss();
+                    dismiss(); // Close
                 }
             });
 
@@ -165,6 +180,10 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
         userVM.getUser().observe(this, user -> this.user = user);
     }
 
+    /**
+     * Appends the clicked number to the input field, handling formatting and decimal points.
+     * @param i The number to append.
+     */
     private void putNumber(String i){
         StringBuilder text = new StringBuilder(textView.getText().toString());
 
@@ -186,6 +205,11 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
     }
 
+    /**
+     * Formats the input string to include thousand separators.
+     * @param s The input string.
+     * @return A formatted string with thousand separators.
+     */
     private String toFormat(String s){
         if(s.isBlank()) return "";
 
@@ -199,6 +223,11 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
         return f.format(Integer.parseInt(text.toString()));
     }
 
+    /**
+     * Converts the input string to a double, removing thousand separators.
+     * @param s The input string.
+     * @return The double representation of the input string.
+     */
     private double toDouble(String s){
         if(s.isBlank()) return 0.0;
 
@@ -210,7 +239,5 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
         return Double.parseDouble(text.toString());
     }
-
-
 
 }
