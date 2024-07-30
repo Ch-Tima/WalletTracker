@@ -5,10 +5,13 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
@@ -23,13 +26,22 @@ import android.widget.Toast;
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.Transaction;
+import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
 import com.chtima.wallettracker.vm.TransactionViewModel;
 import com.chtima.wallettracker.vm.UserViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
 import java.util.Locale;
+
+import autodispose2.AutoDispose;
+import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
+import io.reactivex.rxjava3.core.CompletableObserver;
+import io.reactivex.rxjava3.core.SingleObserver;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Action;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,7 +58,8 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
     //UI
     private TextView textView;//input fields
-
+    private Button btnDot;
+    private Button btnDone;
 
     private TopUpDialogFragment() {}
 
@@ -79,8 +92,22 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
         }
 
         textView = view.findViewById(R.id.number_text);//input fields
+        textView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        view.findViewById(R.id.btn_dot).setOnClickListener(x -> {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                btnDone.setEnabled(!s.toString().isEmpty() && s.charAt(s.length() - 1) != '.' && toDouble(s.toString()) > 0.009);
+            }
+        });
+
+        //dot
+        btnDot = view.findViewById(R.id.btn_dot);
+        btnDot.setOnClickListener(x -> {
             if(!textView.getText().toString().contains(".") && !textView.getText().toString().isEmpty())
                 textView.setText(textView.getText() + ".");
         });
@@ -99,16 +126,32 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
             textView.setText(toFormat(text.toString()));
         });
 
-        view.findViewById(R.id.btn_done).setOnClickListener(x -> {
+        btnDone = view.findViewById(R.id.btn_done);
+        btnDone.setEnabled(false);
+        btnDone.setOnClickListener(x -> {
+            SelectCategoryWithTextInputsDialogFragment fragment = SelectCategoryWithTextInputsDialogFragment.newInstance();
+            fragment.show(this.getChildFragmentManager(), fragment.getClass().getName());
+            fragment.setListener(new SelectCategoryWithTextInputsDialogFragment.OnSelectCategoryWithTextInputsListener() {
+                @Override
+                public void onDone(Category category, String title, String note) {
+                    Transaction transaction = new Transaction(
+                            category.id, user.id,
+                            toDouble(textView.getText().toString()),
+                            title, note,
+                            Calendar.getInstance().getTime(),
+                            TransactionType.INCOME);
 
-            SelectCategoryDialogFragment categoryDialog = SelectCategoryDialogFragment.newInstance(Category.CategoryType.INCOME);
-            categoryDialog.show(this.getChildFragmentManager(), SelectCategoryDialogFragment.class.getName());
-            categoryDialog.setSelectCategoryListener(category -> {
+                    TransactionViewModel transactionVM = new ViewModelProvider(TopUpDialogFragment.this).get(TransactionViewModel.class);
+                    transactionVM.insert(transaction)
+                            .flatMapCompletable(aLong -> {
+                                user.balance = user.balance + transaction.sum;
+                                return userVM.update(TopUpDialogFragment.this.user);
+                            })
+                            .subscribe();
 
+                    dismiss();
+                }
             });
-
-            user.balance = user.balance + toDouble(textView.getText().toString());
-            //update user and add Transaction
 
         });
 
@@ -118,7 +161,7 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userVM = new ViewModelProvider(this).get(UserViewModel.class);
+        userVM = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         userVM.getUser().observe(this, user -> this.user = user);
     }
 
@@ -167,5 +210,7 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
         return Double.parseDouble(text.toString());
     }
+
+
 
 }

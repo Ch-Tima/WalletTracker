@@ -30,14 +30,21 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
     private Context context;
     private List<Category> list;
     private OnClickListener onClickListener;
+    private boolean isShowSelectedItem;
+    private Category selectedCategory;
 
     public CategoryRecycleAdapter(Context context) {
         this(context, new ArrayList<Category>());
     }
 
     public CategoryRecycleAdapter(Context context, List<Category> list) {
+        this(context, list == null ? new ArrayList<>() : list, false);
+    }
+
+    public CategoryRecycleAdapter(Context context, List<Category> list, boolean isShowSelectedItem) {
         this.context = context;
         this.list = list;
+        this.isShowSelectedItem = isShowSelectedItem;
     }
 
     @NonNull
@@ -46,12 +53,31 @@ public class CategoryRecycleAdapter extends RecyclerView.Adapter<CategoryRecycle
         return new ViewHolder(LayoutInflater.from(this.context).inflate(R.layout.category_card_tile, parent, false));
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Category item = this.list.get(position);
         holder.title.setText(item.title);
         holder.icon.setImageDrawable(getCategoryIcon(item));
-        holder.itemView.setOnClickListener(y -> onClickListener.onClick(item));
+
+        holder.itemView.setOnClickListener(y -> {
+            selectedCategory = item;//set new selected category
+            notifyDataSetChanged();//update ui
+            onClickListener.onClick(selectedCategory);
+        });
+
+        if(!isShowSelectedItem) return;
+
+        if(item.equals(selectedCategory)){ //Set the style for a selected item
+            holder.itemView.setBackgroundResource(R.drawable.round_blue_layout_8dp);
+            holder.icon.setImageTintList(context.getColorStateList(R.color.light_ashen_35));
+            holder.title.setTextColor(context.getColorStateList(R.color.light_ashen_35));
+        }
+        else {
+            holder.itemView.setBackgroundResource(R.drawable.round_ashen35_8dp);
+            holder.icon.setImageTintList(context.getColorStateList(R.color.dark_midnight_blue));
+            holder.title.setTextColor(context.getColorStateList(R.color.dark_midnight_blue));
+        }
     }
 
     @Override

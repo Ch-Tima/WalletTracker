@@ -19,30 +19,33 @@ import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.Category.CategoryType;
 import com.chtima.wallettracker.vm.CategoryViewModel;
 
+import java.util.ArrayList;
+
 /**
  * DialogFragment for selecting a category.
  */
 public class SelectCategoryDialogFragment extends DialogFragment {
 
     private final static String CATEGORY_TYPE = "CATEGORY_TYPE";
+    private final static String IS_SHOW_SELECTED_CATEGORY = "IS_SHOW_SELECTED_CATEGORY";
 
     private CategoryRecycleAdapter adapter;//Adapter for RecyclerView
     private CategoryViewModel categoryViewModel;//VM
     private SelectCategoryListener selectCategoryListener;//Listener
     private CategoryType categoryType = null;
+    private boolean isShowSelectCategory;
 
     //UI
     private RecyclerView recyclerView;
 
-    private SelectCategoryDialogFragment() {
-    }
+    private SelectCategoryDialogFragment() {}
 
     /**
      * Static factory method to create a new instance of SelectCategoryDialogFragment.
      * @return A new instance of SelectCategoryDialogFragment.
      */
     public static SelectCategoryDialogFragment newInstance() {
-        return newInstance(null);
+        return newInstance(null, false);
     }
 
     /**
@@ -50,10 +53,11 @@ public class SelectCategoryDialogFragment extends DialogFragment {
      * @param categoryType - use to filter and show only a specific type category
      * @return A new instance of SelectCategoryDialogFragment.
      */
-    public static SelectCategoryDialogFragment newInstance(CategoryType categoryType) {
+    public static SelectCategoryDialogFragment newInstance(CategoryType categoryType, boolean isShowSelectCategory) {
         SelectCategoryDialogFragment fragment = new SelectCategoryDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putString(CATEGORY_TYPE, categoryType == null ? null : categoryType.name());
+        bundle.putBoolean(IS_SHOW_SELECTED_CATEGORY, isShowSelectCategory);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -64,6 +68,7 @@ public class SelectCategoryDialogFragment extends DialogFragment {
         String ct;
         if (getArguments() != null && (ct = getArguments().getString(CATEGORY_TYPE)) != null) {
             categoryType = CategoryType.valueOf(ct);
+            isShowSelectCategory = getArguments().getBoolean(IS_SHOW_SELECTED_CATEGORY);
         }
     }
 
@@ -75,7 +80,7 @@ public class SelectCategoryDialogFragment extends DialogFragment {
 
         //init
         categoryViewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        adapter = new CategoryRecycleAdapter(this.requireContext());
+        adapter = new CategoryRecycleAdapter(this.requireContext(), new ArrayList<>(), isShowSelectCategory);
         recyclerView = view.findViewById(R.id.list_category);
         //setup
         recyclerView.setAdapter(adapter);
@@ -87,7 +92,7 @@ public class SelectCategoryDialogFragment extends DialogFragment {
         //set click listener for RecyclerView items
         adapter.setOnClickListener(category -> {
             if(selectCategoryListener != null) selectCategoryListener.onSelected(category);
-            this.getDialog().dismiss();//dismiss the dialog after category selection
+            if(this.getDialog() != null) this.getDialog().dismiss();//dismiss the dialog after category selection
         });
 
         return view;
