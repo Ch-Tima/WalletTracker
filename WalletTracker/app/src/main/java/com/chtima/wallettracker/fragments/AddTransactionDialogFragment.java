@@ -19,7 +19,6 @@ import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.ErrorEmptyTextWatcher;
 import com.chtima.wallettracker.models.Transaction;
-import com.chtima.wallettracker.models.TransactionType;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -32,8 +31,11 @@ import java.util.Locale;
 /** BottomSheetDialogFragment for adding a new transaction. */
 public class AddTransactionDialogFragment extends BottomSheetDialogFragment {
 
+    private static final String ARG_USERID = "arg_user_id";
+
     private DialogObserver<Transaction> dialogObserver = null;
     private Category selectedCategory;
+    private long userID;
 
     // UI elements
     private EditText title;
@@ -51,6 +53,7 @@ public class AddTransactionDialogFragment extends BottomSheetDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) userID = getArguments().getLong(ARG_USERID);
     }
 
     @Override
@@ -112,8 +115,12 @@ public class AddTransactionDialogFragment extends BottomSheetDialogFragment {
         return view;
     }
 
-    public static AddTransactionDialogFragment newInstance() {
-        return new AddTransactionDialogFragment();
+    public static AddTransactionDialogFragment newInstance(long userId) {
+        AddTransactionDialogFragment fragment = new AddTransactionDialogFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_USERID, userId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     /**
@@ -177,12 +184,15 @@ public class AddTransactionDialogFragment extends BottomSheetDialogFragment {
         }
 
         //create and return Transaction object
-        return new Transaction(selectedCategory.id,
+        return new Transaction(
+                selectedCategory.id,
+                userID,
                 dSum,
                 title.getText().toString(),
                 note.getText().toString(),
                 dateFromPicker,
-                type.getTransactionType());
+                type.getTransactionType()
+        );
     }
 
     /** Launch SelectCategoryDialogFragment to allow user to select a category.*/

@@ -11,7 +11,6 @@ import com.chtima.wallettracker.dao.repositories.CategoryRepository;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.CategoryWithTransactions;
 
-import java.io.Closeable;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
@@ -21,12 +20,16 @@ public class CategoryViewModel extends AndroidViewModel {
     private final CategoryRepository repository;
     private final LiveData<List<Category>> categoriesLiveData;
     private final LiveData<List<CategoryWithTransactions>> categoriesWithTransactionsLiveData;
+    private LiveData<List<CategoryWithTransactions>> categoriesWithTransactionsByUserIdLiveData;
+
+    private long userId;
 
     public CategoryViewModel(@NonNull Application application) {
         super(application);
         repository = new CategoryRepository(application);
         categoriesLiveData = LiveDataReactiveStreams.fromPublisher(repository.getAll());
         categoriesWithTransactionsLiveData = LiveDataReactiveStreams.fromPublisher(repository.getCategoriesWithTransactions());
+        categoriesWithTransactionsByUserIdLiveData = null;
     }
 
     public Completable insertAll(Category...categories){
@@ -37,7 +40,22 @@ public class CategoryViewModel extends AndroidViewModel {
         return categoriesLiveData;
     }
 
+    public LiveData<List<Category>> getByType(Category.CategoryType categoryType) {
+        if(categoryType == null) return this.categoriesLiveData;
+        return LiveDataReactiveStreams.fromPublisher(repository.getByType(categoryType));
+    }
+
     public LiveData<List<CategoryWithTransactions>> getCategoriesWithTransactions() {
         return categoriesWithTransactionsLiveData;
+    }
+
+    public LiveData<List<CategoryWithTransactions>> getCategoriesWithTransactionsByUserId(long userId) {
+
+        if(categoriesWithTransactionsByUserIdLiveData == null || this.userId != userId){
+            this.userId = userId;
+            categoriesWithTransactionsByUserIdLiveData = LiveDataReactiveStreams.fromPublisher(repository.getCategoriesWithTransactionsByUserId(userId));
+        }
+
+        return categoriesWithTransactionsByUserIdLiveData;
     }
 }

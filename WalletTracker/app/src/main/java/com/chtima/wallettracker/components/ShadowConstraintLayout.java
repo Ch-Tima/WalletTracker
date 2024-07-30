@@ -43,7 +43,7 @@ public class ShadowConstraintLayout extends ConstraintLayout {
 
                 ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) getLayoutParams();
                 params.setMargins(dpToPx(16), dpToPx(16), dpToPx(16), dpToPx(16));
-                setBackgroundResource(R.drawable.round_layout);
+                setBackgroundResource(R.drawable.round_ashen35_8dp);
                 setElevation(dpToPx(5));
                 setLayoutParams(params);
             }

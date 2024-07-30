@@ -38,6 +38,9 @@ import java.util.stream.Stream;
 
 public class TransactionReportFragment extends Fragment {
 
+    private static final String ARG_USERID = "arg_user_id";
+
+    private long userId;
 
     private CategoryViewModel viewModel;
     private List<CategoryWithTransactions> categoryWithTransactions;
@@ -53,17 +56,22 @@ public class TransactionReportFragment extends Fragment {
     private TransactionReportFragment() {
     }
 
-    public static TransactionReportFragment newInstance() {
-        return new TransactionReportFragment();
+    public static TransactionReportFragment newInstance(long userId) {
+        TransactionReportFragment fragment = new TransactionReportFragment();
+        Bundle args = new Bundle();
+        args.putLong(ARG_USERID, userId);
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) userId = getArguments().getLong(ARG_USERID);
         categoryWithTransactions = new ArrayList<>();
         transactionAdapter = new TransactionAdapter(requireContext(), new ArrayList<>());
         viewModel = new ViewModelProvider(this).get(CategoryViewModel.class);
-        viewModel.getCategoriesWithTransactions().observeForever(list -> {
+        viewModel.getCategoriesWithTransactionsByUserId(userId).observeForever(list -> {
             categoryWithTransactions.clear();
             categoryWithTransactions.addAll(list);
             transactionAdapter.updateList(filter());

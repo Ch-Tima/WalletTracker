@@ -3,7 +3,7 @@
     android:insetLeft="16dp" android:insetTop="16dp"
     android:insetRight="16dp" android:insetBottom="16dp">
     <shape android:shape="rectangle">
-        <corners android:radius="10dp"/>
+        <corners android:radius="8dp"/>
         <solid android:color="@color/light_ashen"/>
     </shape>
 </inset>

@@ -7,9 +7,12 @@
 
 ## Screenshot
 
+### Design in [Figma](https://www.figma.com/design/ZpdvIpiz0IAwrlFpNMG8Sp/WT?node-id=0-1&t=MbGuKABSRCVSzXq9-0)
+
 <div>
- <img src="./assets/sr_home.png" Width="250">
-<img src="./assets/sr_activity_tab.png" Width="250">
+    <img src="./assets/sr_home.png" Width="250">
+    <img src="./assets/sr_activity_tab.png" Width="250">
+    <img src="./assets/sr_profile.png" Width="250">
 </div>
 
 
@@ -17,3 +20,4 @@
 
 - **Name**: Tymofii
 - **GitHub**: [Ch-Tima](https://github.com/Ch-Tima/)
+- **LinkedIn**: [Tymofii Chyzhevskyi](https://www.linkedin.com/in/tymofii-chyzhevskyi2004/)

@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment {
         //ui
         ((ImageButton)view.findViewById(R.id.btn_add)).setOnClickListener(x -> {
 
-            addTransactionDialogFragment = AddTransactionDialogFragment.newInstance();
+            addTransactionDialogFragment = AddTransactionDialogFragment.newInstance(user.id);
             addTransactionDialogFragment.setSubscribe(new DialogObserver<Transaction>() {
                 @Override
                 public void onSuccess(Transaction obj) {
@@ -209,7 +209,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateCategoriesWithTransactions() {
-        categoryVM.getCategoriesWithTransactions().observe(this, list -> {
+        categoryVM.getCategoriesWithTransactionsByUserId(user.id).observe(this, list -> {
             categoryWithTransactions.clear();
             categoryWithTransactions.addAll(list);
             filterTransactionWithUpdateUI();

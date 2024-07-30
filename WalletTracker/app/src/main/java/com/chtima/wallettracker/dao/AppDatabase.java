@@ -14,6 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.models.Category;
 import com.chtima.wallettracker.models.Transaction;
+import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
 import com.chtima.wallettracker.vm.CategoryViewModel;
 
@@ -49,13 +50,20 @@ public abstract class AppDatabase extends RoomDatabase {
 
     }
 
-    public static Category[] defaultCategories() {
+    public static Category[] defaultCategories(Context context) {
         return new Category[]{
-                new Category("Gift", R.drawable.gift_24px),
-                new Category("Clothes", R.drawable.clothes_24px),
-                new Category("Fitness", R.drawable.fitness_24px),
-                new Category("Food", R.drawable.food_24px),
-                new Category("Car", R.drawable.car_24px)
+                new Category("Paycheck", context.getResources().getResourceName(R.drawable.payments_24px), Category.CategoryType.INCOME),
+                new Category("Gift",  context.getResources().getResourceName(R.drawable.gift_24px), Category.CategoryType.INCOME),
+
+                new Category("Clothes", context.getResources().getResourceName(R.drawable.clothes_24px), Category.CategoryType.EXPENSE),
+                new Category("Health", context.getResources().getResourceName(R.drawable.ecg_heart_24px), Category.CategoryType.EXPENSE),
+                new Category("Food", context.getResources().getResourceName(R.drawable.food_24px), Category.CategoryType.EXPENSE),
+                new Category("Car", context.getResources().getResourceName(R.drawable.car_24px), Category.CategoryType.EXPENSE),
+                new Category("Education", context.getResources().getResourceName(R.drawable.school_24px), Category.CategoryType.EXPENSE),
+                new Category("Vacation", context.getResources().getResourceName(R.drawable.surfing_24px), Category.CategoryType.EXPENSE),
+
+                new Category("Other", context.getResources().getResourceName(R.drawable.help_24px), Category.CategoryType.MIX)
+
         };
     }
 

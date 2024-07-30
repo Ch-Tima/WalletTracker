@@ -26,4 +26,17 @@
     <string name="filter">Filter</string>
     <string name="done">Done</string>
     <string name="clear">Clear</string>
+    <string name="chyzhevskyi_tymofii">Chyzhevskyi Tymofii</string>
+    <string name="ch_tima_example_com">ch-tima@example.com</string>
+    <string name="balance">Balance:</string>
+    <string name="number">19,867.91$</string>
+    <string name="top_up">Top-Up</string>
+    <string name="theme">Theme</string>
+    <string name="create_backup">Create Backup</string>
+    <string name="import_backup">Import Backup</string>
+    <string name="generate_report">Generate Report</string>
+    <string name="help">Help</string>
+    <string name="logout">logOut</string>
+    <string name="number_btn">number_btn</string>
+    <string name="replenishment_message">Replenishment</string><!--Replenishment on {0} for the amount of {1}-->
 </resources>
