@@ -72,13 +72,18 @@ public class ProfileFragment extends Fragment {
         btnImportBackup = view.findViewById(R.id.btn_import_backup);
         btnHelp = view.findViewById(R.id.btn_help);
 
+        btnTotUp.setOnClickListener(i -> {
+            TopUpDialogFragment fragment = TopUpDialogFragment.newInstance();
+            fragment.show(this.getChildFragmentManager(), TopUpDialogFragment.class.getName());
+        });
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         userViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
             @Override
             public void onChanged(User user) {

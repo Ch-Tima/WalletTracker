@@ -78,13 +78,13 @@ public class MultipleCategoriesRecycleAdapter extends RecyclerView.Adapter<Multi
 
     //Set the style for a selected item
     private void setSelectedStyle(ViewHolder holder){
-        holder.itemView.setBackgroundResource(R.drawable.round_blue_layout);
+        holder.itemView.setBackgroundResource(R.drawable.round_blue_layout_8dp);
         holder.icon.setImageTintList(context.getColorStateList(R.color.light_ashen_35));
         holder.title.setTextColor(context.getColorStateList(R.color.light_ashen_35));
     }
 
     private void setNotSelectedStyle(ViewHolder holder){
-        holder.itemView.setBackgroundResource(R.drawable.round_layout);
+        holder.itemView.setBackgroundResource(R.drawable.round_ashen35_8dp);
         holder.icon.setImageTintList(context.getColorStateList(R.color.dark_midnight_blue));
         holder.title.setTextColor(context.getColorStateList(R.color.dark_midnight_blue));
     }
@@ -97,20 +97,8 @@ public class MultipleCategoriesRecycleAdapter extends RecyclerView.Adapter<Multi
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     public Drawable getCategoryIcon(Category category) {
-        String uri = category.icon;
-
-        if (uri.startsWith("res://")) {
-            int resourceId = Integer.parseInt(uri.substring("res://".length()));
-            return context.getDrawable(resourceId);
-        } else {
-            try {
-                InputStream inputStream = context.getContentResolver().openInputStream(Uri.parse(uri));
-                return Drawable.createFromStream(inputStream, uri);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            }
-        }
+        int id = context.getResources().getIdentifier(category.icon, "drawable", context.getPackageName());
+        return context.getDrawable(id);
     }
 
     @Override

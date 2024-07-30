@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.this.user = user;
 
                     homeFragment = HomeFragment.newInstance();
-                    activityFragment = TransactionReportFragment.newInstance();
+                    activityFragment = TransactionReportFragment.newInstance(user.id);
                     profileFragment = ProfileFragment.newInstance();
 
                     homeFragment.setUser(user);
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void signIn() {
         //TODO...
-        categoryVM.insertAll(AppDatabase.defaultCategories())
+        categoryVM.insertAll(AppDatabase.defaultCategories(this))
                 .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
                 .subscribe(() -> {}, throwable -> {
                     Log.e("ERR", throwable.getMessage());

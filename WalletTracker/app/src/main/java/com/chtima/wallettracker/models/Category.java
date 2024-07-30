@@ -1,12 +1,10 @@
 package com.chtima.wallettracker.models;
 
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 
 import androidx.room.Entity;
-import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
+
+import java.util.Objects;
 
 
 @Entity(tableName = "categories")
@@ -17,15 +15,25 @@ public class Category {
 
     public String title;
     public String icon;
+    public CategoryType categoryType;
 
-    @Ignore
-    public Category(String title, int icon) {
-        this.title = title;
-        this.icon = "res://" + icon;
-    }
-
-    public Category(String title, String icon) {
+    public Category(String title, String icon, CategoryType categoryType) {
         this.title = title;
         this.icon = icon;
+        this.categoryType = categoryType;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return id == category.id && Objects.equals(title, category.title) && Objects.equals(icon, category.icon) && categoryType == category.categoryType;
+    }
+
+    public enum CategoryType{
+        INCOME,
+        EXPENSE,
+        MIX
     }
 }
