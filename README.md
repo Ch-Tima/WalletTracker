@@ -1,6 +1,13 @@
 # WalletTracker
 
+<img src="./assets/icon.svg" Width="58" style="margin-right:21px" align="left">
+
+### Need to manage your finances on Android? **WalletTracker** is your reliable assistant!
+
+<br>
+
 ## Libraries
+
  - [Room v2.6.1](https://developer.android.com/jetpack/androidx/releases/room#2.6.1)
  - [Android RxJava3 v3.0.2](https://github.com/ReactiveX/RxJava)
  - [MPAndroidChart: v3.1.0](https://github.com/PhilJay/MPAndroidChart)
