@@ -4,10 +4,7 @@
 
 ### Need to manage your finances on Android? **WalletTracker** is your reliable assistant!
 
-<font size="4">Need to manage your finances on Android? **WalletTracker** is your reliable assistant!</font>
-
-
-<br/>
+<br>
 
 ## Libraries
 
