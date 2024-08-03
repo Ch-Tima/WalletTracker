@@ -1,8 +1,9 @@
 # WalletTracker
 
 <img src="./assets/icon.svg" Width="65" style="margin-right:1em" align="left">
+<span style="font-size:243em;">Need to manage your finances on Android? **WalletTracker** is your reliable assistant!</span>
 
-Need to manage your finances on Android? **WalletTracker** is your reliable assistant!
+
 
 <br/>
 
