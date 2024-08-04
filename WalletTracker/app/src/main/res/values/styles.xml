@@ -2,7 +2,7 @@
 <resources>
 
     <style name="AppTextView" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/nunito_medium</item>
+        <item name="android:fontFamily">@font/outfit_medium</item>
     </style>
 
     <style name="AppEditText" parent="Widget.AppCompat.EditText">

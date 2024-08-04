@@ -1,5 +1,6 @@
 package com.chtima.wallettracker.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.chtima.wallettracker.R;
+import com.chtima.wallettracker.activities.HelpActivity;
 import com.chtima.wallettracker.models.User;
 import com.chtima.wallettracker.vm.UserViewModel;
 
@@ -38,7 +40,6 @@ public class ProfileFragment extends Fragment {
     private Button btnReport;
     private Button btnCreateBackup;
     private Button btnImportBackup;
-    private Button btnHelp;
 
 
     private ProfileFragment() {}
@@ -70,7 +71,7 @@ public class ProfileFragment extends Fragment {
         btnReport = view.findViewById(R.id.btn_generate_report);
         btnCreateBackup = view.findViewById(R.id.btn_create_backup);
         btnImportBackup = view.findViewById(R.id.btn_import_backup);
-        btnHelp = view.findViewById(R.id.btn_help);
+        view.findViewById(R.id.btn_help).setOnClickListener(x -> startActivity(new Intent(requireContext(), HelpActivity.class)));
 
         btnTotUp.setOnClickListener(i -> {
             TopUpDialogFragment fragment = TopUpDialogFragment.newInstance();

@@ -9,7 +9,7 @@
 
     <color name="dark_midnight_blue">#4C4C6B</color> <!--buttons & second containers-->
 
-    <color name="light_slate_blue">#7A80F0</color> <!--selected items-->
+    <color name="light_slate_blue">#787DEB</color> <!--selected items-->
 
     <!--helper colors-->
     <color name="silver_sand">#BBBDBE</color>
