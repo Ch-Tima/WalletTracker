@@ -275,7 +275,7 @@
                     android:id="@+id/btn_help"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="@string/help"
+                    android:text="@string/help_about"
                     app:cornerRadius="8dp"
                     android:textSize="18sp"
                     android:textAlignment="textStart"

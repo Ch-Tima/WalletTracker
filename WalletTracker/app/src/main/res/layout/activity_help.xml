@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.HelpActivity">
+
+
+    <com.chtima.wallettracker.components.ShadowConstraintLayout
+        android:id="@+id/head_back"
+        android:layout_width="match_parent"
+        android:minHeight="56dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/menu"
+        android:paddingVertical="10dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@android:string/cancel"
+            android:minWidth="45dp"
+            android:background="@color/transparent"
+            android:tint="@color/light_slate_blue"
+            android:src="@drawable/back_24px"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.050"/>
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/help_about"
+            android:textColor="@color/dark_midnight_blue"
+            android:textSize="21sp"
+            app:layout_constraintLeft_toRightOf="@id/btn_back"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintHorizontal_bias="0.025"/>
+
+    </com.chtima.wallettracker.components.ShadowConstraintLayout>
+
+    <com.chtima.wallettracker.components.ShadowConstraintLayout
+        android:id="@+id/menu"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/head_back"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/menu_support"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:layout_constraintBottom_toTopOf="@id/menu_about"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/title_support"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/support"
+                android:textSize="20sp"
+                android:textColor="@color/light_slate_blue"
+                app:layout_constraintBottom_toTopOf="@id/list_support"
+                app:layout_constraintHorizontal_bias="0.035"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/list_support"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="21dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/title_support">
+
+                <GridLayout
+                    android:id="@+id/support"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_midnight_8dp"
+                    android:columnCount="2"
+                    android:paddingHorizontal="8dp"
+                    android:rowCount="1"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:id="@+id/icon_email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/mail_40px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/help_developer_forge_gmail_com"
+                        android:textColor="@color/light_ashen"
+                        android:textSize="18sp" />
+                </GridLayout>
+
+                <GridLayout
+                    android:id="@+id/privacy_policy"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_midnight_8dp"
+                    android:columnCount="2"
+                    android:paddingHorizontal="8dp"
+                    android:rowCount="1"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/gpp_maybe_40px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/privacy_policy"
+                        android:textColor="@color/light_ashen"
+                        android:textSize="18sp" />
+                </GridLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/menu_about"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:layout_constraintBottom_toTopOf="@id/menu_help_us"
+            app:layout_constraintTop_toBottomOf="@id/menu_support">
+
+            <TextView
+                android:id="@+id/title_about"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/more_about_us"
+                android:textSize="20sp"
+                android:textColor="@color/coral"
+                app:layout_constraintBottom_toTopOf="@id/list_about"
+                app:layout_constraintHorizontal_bias="0.035"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/list_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="21dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/title_about">
+
+                <GridLayout
+                    android:id="@+id/github"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_midnight_8dp"
+                    android:columnCount="2"
+                    android:paddingHorizontal="8dp"
+                    android:rowCount="1"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/github_mark_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/github"
+                        android:textColor="@color/light_ashen"
+                        android:textSize="18sp" />
+                </GridLayout>
+
+                <GridLayout
+                    android:id="@+id/google_play_store"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_midnight_8dp"
+                    android:columnCount="2"
+                    android:paddingHorizontal="8dp"
+                    android:rowCount="1"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/google_play_store_40px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/github"
+                        android:textColor="@color/light_ashen"
+                        android:textSize="18sp" />
+                </GridLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/menu_help_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            app:layout_constraintTop_toBottomOf="@id/menu_about">
+
+            <TextView
+                android:id="@+id/title_help_us"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/help_us"
+                android:textSize="20sp"
+                android:textColor="@color/peach"
+                app:layout_constraintBottom_toTopOf="@id/list_hel_us"
+                app:layout_constraintHorizontal_bias="0.035"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/list_hel_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="21dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/title_help_us">
+
+                <GridLayout
+                    android:id="@+id/buy_coffee"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_midnight_8dp"
+                    android:columnCount="2"
+                    android:paddingHorizontal="8dp"
+                    android:rowCount="1"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/coffee_40px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/buy_coffee"
+                        android:textColor="@color/light_ashen"
+                        android:textSize="18sp" />
+                </GridLayout>
+
+                <GridLayout
+                    android:id="@+id/rate_us"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/round_midnight_8dp"
+                    android:columnCount="2"
+                    android:paddingHorizontal="8dp"
+                    android:rowCount="1"
+                    tools:ignore="UselessParent">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="0"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/grade_40px" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_row="0"
+                        android:layout_column="1"
+                        android:layout_columnWeight="1"
+                        android:layout_marginStart="8dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/rate_us"
+                        android:textColor="@color/light_ashen"
+                        android:textSize="18sp" />
+                </GridLayout>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/title_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_semi_bold"
+            android:text="@string/version"
+            android:textColor="@color/dark_midnight_blue"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/menu_help_us"
+            app:layout_constraintVertical_bias="0.65" />
+
+
+    </com.chtima.wallettracker.components.ShadowConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
