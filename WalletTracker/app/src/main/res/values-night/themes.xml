@@ -8,6 +8,7 @@
         <item name="android:textViewStyle">@style/AppTextView</item>
         <item name="materialButtonStyle">@style/AppButton</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialog</item>
+        <item name="android:dialogTheme">@style/DialogFragmentTheme</item>
 
         <item name="textInputStyle">@style/AppEditTextMaterialLayoutStyle</item>
     </style>

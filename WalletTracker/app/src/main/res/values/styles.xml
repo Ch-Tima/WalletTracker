@@ -47,7 +47,7 @@
         <item name="materialThemeOverlay">@style/AppThemeOverlayTextInputEditTextOutlinedBox</item>
         <item name="editTextStyle">@style/AppEditTextMaterial</item>
         <item name="cursorErrorColor">@color/coral</item>
-        <item name="cursorColor">@color/dark_midnight_blue</item>
+        <item name="cursorColor">@color/light_slate_blue</item>
     </style>
 
     <style name="AppThemeOverlayTextInputEditTextOutlinedBox">
@@ -63,6 +63,20 @@
         <item name="android:maxLength">99</item>
     </style>
 
+    <!-- -->
+    <style name="AppCompleteTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="autoCompleteTextViewStyle">@style/AppCompleteTextStyle</item>
+    </style>
+
+
+    <style name="AppCompleteTextStyle" parent="ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox">
+        <item name="fontFamily">@font/outfit_medium</item>
+        <item name="android:background">@drawable/custom_input</item>
+        <item name="android:popupBackground">@drawable/round_ashen35_16dp_border</item>
+    </style>
+
+
     <!-- Custom MaterialDatePicker Style -->
     <style name="CustomMaterialDatePicker" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
         <item name="materialCalendarStyle">@style/CustomCalendarStyle</item>
@@ -72,5 +86,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
 
 </resources>
