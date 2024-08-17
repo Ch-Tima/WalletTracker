@@ -94,12 +94,10 @@ public class UserDataFragment extends Fragment {
                     .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
                     .subscribe(aLong -> {
                         user.id = aLong;
-
-                        getParentFragmentManager().beginTransaction()
-                                .addToBackStack(null)
-
+                        getParentFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.main_fragment_container, FirstTopUpFragment.newInstance(), FirstTopUpFragment.class.getName())
                                 .commit();
-
                     }, throwable -> {
                         Toast.makeText(requireContext(), R.string.unexpected_error, Toast.LENGTH_SHORT).show();
                         Log.e("ERR", throwable.toString());
@@ -114,14 +112,14 @@ public class UserDataFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userViewModel = new ViewModelProvider(this.requireActivity()).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
     private User makeUser(){
         boolean err = false;
 
         String name = nameEditText.getText().toString().trim();
-        String surname = surnameEditText.toString().trim();
+        String surname = surnameEditText.getText().toString().trim();
 
         if(name.isEmpty()){
             nameEditTextLayout.setError(getString(R.string.please_enter_first_name));

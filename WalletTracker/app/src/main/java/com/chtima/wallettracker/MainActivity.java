@@ -104,20 +104,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn() {
-//        categoryVM.insertAll(AppDatabase.defaultCategories(this))
-//                .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-//                .subscribe(() -> {}, throwable -> {
-//                    Log.e("ERR", throwable.getMessage());
-//                });
+        categoryVM.insertAll(AppDatabase.defaultCategories(this))
+                .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
+                .subscribe(() -> {}, throwable -> {
+                    Toast.makeText(this, R.string.unexpected_error, Toast.LENGTH_SHORT).show();
+                    Log.e("ERR", throwable.toString());
+                });
 
-
-//        userVM.insert(new User("Tima", "Ch", 832.34, "USD"))
-//                .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-//                .subscribe(aLong -> {
-//                    loadUser();
-//                }, throwable -> {
-//                    Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_LONG).show();
-//                });
 
         startActivity(new Intent(this, WelcomeActivity.class));
         finish();

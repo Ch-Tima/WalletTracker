@@ -48,4 +48,15 @@ public class User {
     public void deductFromBalance(double val){
         balance = balance - val;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", balance=" + balance +
+                ", currency='" + currency + '\'' +
+                '}';
+    }
 }

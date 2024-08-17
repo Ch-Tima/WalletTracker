@@ -3,6 +3,7 @@ package com.chtima.wallettracker.fragments;
 import android.content.res.Resources;
 import android.os.Bundle;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -25,6 +26,7 @@ import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.models.Category;
+import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
@@ -32,6 +34,8 @@ import com.chtima.wallettracker.vm.TransactionViewModel;
 import com.chtima.wallettracker.vm.UserViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -58,6 +62,8 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
     private User user;
 
+    private DialogObserver<Transaction> onDoneListener;
+
     //VM
     private UserViewModel userVM;
     private TransactionViewModel transactionVM;
@@ -66,6 +72,9 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
     private TextView textView;//input fields
     private Button btnDot;
     private Button btnDone;
+    private TextView title;
+
+    private int visibilityTitle = View.VISIBLE;
 
     //Private constructor to prevent instantiation without arguments.
     private TopUpDialogFragment() {}
@@ -89,6 +98,9 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_up_dialog, container, false);
+
+        title = view.findViewById(R.id.title);
+        title.setVisibility(this.visibilityTitle);
 
         GridLayout numpad = view.findViewById(R.id.numpad_grid);
 
@@ -157,12 +169,18 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
                     // Insert transaction and update user balance
                     TransactionViewModel transactionVM = new ViewModelProvider(TopUpDialogFragment.this).get(TransactionViewModel.class);
+                    Log.i("Log.INFO", transaction.toString());
+                    Log.i("Log.INFO", user.toString());
                     transactionVM.insert(transaction)
                             .flatMapCompletable(aLong -> {
-                                user.balance = user.balance + transaction.sum;
+                                user.addToBalance(transaction.sum);
                                 return userVM.update(TopUpDialogFragment.this.user);
                             })
                             .subscribe();
+
+                    if(onDoneListener != null){
+                        onDoneListener.onSuccess(transaction);
+                    }
 
                     dismiss(); // Close
                 }
@@ -177,7 +195,8 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         userVM = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
-        userVM.getUser().observe(this, user -> this.user = user);
+        userVM.getUser().observe(this, u -> this.user = u);
+
     }
 
     /**
@@ -239,5 +258,20 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
         return Double.parseDouble(text.toString());
     }
+
+    public void setOnDoneListener(DialogObserver<Transaction> onDoneListener){
+        this.onDoneListener = onDoneListener;
+    }
+
+    public void setVisibilityTitle(@Visibility int visibilityTitle){
+        this.visibilityTitle = visibilityTitle;
+        if(title != null)
+            title.setVisibility(this.visibilityTitle);
+    }
+
+    /** @hide */
+    @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Visibility {}
 
 }
