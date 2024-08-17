@@ -61,12 +61,12 @@
         <item name="maxLines">1</item>
         <item name="singleLine">true</item>
         <item name="android:maxLength">99</item>
+        <item name="android:textColor">@color/dark_midnight_blue</item>
     </style>
 
     <!-- -->
     <style name="AppCompleteTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeWidth">0dp</item>
-        <item name="autoCompleteTextViewStyle">@style/AppCompleteTextStyle</item>
     </style>
 
 
@@ -74,6 +74,7 @@
         <item name="fontFamily">@font/outfit_medium</item>
         <item name="android:background">@drawable/custom_input</item>
         <item name="android:popupBackground">@drawable/round_ashen35_16dp_border</item>
+        <item name="android:textColor">@color/dark_midnight_blue</item>
     </style>
 
 

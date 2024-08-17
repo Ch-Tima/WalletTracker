@@ -8,10 +8,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
+import com.chtima.wallettracker.adapters.CurrencyAdapter;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class UserDataFragment extends Fragment {
 
@@ -32,13 +39,21 @@ public class UserDataFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_user_data, container, false);
 
-        MaterialAutoCompleteTextView currencyDropdown = view.findViewById(R.id.currency_dropdown);
+        AutoCompleteTextView currencyDropdown = view.findViewById(R.id.currency_dropdown);
         currencyDropdown.setDropDownHeight(getResources().getDimensionPixelSize(R.dimen.dropdown_height));
         currencyDropdown.setDropDownVerticalOffset(getResources().getDimensionPixelSize(R.dimen.m8));
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(requireContext(), R.array.arr_currencies, android.R.layout.simple_dropdown_item_1line);
+        CurrencyAdapter adapter = new CurrencyAdapter(requireContext(), Arrays.asList(getResources().getStringArray(R.array.arr_currencies)));
         currencyDropdown.setAdapter(adapter);
 
+        currencyDropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String currencyName = adapter.getItem(position);
+                adapter.setSelectedItemPosition(position);
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         return view;
     }
