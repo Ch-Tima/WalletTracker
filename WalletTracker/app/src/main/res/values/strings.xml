@@ -14,12 +14,14 @@
     <string name="create_transaction">Create Transaction</string>
     <string name="categories">Categories</string>
     <string name="please_select_a_category">Please select a category</string>
+    <string name="please_select_a_currency">Please select a currency</string>
     <string name="plus_number">+25624.98$</string>
     <string name="today">Today</string>
     <string name="last_week">Last week</string>
     <string name="this_week">This week</string>
     <string name="no_completed_transactions_for_today">No completed transactions for today</string>
     <string name="please_enter_title">Please enter a title</string>
+    <string name="please_enter_first_name">Please enter your name</string>
     <string name="please_enter_sum">Please enter a sum</string>
     <string name="wrong_format">Wrong format</string>
     <string name="search">Search</string>
@@ -61,6 +63,7 @@
     <string name="last_name_request">Last name</string>
     <string name="next">Next</string>
     <string name="currency_request">Currency*</string>
+    <string name="unexpected_error">Unexpected error</string>
 
     <string-array name="arr_currencies">
         <item>AED</item>
@@ -226,5 +229,8 @@
         <item>ZMW</item>
         <item>ZWL</item>
     </string-array>
+
+
+    
 
 </resources>
