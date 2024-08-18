@@ -244,17 +244,35 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
         return Double.parseDouble(text.toString());
     }
 
+    /**
+     * Sets a listener to be invoked when a transaction is completed.
+     *
+     * @param onDoneListener The listener to notify when the transaction is done.
+     *                       This listener should handle the completion of the transaction.
+     */
     public void setOnDoneListener(DialogObserver<Transaction> onDoneListener){
         this.onDoneListener = onDoneListener;
     }
 
+    /**
+     * Sets the visibility of the title view.
+     *
+     * @param visibilityTitle The visibility status for the title view.
+     *                        It should be one of the following values: {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
+     */
     public void setVisibilityTitle(@Visibility int visibilityTitle){
         this.visibilityTitle = visibilityTitle;
         if(title != null)
             title.setVisibility(this.visibilityTitle);
     }
 
-    /** @hide */
+    /**
+     * Annotation to restrict the allowable values for the visibility parameter.
+     * This ensures that only {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}
+     * can be passed to methods that accept visibility parameters.
+     *
+     * @hide This annotation is internal and should not be part of the public API documentation.
+     */
     @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Visibility {}

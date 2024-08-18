@@ -2,7 +2,6 @@ package com.chtima.wallettracker.fragments.welcome;
 
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,12 +21,9 @@ import com.chtima.wallettracker.adapters.CurrencyAdapter;
 import com.chtima.wallettracker.models.ErrorEmptyTextWatcher;
 import com.chtima.wallettracker.models.User;
 import com.chtima.wallettracker.vm.UserViewModel;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Arrays;
-import java.util.List;
 
 import autodispose2.AutoDispose;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
@@ -45,8 +40,14 @@ public class UserDataFragment extends Fragment {
     private TextInputLayout currencyInputLayout;
     private AutoCompleteTextView currencyDropdown;
 
+    // Private constructor to enforce the use of newInstance() method for fragment creation
     private UserDataFragment() {}
 
+    /**
+     * Creates a new instance of UserDataFragment.
+     *
+     * @return A new instance of UserDataFragment.
+     */
     public static UserDataFragment newInstance() {
         return new UserDataFragment();
     }
@@ -86,19 +87,20 @@ public class UserDataFragment extends Fragment {
             }
         });
 
+        // Handle the "Next" button click event
         view.findViewById(R.id.btn_next).setOnClickListener(x -> {
-            User user = makeUser();
-            if(user == null) return;
+            User user = makeUser();  // Create a User object based on input data
+            if(user == null) return;  // If user creation failed, do nothing
 
             userViewModel.insert(user)
                     .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
                     .subscribe(aLong -> {
-                        user.id = aLong;
+                        user.id = aLong;// Set the user ID after insertion
                         getParentFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.main_fragment_container, FirstTopUpFragment.newInstance(), FirstTopUpFragment.class.getName())
-                                .commit();
-                    }, throwable -> {
+                                .commit();// Navigate to the next fragment
+                    }, throwable -> {// Handle errors during insertion
                         Toast.makeText(requireContext(), R.string.unexpected_error, Toast.LENGTH_SHORT).show();
                         Log.e("ERR", throwable.toString());
                     });
@@ -112,29 +114,37 @@ public class UserDataFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        // Initialize the ViewModel after the view is created
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
     }
 
+    /**
+     * Creates a User object based on the input fields. If any required field is empty,
+     * sets an error message and returns null.
+     *
+     * @return A new User object or null if validation fails.
+     */
     private User makeUser(){
-        boolean err = false;
+        boolean err = false;// Flag to track validation errors
 
         String name = nameEditText.getText().toString().trim();
         String surname = surnameEditText.getText().toString().trim();
 
-        if(name.isEmpty()){
+        if(name.isEmpty()){// Validate name input
             nameEditTextLayout.setError(getString(R.string.please_enter_first_name));
             err = true;
         }
 
-        if(currencyName == null || currencyName.isEmpty()){
+        if(currencyName == null || currencyName.isEmpty()){// Validate currency selection
             currencyInputLayout.setError(getText(R.string.please_select_a_currency));
             err = true;
         }
 
-        if(err){
+        if(err){// If any validation error occurred, return null
             return null;
         }
 
+        // Return a new User object with the input values
         return new User(name, surname.isEmpty() ? "" : surname, 0.0, currencyName);
 
     }
