@@ -7,7 +7,10 @@ import androidx.room.Update;
 
 import com.chtima.wallettracker.models.User;
 
+import java.util.List;
+
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 
@@ -19,6 +22,9 @@ public interface UserDao {
 
     @Query("SELECT * FROM users LIMIT 1")
     Single<User> getFirst ();
+
+    @Query("SELECT * FROM users")
+    Flowable<List<User>> getUsers();
 
     @Update
     Completable update(User user);

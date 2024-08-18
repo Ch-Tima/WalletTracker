@@ -1,3 +1,5 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="dropdown_height">250dp</dimen>
+    <dimen name="m8">8dp</dimen>
 </resources>

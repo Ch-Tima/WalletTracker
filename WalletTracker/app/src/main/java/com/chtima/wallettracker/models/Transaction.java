@@ -60,4 +60,17 @@ public class Transaction {
         return calendar.getTime();
     }
 
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", categoryId=" + categoryId +
+                ", userId=" + userId +
+                ", sum=" + sum +
+                ", title='" + title + '\'' +
+                ", note='" + note + '\'' +
+                ", dateTime=" + dateTime +
+                ", type=" + type +
+                '}';
+    }
 }

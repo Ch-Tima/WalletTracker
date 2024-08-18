@@ -6,7 +6,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.activities.HelpActivity;
-import com.chtima.wallettracker.models.User;
+import com.chtima.wallettracker.utils.CurrencyUtils;
 import com.chtima.wallettracker.vm.UserViewModel;
 
 /**
@@ -45,8 +44,7 @@ public class ProfileFragment extends Fragment {
     private ProfileFragment() {}
 
     public static ProfileFragment newInstance() {
-        ProfileFragment fragment = new ProfileFragment();
-        return fragment;
+        return new ProfileFragment();
     }
 
     @Override
@@ -85,14 +83,11 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
-        userViewModel.getUser().observe(getViewLifecycleOwner(), new Observer<User>() {
-            @Override
-            public void onChanged(User user) {
-                if (user != null) {
-                    // Update the UI with user data
-                    userName.setText(new StringBuilder().append(user.lastname).append(" ").append(user.firstname));
-                    userBalance.setText(new StringBuilder().append(user.balance).append("$"));
-                }
+        userViewModel.getUser().observe(getViewLifecycleOwner(), user -> {
+            if (user != null) {
+                // Update the UI with user data
+                userName.setText(new StringBuilder().append(user.lastname).append(" ").append(user.firstname));
+                userBalance.setText(new StringBuilder().append(user.balance).append(CurrencyUtils.getCurrencyChar(user.currency, requireContext())));
             }
         });
     }

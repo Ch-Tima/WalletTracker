@@ -7,17 +7,16 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.LiveDataReactiveStreams;
 import androidx.lifecycle.MutableLiveData;
 
 import com.chtima.wallettracker.dao.repositories.UserRepository;
-import com.chtima.wallettracker.fragments.TopUpDialogFragment;
 import com.chtima.wallettracker.models.User;
 
-import autodispose2.AutoDispose;
-import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
+import java.util.List;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
+import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -51,7 +50,15 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     public Maybe<Long> insert(User user){
-        return repository.insert(user);
+        return repository.insert(user)
+                .doAfterSuccess(aLong -> {
+                    user.id = aLong;
+                    liveData.setValue(user);
+                });
+    }
+
+    public Flowable<List<User>> getUsers(){
+        return repository.getUsers();
     }
 
 

@@ -11,6 +11,7 @@
         <item name="android:dialogTheme">@style/DialogFragmentTheme</item>
 
         <item name="textInputStyle">@style/AppEditTextMaterialLayoutStyle</item>
+
     </style>
 
     <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker" />

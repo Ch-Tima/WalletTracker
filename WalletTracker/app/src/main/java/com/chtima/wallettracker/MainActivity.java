@@ -1,15 +1,20 @@
 package com.chtima.wallettracker;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.window.OnBackInvokedDispatcher;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.chtima.wallettracker.activities.WelcomeActivity;
 import com.chtima.wallettracker.dao.AppDatabase;
 import com.chtima.wallettracker.fragments.HomeFragment;
 import com.chtima.wallettracker.fragments.ProfileFragment;
@@ -99,19 +104,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void signIn() {
-        //TODO...
         categoryVM.insertAll(AppDatabase.defaultCategories(this))
                 .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
                 .subscribe(() -> {}, throwable -> {
-                    Log.e("ERR", throwable.getMessage());
-                });
-        userVM.insert(new User("Tima", "Ch", 832.34, "USD"))
-                .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-                .subscribe(aLong -> {
-                    loadUser();
-                }, throwable -> {
-                    Toast.makeText(this, throwable.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, R.string.unexpected_error, Toast.LENGTH_SHORT).show();
+                    Log.e("ERR", throwable.toString());
                 });
 
+
+        startActivity(new Intent(this, WelcomeActivity.class));
+        finish();
+
     }
+
 }

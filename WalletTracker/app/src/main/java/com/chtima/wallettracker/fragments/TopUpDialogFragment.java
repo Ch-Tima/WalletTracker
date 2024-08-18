@@ -1,30 +1,25 @@
 package com.chtima.wallettracker.fragments;
 
-import android.content.res.Resources;
 import android.os.Bundle;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.models.Category;
+import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
@@ -32,16 +27,10 @@ import com.chtima.wallettracker.vm.TransactionViewModel;
 import com.chtima.wallettracker.vm.UserViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.text.DecimalFormat;
 import java.util.Calendar;
-import java.util.Locale;
-
-import autodispose2.AutoDispose;
-import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
-import io.reactivex.rxjava3.core.CompletableObserver;
-import io.reactivex.rxjava3.core.SingleObserver;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.functions.Action;
 
 /**
  * A dialog fragment for handling user top-up transactions.
@@ -58,6 +47,8 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
     private User user;
 
+    private DialogObserver<Transaction> onDoneListener;
+
     //VM
     private UserViewModel userVM;
     private TransactionViewModel transactionVM;
@@ -66,6 +57,9 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
     private TextView textView;//input fields
     private Button btnDot;
     private Button btnDone;
+    private TextView title;
+
+    private int visibilityTitle = View.VISIBLE;
 
     //Private constructor to prevent instantiation without arguments.
     private TopUpDialogFragment() {}
@@ -89,6 +83,9 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_top_up_dialog, container, false);
+
+        title = view.findViewById(R.id.title);
+        title.setVisibility(this.visibilityTitle);
 
         GridLayout numpad = view.findViewById(R.id.numpad_grid);
 
@@ -157,12 +154,18 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
                     // Insert transaction and update user balance
                     TransactionViewModel transactionVM = new ViewModelProvider(TopUpDialogFragment.this).get(TransactionViewModel.class);
+                    Log.i("Log.INFO", transaction.toString());
+                    Log.i("Log.INFO", user.toString());
                     transactionVM.insert(transaction)
                             .flatMapCompletable(aLong -> {
-                                user.balance = user.balance + transaction.sum;
+                                user.addToBalance(transaction.sum);
                                 return userVM.update(TopUpDialogFragment.this.user);
                             })
                             .subscribe();
+
+                    if(onDoneListener != null){
+                        onDoneListener.onSuccess(transaction);
+                    }
 
                     dismiss(); // Close
                 }
@@ -177,7 +180,8 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         userVM = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
-        userVM.getUser().observe(this, user -> this.user = user);
+        userVM.getUser().observe(this, u -> this.user = u);
+
     }
 
     /**
@@ -239,5 +243,38 @@ public class TopUpDialogFragment extends BottomSheetDialogFragment {
 
         return Double.parseDouble(text.toString());
     }
+
+    /**
+     * Sets a listener to be invoked when a transaction is completed.
+     *
+     * @param onDoneListener The listener to notify when the transaction is done.
+     *                       This listener should handle the completion of the transaction.
+     */
+    public void setOnDoneListener(DialogObserver<Transaction> onDoneListener){
+        this.onDoneListener = onDoneListener;
+    }
+
+    /**
+     * Sets the visibility of the title view.
+     *
+     * @param visibilityTitle The visibility status for the title view.
+     *                        It should be one of the following values: {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}.
+     */
+    public void setVisibilityTitle(@Visibility int visibilityTitle){
+        this.visibilityTitle = visibilityTitle;
+        if(title != null)
+            title.setVisibility(this.visibilityTitle);
+    }
+
+    /**
+     * Annotation to restrict the allowable values for the visibility parameter.
+     * This ensures that only {@link View#VISIBLE}, {@link View#INVISIBLE}, or {@link View#GONE}
+     * can be passed to methods that accept visibility parameters.
+     *
+     * @hide This annotation is internal and should not be part of the public API documentation.
+     */
+    @IntDef({View.VISIBLE, View.INVISIBLE, View.GONE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Visibility {}
 
 }

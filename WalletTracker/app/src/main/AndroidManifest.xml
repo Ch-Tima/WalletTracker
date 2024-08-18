@@ -13,12 +13,12 @@
         android:theme="@style/Theme.WalletTracker"
         tools:targetApi="34">
         <activity
+            android:name=".activities.WelcomeActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.HelpActivity"
             android:exported="false"
             android:theme="@style/Theme.WalletTracker" />
-        <activity
-            android:name=".activities.WelcomeActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
