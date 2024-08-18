@@ -136,7 +136,7 @@ public class AddTransactionDialogFragment extends BottomSheetDialogFragment {
     public void onStart() {
         super.onStart();
         //adjust dialog window attributes on dialog start
-        if (getDialog() != null) {
+        if (getDialog() != null && getDialog().getWindow() != null) {
             Window window = getDialog().getWindow();
             WindowManager.LayoutParams params = window.getAttributes();
             params.width = WindowManager.LayoutParams.MATCH_PARENT;

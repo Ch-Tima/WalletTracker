@@ -1,20 +1,20 @@
 package com.chtima.wallettracker.fragments.welcome;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.fragment.app.Fragment;
 
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.chtima.wallettracker.R;
 
+
+/**
+ * <p>Welcome window with login selection.</p>
+ * Use the {@link FirstTopUpFragment#newInstance} factory method to create an instance of this fragment.
+ */
 public class WelcomeFragment extends Fragment {
 
 

@@ -2,6 +2,8 @@ package com.chtima.wallettracker.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 
 import com.chtima.wallettracker.MainActivity;
 import com.chtima.wallettracker.R;
@@ -41,7 +42,6 @@ import java.util.stream.Collectors;
 
 import autodispose2.AutoDispose;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class HomeFragment extends Fragment {
 
@@ -79,12 +79,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        categoryVM = new ViewModelProvider(this).get(CategoryViewModel.class);
-        transactionVM = new ViewModelProvider(this).get(TransactionViewModel.class);
-        userVM = new ViewModelProvider(this).get(UserViewModel.class);
-
-        updateCategoriesWithTransactions(); //only once!
     }
 
     @Override
@@ -93,7 +87,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         //ui
-        ((ImageButton)view.findViewById(R.id.btn_add)).setOnClickListener(x -> {
+        (view.findViewById(R.id.btn_add)).setOnClickListener(x -> {
 
             addTransactionDialogFragment = AddTransactionDialogFragment.newInstance(user.id);
             addTransactionDialogFragment.setSubscribe(new DialogObserver<Transaction>() {
@@ -108,17 +102,15 @@ public class HomeFragment extends Fragment {
                                else
                                    user.addToBalance(obj.sum);
 
-                               btnBalance.setText(String.valueOf(user.balance));
-
                                userVM.update(HomeFragment.this.user)
                                        .to(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(HomeFragment.this)))
                                        .subscribe(
                                                () -> Log.i("WW-INFO-C", "OK"),
-                                               e -> Log.e("WW-INFO-E", e.getMessage())
+                                               e -> Log.e("WW-INFO-E", e.toString())
                                        );
 
                                //updateCategoriesWithTransactions();
-                           }, ex -> Log.e("ERR", ex.getMessage()));
+                           }, ex -> Log.e("ERR", ex.toString()));
                 }
 
                 @Override
@@ -144,11 +136,26 @@ public class HomeFragment extends Fragment {
             this.filterTransactionWithUpdateUI();
         });
 
-        //btns
+        //buttons
         btnBalance = view.findViewById(R.id.balance_btn);
-        btnBalance.setText(user.balance + "$");//set user balance to "balance_btn"
+        btnBalance.setText(String.format("%s$", user.balance));//set user balance to "balance_btn"
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        categoryVM = new ViewModelProvider(this).get(CategoryViewModel.class);
+        transactionVM = new ViewModelProvider(this).get(TransactionViewModel.class);
+        userVM = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+
+        userVM.getUser().observe(getViewLifecycleOwner(), u -> {
+            user = u;
+            btnBalance.setText(String.format("%s$", user.balance));
+        });
+
+        updateCategoriesWithTransactions(); //only once!
     }
 
     //Method to filter transactions based on the transaction type and update the UI
@@ -182,9 +189,7 @@ public class HomeFragment extends Fragment {
         }).filter(x -> x.getValue() > 0)
                 .sorted((s1, s2) -> Double.compare(s2.getValue(), s1.getValue()))
                 .limit(4)
-                .forEach(x -> {
-                    pieChartToday.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title));
-                });
+                .forEach(x -> pieChartToday.add(new PieEntry(x.getValue().floatValue(), x.getKey().category.title)));
         this.sliderChartFragment.setPieChartToday(pieChartToday);
 
         //LAST_WEEK
@@ -209,7 +214,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void updateCategoriesWithTransactions() {
-        categoryVM.getCategoriesWithTransactionsByUserId(user.id).observe(this, list -> {
+        categoryVM.getCategoriesWithTransactionsByUserId(user.id).observe(getViewLifecycleOwner(), list -> {
             categoryWithTransactions.clear();
             categoryWithTransactions.addAll(list);
             filterTransactionWithUpdateUI();
@@ -258,7 +263,7 @@ public class HomeFragment extends Fragment {
         return toTransactionList().stream().filter(x -> x.type == transactionType && (x.dateTime.before(end) && x.dateTime.after(start)))
                 .collect(Collectors.groupingBy(Transaction::getDate))//grouping by date
                 .entrySet().stream()//Calculation of the amount on a specific day of the week
-                .map(x -> new AbstractMap.SimpleEntry<String, Double>(x.getKey(), x.getValue().stream().mapToDouble(y -> y.sum).sum()))
+                .map(x -> new AbstractMap.SimpleEntry<>(x.getKey(), x.getValue().stream().mapToDouble(y -> y.sum).sum()))
                 .collect(Collectors.toList());
     }
 
