@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.chtima.wallettracker.R;
 import com.chtima.wallettracker.activities.HelpActivity;
+import com.chtima.wallettracker.utils.CurrencyUtils;
 import com.chtima.wallettracker.vm.UserViewModel;
 
 /**
@@ -86,7 +87,7 @@ public class ProfileFragment extends Fragment {
             if (user != null) {
                 // Update the UI with user data
                 userName.setText(new StringBuilder().append(user.lastname).append(" ").append(user.firstname));
-                userBalance.setText(new StringBuilder().append(user.balance).append("$"));
+                userBalance.setText(new StringBuilder().append(user.balance).append(CurrencyUtils.getCurrencyChar(user.currency, requireContext())));
             }
         });
     }

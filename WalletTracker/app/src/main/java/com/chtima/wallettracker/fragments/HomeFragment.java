@@ -23,6 +23,7 @@ import com.chtima.wallettracker.models.DialogObserver;
 import com.chtima.wallettracker.models.Transaction;
 import com.chtima.wallettracker.models.TransactionType;
 import com.chtima.wallettracker.models.User;
+import com.chtima.wallettracker.utils.CurrencyUtils;
 import com.chtima.wallettracker.vm.CategoryViewModel;
 import com.chtima.wallettracker.vm.TransactionViewModel;
 import com.chtima.wallettracker.vm.UserViewModel;
@@ -138,7 +139,7 @@ public class HomeFragment extends Fragment {
 
         //buttons
         btnBalance = view.findViewById(R.id.balance_btn);
-        btnBalance.setText(String.format("%s$", user.balance));//set user balance to "balance_btn"
+        btnBalance.setText(String.format("%s%s", user.balance, CurrencyUtils.getCurrencyChar(user.currency, requireContext())));//set user balance to "balance_btn"
 
         return view;
     }
@@ -152,7 +153,7 @@ public class HomeFragment extends Fragment {
 
         userVM.getUser().observe(getViewLifecycleOwner(), u -> {
             user = u;
-            btnBalance.setText(String.format("%s$", user.balance));
+            btnBalance.setText(String.format("%s%s", user.balance, CurrencyUtils.getCurrencyChar(user.currency, requireContext())));
         });
 
         updateCategoriesWithTransactions(); //only once!
