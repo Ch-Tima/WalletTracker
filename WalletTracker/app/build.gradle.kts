@@ -1,5 +1,7 @@
 plugins {
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    kotlin("kapt")
 }
 
 android {
@@ -8,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.chtima.wallettracker"
-        minSdk = 27
+        minSdk = 28
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -29,44 +31,46 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    buildFeatures {
-        viewBinding = true
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
 
-    implementation(libs.appcompat)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.activity)
-    implementation(libs.constraintlayout)
-    implementation(libs.navigation.fragment)
-    implementation(libs.navigation.ui)
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
 
-    //room
+    // Room
     val room_version = "2.6.1"
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
-    implementation("androidx.room:room-rxjava3:$room_version")
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.room.compiler)
+    implementation(libs.androidx.room.rxjava3)
 
     // RxJava and RxAndroid
-    implementation ("io.reactivex.rxjava3:rxandroid:3.0.2")
+    implementation (libs.rxandroid)
 
-    //MPAndroidChart
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // MPAndroidChart
+    implementation(libs.mpandroidchart)
 
     // Lifecycle components
-    implementation("androidx.lifecycle:lifecycle-livedata:2.4.0")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.4.0")
-    implementation("androidx.lifecycle:lifecycle-reactivestreams:2.4.0")
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.androidx.lifecycle.reactivestreams)
 
-    val autodispose = "2.2.1"
-    implementation("com.uber.autodispose2:autodispose:$autodispose")
-    implementation("com.uber.autodispose2:autodispose-lifecycle:$autodispose")
-    implementation("com.uber.autodispose2:autodispose-android:$autodispose")
-    implementation("com.uber.autodispose2:autodispose-androidx-lifecycle:$autodispose")
+    // AutoDispose
+    implementation(libs.autodispose)
+    implementation(libs.autodispose.android)
+    implementation(libs.autodispose.lifecycle)
+    implementation(libs.autodispose.androidx.lifecycle)
+    implementation(libs.autodispose.rxlifecycle3)
+
 
 }
