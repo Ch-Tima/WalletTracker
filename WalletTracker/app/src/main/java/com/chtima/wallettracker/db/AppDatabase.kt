@@ -2,6 +2,8 @@ package com.chtima.wallettracker.db
 
 import android.R
 import android.content.Context
+import android.database.sqlite.SQLiteDatabase
+import android.database.sqlite.SQLiteException
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -35,8 +37,22 @@ abstract class AppDatabase : RoomDatabase() {
               }
          }
 
-     }
+         fun isExist(context: Context):Boolean{
+             val checkDB:SQLiteDatabase?;
 
+             try {
+                 checkDB = SQLiteDatabase.openDatabase(context.getDatabasePath(DATABASE_NAME).getAbsolutePath(), null,
+                     SQLiteDatabase.OPEN_READONLY);
+                 checkDB.close();
+             } catch (e: SQLiteException) {
+                 return false
+             }
+
+             return checkDB != null
+         }
+
+
+     }
 
 
 }

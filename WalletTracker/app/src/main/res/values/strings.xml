@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">WalletTracker</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_to_wallettracker">Welcome to WalletTracker!</string>
+    <string name="great_you_ve_taken_the_first_step_towards_organizing_your_finances_let_s_keep_going">Great, you\'ve taken the first step towards organizing your finances! Let\'s keep going!</string>
+    <string name="get_started">Get Started</string>
+    <string name="by_using_wallettracker_you_agree_to_the_font_color_ff0000_privacy_policy_font"><![CDATA[By using WalletTracker, you agree to the <font color=\'#787DEB\'>privacy policy</font>]]></string>
+    <string name="use_backup">Use Backup</string>
+    <string name="create_your_local_profile">Create Your Local Profile!</string>
+    <string name="great_let_s_continue_and_create_your_profile_note_this_will_be_a_local_profile">Great! Let\'s continue and create your profile. \nNote, this will be a local profile.</string>
+    <string name="first_name_request">First name*</string>
+    <string name="last_name_request">Last name</string>
+    <string name="currency_request">Currency*</string>
+    <string name="create">Create</string>
+    <string name="please_enter_first_name">Please enter your name</string>
+    <string name="please_select_a_currency">Please select a currency</string>
+    <string name="unexpected_error">Unexpected error</string>
 </resources>
