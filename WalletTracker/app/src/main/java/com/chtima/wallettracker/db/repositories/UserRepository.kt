@@ -22,6 +22,12 @@ class UserRepository(val app: Application){
             .observeOn(AndroidSchedulers.mainThread())
     }
 
+    fun getUserById(id:Long): Single<User>{
+        return dao.getUserById(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+    }
+
     fun getUsers(): Flowable<List<User>> {
         return dao.getUsers()
             .subscribeOn(Schedulers.io())

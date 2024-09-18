@@ -7,9 +7,9 @@ import androidx.room.Relation
 class CategoryWithTransactions {
 
     @Embedded
-    var category: Category? = null
+    lateinit var category: Category
 
     @Relation(parentColumn = "id", entityColumn = "categoryId")
-    var transactions: List<Transaction>? = null
+    lateinit var transactions: List<Transaction>
 
 }

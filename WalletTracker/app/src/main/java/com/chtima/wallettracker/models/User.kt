@@ -16,6 +16,15 @@ class User(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 
+    fun addToBalance(n: Double) {
+        balance += n
+    }
+
+    fun deductFromBalance(n: Double) {
+        balance -= n
+    }
+
+
     override fun toString(): String {
         return "User(id=$id, firstname=$firstname, lastname=$lastname, balance=$balance, currency=$currency)"
     }

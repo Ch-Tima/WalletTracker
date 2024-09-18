@@ -1,12 +1,13 @@
 package com.chtima.wallettracker.fragments.welcome
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.Toast
@@ -15,16 +16,22 @@ import autodispose2.AutoDispose
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.adapters.CurrencyAdapter
+import com.chtima.wallettracker.db.AppDatabase
+import com.chtima.wallettracker.models.Category
+import com.chtima.wallettracker.models.SharedPreferencesKeys
 import com.chtima.wallettracker.models.User
+import com.chtima.wallettracker.viewModels.CategoryViewModel
 import com.chtima.wallettracker.viewModels.UserViewModel
 import com.chtima.wallettracker.watchers.ErrorEmptyTextWatcher
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import io.reactivex.rxjava3.core.Completable
 
 class CreateUserFragment : Fragment() {
 
     private var currencyName : String = "";
     private lateinit var userVM : UserViewModel;
+    private lateinit var categoryVM : CategoryViewModel;
 
     //UI
     private lateinit var nameEditText : TextInputEditText
@@ -37,6 +44,7 @@ class CreateUserFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
+    @SuppressLint("CommitPrefEdits")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,6 +82,15 @@ class CreateUserFragment : Fragment() {
                 .subscribe(
                     {id ->
                         user.id = id;// Set the user ID after insertion
+                        SharedPreferencesKeys.getSharedPreferences(requireContext()).edit().putLong(SharedPreferencesKeys.SELECTED_USER_ID, id).apply()
+
+                        categoryVM.insertAll(*AppDatabase.defaultCategories(requireContext()))
+                            .to(AutoDispose.autoDisposable<Completable>(AndroidLifecycleScopeProvider.from(requireActivity())))
+                            .subscribe({}, {
+                                Toast.makeText(requireContext(), R.string.unexpected_error, Toast.LENGTH_SHORT).show();
+                                Log.e("ERR", it.toString());
+                            })
+
                         parentFragmentManager.beginTransaction()
                             .replace(R.id.main_fragment_container, FirstTopUpFragment.newInstance(), FirstTopUpFragment::class.simpleName)
                             .commit();
@@ -123,7 +140,8 @@ class CreateUserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Initialize the ViewModel after the view is created
-        userVM = ViewModelProvider(requireActivity())[UserViewModel::class.java]
+        userVM = ViewModelProvider(requireActivity())[UserViewModel::class]
+        categoryVM = ViewModelProvider(requireActivity())[CategoryViewModel::class]
 
     }
 

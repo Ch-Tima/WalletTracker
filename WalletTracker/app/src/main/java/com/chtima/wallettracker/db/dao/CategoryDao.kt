@@ -19,7 +19,7 @@ interface CategoryDao {
     fun insert(category: Category): Maybe<Long>
 
     @Insert
-    fun insertAll(vararg categories: Category): Completable?
+    fun insertAll(vararg categories: Category): Completable
 
     @Query("SELECT * FROM categories")
     fun getAll(): Flowable<List<Category>>
