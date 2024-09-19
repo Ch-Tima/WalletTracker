@@ -39,12 +39,12 @@ class SliderChartFragment private constructor(): Fragment() {
 
         onSwipeTouchListener = OnSwipeTouchListener(requireContext(), object: OnSwipeTouchListener.onSwipe{
             override fun onSwipeLeft() {
-                currentIndex = (currentIndex + 1) % list.size;
+                currentIndex = (currentIndex + 1) % list.size
                 updateChartPositions()
             }
 
             override fun onSwipeRight() {
-                currentIndex = (currentIndex - 1 + list.size % list.size)
+                currentIndex =  (currentIndex - 1 + list.size) % list.size
                 updateChartPositions()
             }
         })
@@ -112,6 +112,7 @@ class SliderChartFragment private constructor(): Fragment() {
     }
 
     fun setBarChartLastWeek(barChartLastWeek: List<BarEntry>) {
+        if(list.isEmpty()) return
 
         val barChart = list[0] as BarChart
 

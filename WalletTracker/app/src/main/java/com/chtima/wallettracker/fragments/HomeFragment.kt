@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.chtima.wallettracker.R
@@ -104,10 +106,10 @@ class HomeFragment private constructor(): Fragment() {
         val recyclerView: RecyclerView = v.findViewById(R.id.transaction_recycle)
         recyclerView.adapter = transactionAdapter
 
-        sliderChartFragment = SliderChartFragment.newInstance();
-        getChildFragmentManager().beginTransaction()
+        sliderChartFragment = SliderChartFragment.newInstance()
+        childFragmentManager.beginTransaction()
                 .replace(R.id.slide_chart_fragment, sliderChartFragment, SliderChartFragment.Companion::class.java.name)
-                .commit();
+                .commit()
 
         //SwitchTransactionView
         val switch = v.findViewById<SwitchTransactionView>(R.id.swicher_transaction_type);
@@ -120,7 +122,6 @@ class HomeFragment private constructor(): Fragment() {
 
         //buttons
         btnBalance = v.findViewById<Button>(R.id.balance_btn);//set user balance to "balance_btn"
-        //btnBalance.text = String.format("%s%s", user.balance, CurrencyUtils.getCurrencyChar(user.currency, requireContext()));
 
         return v
     }
@@ -137,16 +138,13 @@ class HomeFragment private constructor(): Fragment() {
             btnBalance.text = "${user.balance} ${CurrencyUtils.getCurrencyChar(user.currency?:"", requireContext())}"
         }
 
-        updateCategoriesWithTransactions(); //only once!
-    }
-
-    private fun updateCategoriesWithTransactions() {
         categoryVM.getCategoriesWithTransactionsByUser().observe(requireActivity()){
             categoryWithTransactions.clear()
             categoryWithTransactions.addAll(it)
             filterTransactionWithUpdateUI()
         }
     }
+
 
     companion object {
         @JvmStatic
@@ -155,7 +153,7 @@ class HomeFragment private constructor(): Fragment() {
 
     //Method to filter transactions based on the transaction type and update the UI
     private fun filterTransactionWithUpdateUI(){
-        if(categoryWithTransactions.isEmpty()) return;
+        if(categoryWithTransactions.isEmpty()) return
 
         val transactionsFilterType = categoryWithTransactions
             .flatMap { it.transactions }
@@ -164,6 +162,20 @@ class HomeFragment private constructor(): Fragment() {
 
         transactionAdapter.updateList(transactionsFilterType)
 
+        if(sliderChartFragment.isResumed){
+            updateSliderChartFragment()
+        }else{
+            sliderChartFragment.lifecycle.addObserver(object: DefaultLifecycleObserver{
+                override fun onResume(owner: LifecycleOwner) {
+                    super.onResume(owner)
+                    updateSliderChartFragment()
+                }
+            })
+        }
+
+    }
+
+    private fun updateSliderChartFragment(){
         //setPieChart TODAY
         val pieChartToday: MutableList<PieEntry> = ArrayList()
 
@@ -195,7 +207,6 @@ class HomeFragment private constructor(): Fragment() {
             pieBarChartThisWeek.add(BarEntry(LocalDate.parse(it.key).dayOfWeek.value.toFloat(), it.value.toFloat()))
         }
         this.sliderChartFragment.setBarChartThisWeek(pieBarChartThisWeek);
-
     }
 
     /**

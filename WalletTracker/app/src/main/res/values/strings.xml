@@ -34,8 +34,28 @@
     <string name="please_enter_sum">Please enter sum</string>
     <string name="please_select_a_category">Please select a category</string>
     <string name="wrong_format">Wrong Format</string>
-
-
+    <string name="balance">Balance:</string>
+    <string name="number">19,867.91$</string>
+    <string name="top_up">Top-Up</string>
+    <string name="theme">Theme</string>
+    <string name="create_backup">Create Backup</string>
+    <string name="import_backup">Import Backup</string>
+    <string name="generate_report">Generate Report</string>
+    <string name="help">Help</string>
+    <string name="logout">logOut</string>
+    <string name="help_about">Help/About</string>
+    <string name="chyzhevskyi_tymofii">Chyzhevskyi Tymofii</string>
+    <string name="ch_tima_example_com">ch-tima@example.com</string>
+    <string name="support">Support</string>
+    <string name="more_about_us">More about us</string>
+    <string name="help_us">Help us</string>
+    <string name="help_developer_forge_gmail_com">help.developer.forge@gmail.com</string>
+    <string name="github">GitHub</string>
+    <string name="google_play_store">Google Play Store</string>
+    <string name="buy_coffee">Buy me coffee</string>
+    <string name="rate_us">Rate us</string>
+    <string name="version">Version:1.0</string>
+    <string name="support_email_copy">Support email copied!</string>
 
     <!-- Currency symbols dictionary -->
     <string name="currency_aed">د.إ</string>
@@ -200,5 +220,6 @@
     <string name="currency_zar">R</string>
     <string name="currency_zmw">ZK</string>
     <string name="currency_zwl">Z$</string>
+    <string name="privacy_policy">Privacy Policy</string>
 
 </resources>
