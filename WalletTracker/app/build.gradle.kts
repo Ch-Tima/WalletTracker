@@ -73,5 +73,7 @@ dependencies {
     implementation(libs.autodispose.androidx.lifecycle)
     implementation(libs.autodispose.rxlifecycle3)
 
+    //flexbox
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
 
 }

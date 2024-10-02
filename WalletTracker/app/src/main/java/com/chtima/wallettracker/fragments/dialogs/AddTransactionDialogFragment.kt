@@ -134,7 +134,7 @@ class AddTransactionDialogFragment private constructor(): BottomSheetDialogFragm
 
     /** Launch SelectCategoryDialogFragment to allow user to select a category.*/
     private fun selectCategory(){
-        val dialogFragment = SelectCategoryDialogFragment.newInstance();
+        val dialogFragment = SelectCategoryDialogFragment.newInstance()
         dialogFragment.setSelectCategoryListener(object : DialogObserver<Category>{
             override fun onSuccess(result: Category) {
                 selectedCategory = result

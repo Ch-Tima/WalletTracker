@@ -6,10 +6,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.activities.HelpActivity
+import com.chtima.wallettracker.fragments.dialogs.TopUpBottomDialogFragment
 import com.chtima.wallettracker.utils.CurrencyUtils
 import com.chtima.wallettracker.viewModels.UserViewModel
 import com.google.android.material.button.MaterialButton
@@ -46,6 +48,11 @@ class ProfileFragment : Fragment() {
 
         v.findViewById<MaterialButton>(R.id.btn_help).setOnClickListener{
             startActivity(Intent(requireContext(), HelpActivity::class.java))
+        }
+
+        v.findViewById<Button>(R.id.btn_top_up).setOnClickListener{
+            val dialogFragment = TopUpBottomDialogFragment.newInstance()
+            dialogFragment.show(childFragmentManager, TopUpBottomDialogFragment::class.simpleName)
         }
 
         return v

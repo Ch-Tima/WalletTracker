@@ -1,11 +1,11 @@
-package com.chtima.wallettracker.fragments.dialogs
+package com.chtima.wallettracker.fragments.simples
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.domain.SelectCategoryLogic
@@ -13,11 +13,10 @@ import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.Category.CategoryType
 import com.chtima.wallettracker.models.DialogObserver
 
+class SelectionCategoryFragment : Fragment() {
 
-class SelectCategoryDialogFragment private constructor() : DialogFragment() {
-
-    private var selectCategoryListener:DialogObserver<Category>? = null
-    private var categoryType:CategoryType? = null
+    private var selectCategoryListener: DialogObserver<Category>? = null
+    private var categoryType: CategoryType? = null
     private var isShowSelectCategory = false
     private lateinit var selectCategoryLogic: SelectCategoryLogic
 
@@ -32,7 +31,7 @@ class SelectCategoryDialogFragment private constructor() : DialogFragment() {
          * Static factory method to create a new instance of SelectCategoryDialogFragment.
          * @return A new instance of SelectCategoryDialogFragment.
          */
-        public fun newInstance(): SelectCategoryDialogFragment {
+        public fun newInstance(): SelectionCategoryFragment {
             return newInstance(null, false);
         }
 
@@ -41,14 +40,13 @@ class SelectCategoryDialogFragment private constructor() : DialogFragment() {
          * @param categoryType - use to filter and show only a specific type category
          * @return A new instance of SelectCategoryDialogFragment.
          */
-        public fun newInstance(categoryType: CategoryType?, isShowSelectCategory: Boolean): SelectCategoryDialogFragment {
-            val fragment = SelectCategoryDialogFragment()
+        public fun newInstance(categoryType: CategoryType?, isShowSelectCategory: Boolean): SelectionCategoryFragment {
+            val fragment = SelectionCategoryFragment()
             val bundle = Bundle()
             bundle.putString(CATEGORY_TYPE, categoryType?.name)
             bundle.putBoolean(IS_SHOW_SELECTED_CATEGORY, isShowSelectCategory)
             fragment.arguments = bundle
             return fragment
-
         }
     }
 
@@ -84,18 +82,6 @@ class SelectCategoryDialogFragment private constructor() : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         selectCategoryLogic.setupUI()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        //adjust dialog window attributes on dialog start
-        if (dialog == null || dialog?.window == null) return
-
-        val window = dialog!!.window
-        val params: WindowManager.LayoutParams = window!!.attributes
-        params.width = WindowManager.LayoutParams.MATCH_PARENT
-        window.setBackgroundDrawableResource(R.drawable.rounded_8dp_m16_ashen)
-        window.attributes = params
     }
 
     /**

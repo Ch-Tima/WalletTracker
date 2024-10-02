@@ -221,5 +221,9 @@
     <string name="currency_zmw">ZK</string>
     <string name="currency_zwl">Z$</string>
     <string name="privacy_policy">Privacy Policy</string>
+    <string name="done">Done</string>
+    <string name="number_btn">number_btn</string>
+    <string name="clear">clear_btn</string>
+    <string name="replenishment_message">Replenishment</string>
 
 </resources>

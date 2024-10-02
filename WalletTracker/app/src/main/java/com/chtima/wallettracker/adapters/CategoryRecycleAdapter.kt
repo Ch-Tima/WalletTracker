@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.models.Category
 
-
 class CategoryRecycleAdapter (
     private val context: Context,
     private val list: ArrayList<Category>,
@@ -23,17 +22,22 @@ class CategoryRecycleAdapter (
     private var selectedCategory: Category? = null
     private var onClickListener: OnClickListener? = null
 
+    private val pageSize = 4
+    private var currentPage = 0
+    private var currentData = mutableListOf<Category>()
+
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.category_card_tile, parent, false));
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.category_card_tile, parent, false))
     }
 
     override fun getItemCount(): Int {
-        return list.size
+        return currentData.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val it = list[position]
+        val it = currentData[position]
         holder.title.text = it.title
         holder.icon.setImageDrawable(getCategoryIcon(it));
 
@@ -66,7 +70,16 @@ class CategoryRecycleAdapter (
     fun updateList(list: List<Category>) {
         this.list.clear() // Clear current list
         this.list.addAll(list) // Add new list
-        this.notifyDataSetChanged() // Notify RecyclerView of data change
+        updateData() // Notify RecyclerView of data change
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun updateData() {//show all
+        val startIndex = 0//currentPage * pageSize
+        val endIndex = list.size//minOf(startIndex + pageSize, list.size)
+        currentData.clear()
+        currentData.addAll(list.subList(startIndex, endIndex))
+        notifyDataSetChanged()
     }
 
     /**
@@ -85,6 +98,21 @@ class CategoryRecycleAdapter (
         this.onClickListener = onClickListener
     }
 
+    //NOT WORK! JUST SHOW ALL ITEMS
+    fun nextPage() {
+//        return
+//        if ((currentPage + 1) * pageSize < list.size) {
+//            currentPage++
+//            updateData()
+//        }
+    }
+
+    fun previousPage() {
+//        if (currentPage > 0) {
+//            currentPage--
+//            updateData()
+//        }
+    }
 
     /**
      * ViewHolder class for caching views in each RecyclerView item.
@@ -136,6 +164,15 @@ class CategoryRecycleAdapter (
                     outRect.top = spacing // Top indent
                 }
             }
+        }
+    }
+
+    class FlexboxItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
+        override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            outRect.left = spacing
+            outRect.right = spacing
+            outRect.top = spacing
+            outRect.bottom = spacing
         }
     }
 
