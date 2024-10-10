@@ -38,6 +38,7 @@ import java.util.Locale
 
 import autodispose2.AutoDispose;
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider;
+import com.chtima.wallettracker.db.AppDatabase
 import com.chtima.wallettracker.models.User
 
 
@@ -91,6 +92,7 @@ class HomeFragment private constructor(): Fragment() {
                             })
 
                         }, { er ->
+                            val b = AppDatabase.isExist(requireContext())
                             Log.e("ERR", er.toString())
                         })
 
@@ -129,16 +131,17 @@ class HomeFragment private constructor(): Fragment() {
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userVM = ViewModelProvider(requireActivity())[UserViewModel::class]
-        categoryVM = ViewModelProvider(requireActivity())[CategoryViewModel::class]
-        transactionVM = ViewModelProvider(requireActivity())[TransactionViewModel::class]
+        userVM = ViewModelProvider(this)[UserViewModel::class]
+        categoryVM = ViewModelProvider(this)[CategoryViewModel::class]
+        transactionVM = ViewModelProvider(this)[TransactionViewModel::class]
 
         userVM.getUser().observe(viewLifecycleOwner) { u ->
             user = u
             btnBalance.text = "${user.balance} ${CurrencyUtils.getCurrencyChar(user.currency?:"", requireContext())}"
         }
 
-        categoryVM.getCategoriesWithTransactionsByUser().observe(requireActivity()){
+        //как обновить UI
+        categoryVM.getCategoriesWithTransactionsByUser().observe(viewLifecycleOwner){
             categoryWithTransactions.clear()
             categoryWithTransactions.addAll(it)
             filterTransactionWithUpdateUI()

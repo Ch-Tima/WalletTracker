@@ -1,11 +1,16 @@
 package com.chtima.wallettracker.db
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
+import android.net.Uri
+import android.util.Log
+import android.widget.Toast
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.db.dao.CategoryDao
 import com.chtima.wallettracker.db.dao.TransactionDao
@@ -13,7 +18,11 @@ import com.chtima.wallettracker.db.dao.UserDao
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.Transaction
 import com.chtima.wallettracker.models.User
-
+import org.greenrobot.eventbus.EventBus
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.io.InputStream
 
 @Database(entities = [Category::class, Transaction::class, User::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
@@ -22,7 +31,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun transactionDao(): TransactionDao
     abstract fun userDao(): UserDao
 
-     companion object{
+    companion object{
          private const val DATABASE_NAME: String = "wallet-tracker.db"
          private val LOCK: Any = Object()
          private var instance: AppDatabase? = null
@@ -33,22 +42,23 @@ abstract class AppDatabase : RoomDatabase() {
                       context.applicationContext,
                       AppDatabase::class.java,
                       DATABASE_NAME
-                  ).build().also { appDatabase: AppDatabase -> instance = appDatabase }
+                  ).addCallback(object: Callback(){
+                      override fun onOpen(db: SupportSQLiteDatabase) {
+                          super.onOpen(db)
+                         Log.d("INFO", "onOpen")
+                      }
+                  }).build().also { appDatabase: AppDatabase ->
+                      instance = appDatabase
+                  }
               }
          }
 
          fun isExist(context: Context):Boolean{
-             val checkDB:SQLiteDatabase?;
-
-             try {
-                 checkDB = SQLiteDatabase.openDatabase(context.getDatabasePath(DATABASE_NAME).getAbsolutePath(), null,
-                     SQLiteDatabase.OPEN_READONLY);
-                 checkDB.close();
+             return try {
+                 context.getDatabasePath(DATABASE_NAME).exists()
              } catch (e: SQLiteException) {
-                 return false
+                 false
              }
-
-             return checkDB != null
          }
 
          fun defaultCategories(context: Context): Array<Category> {
@@ -67,7 +77,32 @@ abstract class AppDatabase : RoomDatabase() {
              )
          }
 
+         fun backupDatabase(context: Context, uri: Uri) {
+             getInstance(context).backupDatabaseToUri(context, uri)
+         }
+
      }
+
+    private fun backupDatabaseToUri(context: Context, targetUri: Uri){
+        val dbFile = context.getDatabasePath(DATABASE_NAME)
+
+        if (!dbFile.exists()) {
+            throw SQLiteException("Database $DATABASE_NAME does not exist.")
+        }
+
+        try {
+            context.contentResolver.openOutputStream(targetUri).use { out ->
+                FileInputStream(dbFile).use { inp ->
+                    inp.copyTo(out!!)
+                }
+            }
+        }catch (e: IOException){
+            Log.e("WTF", e.toString())
+        }catch (e: Exception){
+            Log.e("WTF", e.toString())
+        }
+
+    }
 
 
 }

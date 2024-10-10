@@ -5,11 +5,14 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.toLiveData
+import com.chtima.wallettracker.db.DatabaseUpdatedEvent
 import com.chtima.wallettracker.db.repositories.CategoryRepository
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.CategoryWithTransactions
 import com.chtima.wallettracker.models.SharedPreferencesKeys
 import io.reactivex.rxjava3.core.Completable
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 
 
 class CategoryViewModel(private val app: Application) : AndroidViewModel(app) {
@@ -39,6 +42,11 @@ class CategoryViewModel(private val app: Application) : AndroidViewModel(app) {
         Log.d("CategoryViewModel", "userID:$userID")
 
         return this.categoriesWithTransactionsByUserLiveData!!
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        EventBus.getDefault().unregister(this)
     }
 
 }

@@ -1,6 +1,7 @@
 package com.chtima.wallettracker.fragments.dialogs
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -113,7 +114,9 @@ class TopUpBottomDialogFragment private constructor (): BottomSheetDialogFragmen
                     transactionVM.insert(transaction)
                         .flatMapCompletable {
                             user.addToBalance(transaction.sum)
-                            userVM.update(user)
+                            userVM.update(user).doOnError{
+                                Log.e("GGGGGGG", it.toString())
+                            }
                         }.subscribe()
 
                     onDoneListener?.onSuccess(transaction)
@@ -130,9 +133,9 @@ class TopUpBottomDialogFragment private constructor (): BottomSheetDialogFragmen
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        userVM = ViewModelProvider(requireActivity())[UserViewModel::class]
+        userVM = ViewModelProvider(requireParentFragment())[UserViewModel::class]
         userVM.getUser().observe(this) { user = it }
-        transactionVM = ViewModelProvider(requireActivity())[TransactionViewModel::class]
+        transactionVM = ViewModelProvider(requireParentFragment())[TransactionViewModel::class]
     }
 
     companion object{
