@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteException
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.core.net.toFile
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -18,9 +19,11 @@ import com.chtima.wallettracker.db.dao.UserDao
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.Transaction
 import com.chtima.wallettracker.models.User
+import com.google.protobuf.Internal.BooleanList
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStream
 
@@ -42,16 +45,34 @@ abstract class AppDatabase : RoomDatabase() {
                       context.applicationContext,
                       AppDatabase::class.java,
                       DATABASE_NAME
-                  ).addCallback(object: Callback(){
-                      override fun onOpen(db: SupportSQLiteDatabase) {
-                          super.onOpen(db)
-                         Log.d("INFO", "onOpen")
-                      }
-                  }).build().also { appDatabase: AppDatabase ->
+                  ).build().also { appDatabase: AppDatabase ->
                       instance = appDatabase
                   }
               }
          }
+
+        fun getInstance(context: Context, targetUri: Uri): Boolean {
+
+            try {
+                val newDBFile = File(context.getDatabasePath(DATABASE_NAME).absolutePath)
+                if (newDBFile.exists()) {
+                    newDBFile.delete()
+                }
+
+                context.contentResolver.openInputStream(targetUri).use { inputStream ->
+                    FileOutputStream(newDBFile).use { outputStream ->
+                        inputStream?.copyTo(outputStream)
+                    }
+                }
+
+                getInstance(context)
+
+                return true
+
+            }catch (e: Exception){
+                return false
+            }
+        }
 
          fun isExist(context: Context):Boolean{
              return try {
@@ -81,7 +102,14 @@ abstract class AppDatabase : RoomDatabase() {
              getInstance(context).backupDatabaseToUri(context, uri)
          }
 
-     }
+        fun delete(context: Context) {
+            val newDBFile = File(context.getDatabasePath(DATABASE_NAME).absolutePath)
+            if (newDBFile.exists()) {
+                newDBFile.delete()
+            }
+        }
+
+    }
 
     private fun backupDatabaseToUri(context: Context, targetUri: Uri){
         val dbFile = context.getDatabasePath(DATABASE_NAME)
