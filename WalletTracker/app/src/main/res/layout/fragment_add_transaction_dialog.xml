@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    tools:context=".fragments.AddTransactionDialogFragment">
+    tools:context=".fragments.dialogs.AddTransactionDialogFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/nunito_bold"
+            android:fontFamily="@font/outfit_bold"
             android:text="@string/create_transaction"
             android:textColor="@color/dark_midnight_blue"
             android:textSize="19sp"
@@ -110,7 +110,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/type_transaction"/>
 
-                <com.chtima.wallettracker.components.Swicher
+                <com.chtima.wallettracker.components.SwitchTransactionView
                     android:id="@+id/type_transaction"
                     android:layout_width="150dp"
                     android:layout_height="45dp"

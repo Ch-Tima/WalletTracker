@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:paddingVertical="8dp">
+
+    <TextView
+        android:id="@+id/text1"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:ellipsize="marquee"
+        android:text="@string/app_name"
+        android:layout_marginHorizontal="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="0dp"
+        android:fontFamily="@font/outfit_medium"
+        android:textColor="@color/darkened_slate_blue"
+        android:textSize="17sp"
+        android:gravity="center_vertical"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

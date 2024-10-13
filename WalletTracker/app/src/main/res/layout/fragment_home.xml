@@ -6,12 +6,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.HomeFragment">
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.chtima.wallettracker.components.Swicher
+        <com.chtima.wallettracker.components.SwitchTransactionView
             android:id="@+id/swicher_transaction_type"
             android:layout_width="150dp"
             android:layout_height="45dp"
@@ -64,7 +63,7 @@
                 android:scaleType="fitXY"
                 android:scaleX="1.75"
                 android:scaleY="1.75"
-                android:src="@drawable/add_circle_24px"
+                android:src="@drawable/round_plus_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintHorizontal_bias="0.85"
                 app:layout_constraintLeft_toRightOf="@+id/balance_btn"

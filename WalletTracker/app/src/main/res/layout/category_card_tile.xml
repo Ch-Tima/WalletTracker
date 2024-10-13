@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="90dp"
     android:layout_height="120dp"
-    android:background="@drawable/round_ashen35_8dp"
+    android:background="@drawable/rounded_8dp_ashen35"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="center">
 
@@ -10,7 +10,7 @@
         android:id="@+id/icon"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:src="@drawable/car_24px"
+        android:src="@drawable/next24"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/title"
         app:tint="@color/dark_midnight_blue"
