@@ -56,6 +56,12 @@
     <string name="rate_us">Rate us</string>
     <string name="version">Version:1.0</string>
     <string name="support_email_copy">Support email copied!</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="done">Done</string>
+    <string name="number_btn">number_btn</string>
+    <string name="clear">clear_btn</string>
+    <string name="replenishment_message">Replenishment</string>
+    <string name="incorrect_data">Incorrect data</string>
 
     <!-- Currency symbols dictionary -->
     <string name="currency_aed">د.إ</string>
@@ -220,10 +226,9 @@
     <string name="currency_zar">R</string>
     <string name="currency_zmw">ZK</string>
     <string name="currency_zwl">Z$</string>
-    <string name="privacy_policy">Privacy Policy</string>
-    <string name="done">Done</string>
-    <string name="number_btn">number_btn</string>
-    <string name="clear">clear_btn</string>
-    <string name="replenishment_message">Replenishment</string>
+    <string name="error">Error</string>
+    <string name="unable_to_recover_data_due_to_incorrect_data">Unable to recover data due to incorrect data!</string>
+    <string name="ok">Ok</string>
+    <string name="this_backup_is_corrupted_or_isnt_part_of_this_app">This backup is corrupted or is not part of this application.</string>
 
 </resources>

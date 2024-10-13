@@ -73,7 +73,14 @@ dependencies {
     implementation(libs.autodispose.androidx.lifecycle)
     implementation(libs.autodispose.rxlifecycle3)
 
-    //flexbox
-    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    //FlexBox
+    implementation(libs.flexbox)
+
+    //SqlCipher
+    implementation(libs.zetetic.android.database.sqlcipher)
+    implementation(libs.androidx.sqlite.framework)
+
+    //EventBus
+    implementation(libs.eventbus)
 
 }

@@ -1,7 +1,10 @@
 [versions]
 agp = "8.5.1"
+androidDatabaseSqlcipherVersion = "4.5.3"
 autodispose = "2.2.1"
 autodisposeRxlifecycle3 = "1.4.1"
+eventbus = "3.3.1"
+flexbox = "3.0.0"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -17,6 +20,7 @@ mpandroidchart = "v3.1.0"
 roomRuntimeVersion = "2.6.1"
 rxandroid = "3.0.2"
 firebasePerfKtx = "21.0.1"
+sqliteFramework = "2.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -26,11 +30,14 @@ androidx-room-room-compiler = { module = "androidx.room:room-compiler", version.
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntimeVersion" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntimeVersion" }
 androidx-room-rxjava3 = { module = "androidx.room:room-rxjava3", version.ref = "roomRuntimeVersion" }
+androidx-sqlite-framework = { module = "androidx.sqlite:sqlite-framework", version.ref = "sqliteFramework" }
 autodispose = { module = "com.uber.autodispose2:autodispose", version.ref = "autodispose" }
 autodispose-android = { module = "com.uber.autodispose2:autodispose-android", version.ref = "autodispose" }
 autodispose-androidx-lifecycle = { module = "com.uber.autodispose2:autodispose-androidx-lifecycle", version.ref = "autodispose" }
 autodispose-lifecycle = { module = "com.uber.autodispose2:autodispose-lifecycle", version.ref = "autodispose" }
 autodispose-rxlifecycle3 = { module = "com.uber.autodispose:autodispose-rxlifecycle3", version.ref = "autodisposeRxlifecycle3" }
+eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventbus" }
+flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -42,6 +49,7 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 rxandroid = { module = "io.reactivex.rxjava3:rxandroid", version.ref = "rxandroid" }
 firebase-perf-ktx = { group = "com.google.firebase", name = "firebase-perf-ktx", version.ref = "firebasePerfKtx" }
+zetetic-android-database-sqlcipher = { module = "net.zetetic:android-database-sqlcipher", version.ref = "androidDatabaseSqlcipherVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
