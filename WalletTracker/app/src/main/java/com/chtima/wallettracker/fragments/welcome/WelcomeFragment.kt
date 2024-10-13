@@ -8,21 +8,17 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.ViewModelProvider
-import autodispose2.AutoDispose
 import autodispose2.androidx.lifecycle.autoDispose
-import autodispose2.autoDispose
 import com.chtima.wallettracker.MainActivity
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.db.AppDatabase
 import com.chtima.wallettracker.db.repositories.UserRepository
 import com.chtima.wallettracker.models.SharedPreferencesKeys
-import com.chtima.wallettracker.viewModels.UserViewModel
 import com.google.android.material.button.MaterialButton
+import com.google.rpc.Code
 
 class WelcomeFragment : Fragment() {
 
@@ -43,13 +39,12 @@ class WelcomeFragment : Fragment() {
 
         openFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             result.data?.data?.let {
-                val res = AppDatabase.getInstance(requireContext(), it)
-
-                if(res){
+                val res = AppDatabase.restoreDatabase(requireContext(), it)
+                if(res.code == Code.OK){
                     val ur = UserRepository(requireActivity().application)
                     ur.getUsers()
                         .autoDispose(this)
-                        .subscribe { list ->
+                        .subscribe({ list ->
                             if (list.isEmpty()) {
                                 deleteDbAndAlertError()
                             } else {
@@ -58,11 +53,12 @@ class WelcomeFragment : Fragment() {
                                 requireActivity().startActivity(Intent(requireContext(), MainActivity::class.java))
                                 requireActivity().finish()
                             }
-                        }
+                        }, { ex ->
+                            deleteDbAndAlertError(R.string.this_backup_is_corrupted_or_isnt_part_of_this_app)
+                        })
                 }else{
                     deleteDbAndAlertError()
                 }
-
             }
             Log.d("RESSSS", result.resultCode.toString())
         }
@@ -85,11 +81,11 @@ class WelcomeFragment : Fragment() {
         return view
     }
 
-    private fun deleteDbAndAlertError(){
+    private fun deleteDbAndAlertError(rId:Int = R.string.unable_to_recover_data_due_to_incorrect_data){
         AppDatabase.delete(requireContext())
         AlertDialog.Builder(requireContext())
             .setTitle(R.string.error)
-            .setMessage(R.string.unable_to_recover_data_due_to_incorrect_data)
+            .setMessage(rId)
             .setPositiveButton(R.string.ok) { x, _ -> x.dismiss() }
             .create().show()
     }

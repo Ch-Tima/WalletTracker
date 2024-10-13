@@ -1,13 +1,9 @@
 package com.chtima.wallettracker.fragments
 
-import android.app.Activity
-import android.content.ContentValues
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
-import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,6 +21,7 @@ import com.chtima.wallettracker.fragments.dialogs.TopUpBottomDialogFragment
 import com.chtima.wallettracker.utils.CurrencyUtils
 import com.chtima.wallettracker.viewModels.UserViewModel
 import com.google.android.material.button.MaterialButton
+import com.google.rpc.Code
 
 class ProfileFragment : Fragment() {
 
@@ -60,7 +57,10 @@ class ProfileFragment : Fragment() {
 
         createFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             result.data?.data?.let {
-                AppDatabase.backupDatabase(requireContext(), it)
+                val backupResult = AppDatabase.backupDatabase(requireContext(), it)
+                if(backupResult.code != Code.OK){
+                    //SEND ERROR TO FIREBASE
+                }
             }
             Log.d("RESSSS", result.resultCode.toString())
         }
@@ -85,7 +85,7 @@ class ProfileFragment : Fragment() {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "application/octet-stream"
-            putExtra(Intent.EXTRA_TITLE, "WTBackup.db")
+            putExtra(Intent.EXTRA_TITLE, "WTBackup.wt2db")
 
             // Optionally, specify a URI for the directory that should be opened in
             // the system file picker before your app creates the document.

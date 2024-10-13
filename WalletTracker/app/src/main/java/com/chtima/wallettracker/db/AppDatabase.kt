@@ -1,17 +1,11 @@
 package com.chtima.wallettracker.db
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteException
 import android.net.Uri
-import android.util.Log
-import android.widget.Toast
-import androidx.core.net.toFile
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.db.dao.CategoryDao
 import com.chtima.wallettracker.db.dao.TransactionDao
@@ -19,13 +13,12 @@ import com.chtima.wallettracker.db.dao.UserDao
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.Transaction
 import com.chtima.wallettracker.models.User
-import com.google.protobuf.Internal.BooleanList
-import org.greenrobot.eventbus.EventBus
+import com.google.rpc.Code
+import net.sqlcipher.database.SupportFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 
 @Database(entities = [Category::class, Transaction::class, User::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
@@ -45,13 +38,13 @@ abstract class AppDatabase : RoomDatabase() {
                       context.applicationContext,
                       AppDatabase::class.java,
                       DATABASE_NAME
-                  ).build().also { appDatabase: AppDatabase ->
+                  ).openHelperFactory(getFactory(context)).build().also { appDatabase: AppDatabase ->
                       instance = appDatabase
                   }
               }
          }
 
-        fun getInstance(context: Context, targetUri: Uri): Boolean {
+        fun restoreDatabase(context: Context, targetUri: Uri): ResultAction {
 
             try {
                 val newDBFile = File(context.getDatabasePath(DATABASE_NAME).absolutePath)
@@ -67,14 +60,22 @@ abstract class AppDatabase : RoomDatabase() {
 
                 getInstance(context)
 
-                return true
+                return ResultAction("Success", "Success", code = Code.OK)
 
             }catch (e: Exception){
-                return false
+                return ResultAction("Error",
+                    message = e.toString(),
+                    ex = e,
+                    code = Code.UNKNOWN)
             }
         }
 
-         fun isExist(context: Context):Boolean{
+        private fun getFactory(context: Context) : SupportFactory{
+            val passphraseBytes = net.sqlcipher.database.SQLiteDatabase.getBytes("20eW8UjSosUok1hPf84bn1rSkxTwVyAL4EL2p1916vIjmRA5J6".toCharArray())
+            return SupportFactory(passphraseBytes)
+        }
+
+        fun isExist(context: Context):Boolean{
              return try {
                  context.getDatabasePath(DATABASE_NAME).exists()
              } catch (e: SQLiteException) {
@@ -98,8 +99,8 @@ abstract class AppDatabase : RoomDatabase() {
              )
          }
 
-         fun backupDatabase(context: Context, uri: Uri) {
-             getInstance(context).backupDatabaseToUri(context, uri)
+         fun backupDatabase(context: Context, uri: Uri) : ResultAction {
+             return getInstance(context).backupDatabaseToUri(context, uri)
          }
 
         fun delete(context: Context) {
@@ -111,11 +112,19 @@ abstract class AppDatabase : RoomDatabase() {
 
     }
 
-    private fun backupDatabaseToUri(context: Context, targetUri: Uri){
+    private fun backupDatabaseToUri(context: Context, targetUri: Uri) : ResultAction{
+        // Force writing data from the WAL log to disk
+        getInstance(context).openHelper.writableDatabase.query("PRAGMA wal_checkpoint(FULL);")
+
         val dbFile = context.getDatabasePath(DATABASE_NAME)
+        val walFile = File(dbFile.absolutePath + "-wal")
+        val shmFile = File(dbFile.absolutePath + "-shm")
 
         if (!dbFile.exists()) {
-            throw SQLiteException("Database $DATABASE_NAME does not exist.")
+            return ResultAction(
+                title = "Error",
+                message = "Database $DATABASE_NAME does not exist.",
+            )
         }
 
         try {
@@ -123,14 +132,31 @@ abstract class AppDatabase : RoomDatabase() {
                 FileInputStream(dbFile).use { inp ->
                     inp.copyTo(out!!)
                 }
+
+                if (walFile.exists())
+                    FileInputStream(walFile).use { inp -> inp.copyTo(out!!) }
+
+                if (shmFile.exists())
+                    FileInputStream(shmFile).use { inp -> inp.copyTo(out!!) }
+
+                return ResultAction(
+                    title = "Success",
+                    message = "Database backup created",
+                    code = Code.OK
+                )
             }
         }catch (e: IOException){
-            Log.e("WTF", e.toString())
-        }catch (e: Exception){
-            Log.e("WTF", e.toString())
+            return ResultAction(
+                title = "Error",
+                message = e.message?:""
+            )
         }
-
     }
 
+    class ResultAction(val title: String,
+                       val message: String,
+                       val ex: Exception? = null,
+                       val code: Code = Code.UNKNOWN){
+    }
 
 }

@@ -76,6 +76,10 @@ dependencies {
     //FlexBox
     implementation(libs.flexbox)
 
+    //SqlCipher
+    implementation(libs.zetetic.android.database.sqlcipher)
+    implementation(libs.androidx.sqlite.framework)
+
     //EventBus
     implementation(libs.eventbus)
 

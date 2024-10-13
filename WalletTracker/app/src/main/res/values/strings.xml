@@ -229,5 +229,6 @@
     <string name="error">Error</string>
     <string name="unable_to_recover_data_due_to_incorrect_data">Unable to recover data due to incorrect data!</string>
     <string name="ok">Ok</string>
+    <string name="this_backup_is_corrupted_or_isnt_part_of_this_app">This backup is corrupted or is not part of this application.</string>
 
 </resources>
