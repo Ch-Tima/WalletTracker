@@ -27,7 +27,7 @@ import java.util.Locale
 
 
 /** BottomSheetDialogFragment for adding a new transaction. */
-class AddTransactionDialogFragment private constructor(): BottomSheetDialogFragment() {
+class AddTransactionDialogFragment constructor(): BottomSheetDialogFragment() {
 
     private var dialogObservers : MutableList<DialogObserver<Transaction>> = ArrayList()
     private lateinit var dateFromPicker: Date
@@ -128,7 +128,7 @@ class AddTransactionDialogFragment private constructor(): BottomSheetDialogFragm
      * Set the DialogObserver to subscribe to transaction events.
      * @param observer The observer to set.
      */
-    public fun addDialogObserver(observer: DialogObserver<Transaction>){
+    fun addDialogObserver(observer: DialogObserver<Transaction>){
         this.dialogObservers.add(observer)
     }
 

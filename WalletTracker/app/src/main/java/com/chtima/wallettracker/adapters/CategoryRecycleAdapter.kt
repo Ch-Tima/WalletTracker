@@ -39,7 +39,8 @@ class CategoryRecycleAdapter (
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val it = currentData[position]
         holder.title.text = it.title
-        holder.icon.setImageDrawable(getCategoryIcon(it));
+        holder.icon.setImageDrawable(getCategoryIcon(it))
+        //holder.icon.setBackgroundResource(getCategoryIconResId(it).let { if(it == -1) R.drawable.help_24dp else it })
 
         holder.itemView.setOnClickListener { _ ->
             selectedCategory = it //set new selected category
@@ -50,14 +51,14 @@ class CategoryRecycleAdapter (
         if(!isShowSelectedItem) return;
 
         if(it.equals(selectedCategory)){ //Set the style for a selected item
-            holder.itemView.setBackgroundResource(R.drawable.rounded_blue_8dp)
-            holder.icon.setImageTintList(context.getColorStateList(R.color.light_ashen_35))
-            holder.title.setTextColor(context.getColorStateList(R.color.light_ashen_35))
+            //holder.itemView.setBackgroundResource(R.drawable.rounded_blue_8dp)
+            //holder.icon.setImageTintList(context.getColorStateList(R.color.light_ashen_35))
+            //holder.title.setTextColor(context.getColorStateList(R.color.light_ashen_35))
         }
         else {
-            holder.itemView.setBackgroundResource(R.drawable.rounded_8dp_ashen35)
-            holder.icon.setImageTintList(context.getColorStateList(R.color.dark_midnight_blue))
-            holder.title.setTextColor(context.getColorStateList(R.color.dark_midnight_blue))
+            //holder.itemView.setBackgroundResource(R.drawable.rounded_8dp_ashen35)
+            //holder.icon.setImageTintList(context.getColorStateList(R.color.dark_midnight_blue))
+            //holder.title.setTextColor(context.getColorStateList(R.color.dark_midnight_blue))
         }
 
     }
@@ -92,6 +93,10 @@ class CategoryRecycleAdapter (
     fun getCategoryIcon(category: Category): Drawable? {
         val id = context.resources.getIdentifier(category.icon, "drawable", context.packageName)
         return context.getDrawable(id)
+    }
+
+    fun getCategoryIconResId(category: Category): Int {
+        return context.resources.getIdentifier(category.icon, "drawable", context.packageName)
     }
 
     fun setOnClickListener(onClickListener: OnClickListener) {

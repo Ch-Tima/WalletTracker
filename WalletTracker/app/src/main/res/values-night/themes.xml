@@ -3,14 +3,19 @@
     <style name="Base.Theme.WalletTracker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="android:statusBarColor">@color/dark_midnight_blue</item>
-        <item name="android:windowBackground">@color/light_ashen</item>
+        <item name="android:windowBackground">@color/dark_ashen</item>
 
-        <item name="android:textViewStyle">@style/AppTextView</item>
-        <item name="materialButtonStyle">@style/AppButton</item>
-        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialog</item>
-        <item name="android:dialogTheme">@style/DialogFragmentTheme</item>
+        <item name="android:textViewStyle">@style/AppTextViewDark</item>
+        <item name="materialButtonStyle">@style/AppButtonDark</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogDark</item>
+        <item name="android:dialogTheme">@style/AppDialogFragmentDark</item>
 
-        <item name="textInputStyle">@style/AppEditTextMaterialLayoutStyle</item>
+        <item name="textInputStyle">@style/AppEditTextMaterialLayoutThemeDark</item>
+        <item name="imageButtonStyle">@style/AppImageButtonDark</item>
+    </style>
+
+    <style name="ShadowConstraintLayoutStyle" parent="ShadowConstraintLayoutStyleOverlay">
+        <item name="android:backgroundTint">@color/dark_ashen_35</item>
     </style>
 
     <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker" />

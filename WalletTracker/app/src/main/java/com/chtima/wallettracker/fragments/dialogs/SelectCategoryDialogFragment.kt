@@ -14,7 +14,7 @@ import com.chtima.wallettracker.models.Category.CategoryType
 import com.chtima.wallettracker.models.DialogObserver
 
 
-class SelectCategoryDialogFragment private constructor() : DialogFragment() {
+class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
     private var selectCategoryListener:DialogObserver<Category>? = null
     private var categoryType:CategoryType? = null

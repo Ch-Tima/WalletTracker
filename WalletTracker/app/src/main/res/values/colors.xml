@@ -11,6 +11,10 @@
 
     <color name="light_slate_blue">#787DEB</color> <!--selected items-->
 
+
+    <color name="dark_ashen">#1E1E22</color> <!--main background-->
+    <color name="dark_ashen_35">#282830</color> <!--all containers-->
+
     <!--helper colors-->
     <color name="silver_sand">#BBBDBE</color>
     <color name="lilac_grey">#AC9BB1</color>
