@@ -2,6 +2,7 @@ package com.chtima.wallettracker.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
@@ -51,14 +52,20 @@ class CategoryRecycleAdapter (
         if(!isShowSelectedItem) return;
 
         if(it.equals(selectedCategory)){ //Set the style for a selected item
-            //holder.itemView.setBackgroundResource(R.drawable.rounded_blue_8dp)
-            //holder.icon.setImageTintList(context.getColorStateList(R.color.light_ashen_35))
-            //holder.title.setTextColor(context.getColorStateList(R.color.light_ashen_35))
+            holder.itemView.setBackgroundResource(R.drawable.rounded_blue_8dp)
+            holder.icon.setImageTintList(context.getColorStateList(R.color.white))
+            holder.title.setTextColor(context.getColor(R.color.white))
         }
         else {
-            //holder.itemView.setBackgroundResource(R.drawable.rounded_8dp_ashen35)
-            //holder.icon.setImageTintList(context.getColorStateList(R.color.dark_midnight_blue))
-            //holder.title.setTextColor(context.getColorStateList(R.color.dark_midnight_blue))
+            holder.itemView.setBackgroundResource(R.drawable.rounded_8dp_ashen35)
+            if((context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) != Configuration.UI_MODE_NIGHT_YES){
+                holder.icon.imageTintList = context.getColorStateList(R.color.dark_midnight_blue)
+                holder.title.setTextColor(context.getColor(R.color.dark_midnight_blue))
+            }else{
+                holder.icon.setImageTintList(context.getColorStateList(R.color.white))
+                holder.title.setTextColor(context.getColor(R.color.white))
+            }
+
         }
 
     }
