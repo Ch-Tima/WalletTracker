@@ -1,10 +1,10 @@
 package com.chtima.wallettracker.fragments.dialogs
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
@@ -36,7 +36,8 @@ import com.google.android.material.textfield.TextInputLayout
  * @see DialogFragment
  * @author <a href="https://github.com/Ch-Tima/">chizh</a>
  */
-class CategoryAndDetailsDialogFragment private constructor(): DialogFragment() {
+@SuppressLint("RestrictedApi")
+class CategoryAndDetailsDialogFragment constructor(): DialogFragment() {
 
     private var category: Category? = null
     private var listener: OnCategoryAndDetailsDialogListener? = null
@@ -60,6 +61,11 @@ class CategoryAndDetailsDialogFragment private constructor(): DialogFragment() {
         fun newInstance(): CategoryAndDetailsDialogFragment {
             return CategoryAndDetailsDialogFragment()
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        //setStyle(DialogFragment.STYLE_NORMAL, R.style.AppBottomSheetDialog)
+        super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -118,13 +124,11 @@ class CategoryAndDetailsDialogFragment private constructor(): DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-        if (dialog != null && dialog?.window != null) {
-            val window:Window = dialog!!.window!!
-            val params = window.attributes
-            params.width = WindowManager.LayoutParams.MATCH_PARENT
-            window.setBackgroundDrawableResource(R.drawable.rounded_8dp_m16_ashen)
-            window.attributes = params
-        }
+        //adjust dialog window attributes on dialog start
+        val window = dialog?.window?:return
+        val params: WindowManager.LayoutParams = window.attributes
+        params.width = WindowManager.LayoutParams.MATCH_PARENT
+        window.setAttributes(params);
     }
 
     /**

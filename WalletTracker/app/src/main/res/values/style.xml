@@ -24,27 +24,17 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-
-
-<!--=======================================================================-->
-<!--=======================================================================-->
-<!--=======================================================================-->
-<!--=======================================================================-->
-<!--=======================================================================-->
-
-    <!--!NEW!-->
+    
 
     <!--DialogFragmentTheme-->
-    <style name="DialogFragmentStyleOverlay" parent="Theme.AppCompat.Light.Dialog">
+    <style name="DialogFragmentTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:backgroundDimAmount">0.7</item>
-    </style>
-    
-    <style name="AppDialogFragment" parent="DialogFragmentStyleOverlay">
-        <item name="android:background">@color/white</item>
+        <item name="android:windowBackground">@drawable/rounded_8dp_m16_ashen</item>
     </style>
 
-    <style name="AppDialogFragmentDark" parent="DialogFragmentStyleOverlay">
-        <item name="android:background">@color/dark_ashen_35</item>
+    <style name="DialogFragmentThemeDark" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="android:windowBackground">@drawable/rounded_8dp_m16_dark</item>
     </style>
 
     <!--ShadowConstraintLayoutStyleOverlay-->
@@ -90,8 +80,8 @@
     </style>
 
     <style name="AppImageButtonDark" parent="ImageButtonStyleOverlay">
-        <item name="android:backgroundTint">@color/light_ashen</item>
-        <item name="android:tint">@color/light_ashen</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:tint">@color/white</item>
     </style>
 
 
@@ -105,7 +95,7 @@
     </style>
 
     <style name="AppTextViewDark" parent="AppTextViewStyleOverlay">
-        <item name="android:textColor">@color/light_ashen_35</item>
+        <item name="android:textColor">@color/white</item>
     </style>
 
 

@@ -23,8 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.text.DecimalFormat
 import java.util.Calendar
 
-
-class TopUpBottomDialogFragment private constructor (): BottomSheetDialogFragment() {
+class TopUpBottomDialogFragment constructor (): BottomSheetDialogFragment() {
 
     private lateinit var user: User
 

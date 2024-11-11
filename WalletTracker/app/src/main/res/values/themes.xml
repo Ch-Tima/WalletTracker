@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.WalletTracker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -8,7 +8,7 @@
         <item name="android:textViewStyle">@style/AppTextView</item>
         <item name="materialButtonStyle">@style/AppButton</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialog</item>
-        <item name="android:dialogTheme">@style/AppDialogFragment</item>
+        <item name="android:dialogTheme">@style/DialogFragmentTheme</item>
 
         <item name="textInputStyle">@style/AppEditTextMaterialLayoutTheme</item>
         <item name="imageButtonStyle">@style/AppImageButton</item>

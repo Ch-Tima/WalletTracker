@@ -8,7 +8,7 @@
         <item name="android:textViewStyle">@style/AppTextViewDark</item>
         <item name="materialButtonStyle">@style/AppButtonDark</item>
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogDark</item>
-        <item name="android:dialogTheme">@style/AppDialogFragmentDark</item>
+        <item name="android:dialogTheme">@style/DialogFragmentThemeDark</item>
 
         <item name="textInputStyle">@style/AppEditTextMaterialLayoutThemeDark</item>
         <item name="imageButtonStyle">@style/AppImageButtonDark</item>
