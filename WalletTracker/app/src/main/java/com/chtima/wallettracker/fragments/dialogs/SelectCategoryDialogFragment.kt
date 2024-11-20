@@ -94,7 +94,6 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
         val window = dialog!!.window
         val params: WindowManager.LayoutParams = window!!.attributes
         params.width = WindowManager.LayoutParams.MATCH_PARENT
-        window.setBackgroundDrawableResource(R.drawable.rounded_8dp_m16_ashen)
         window.attributes = params
     }
 
