@@ -2,12 +2,15 @@ package com.chtima.wallettracker.fragments.welcome
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -84,6 +87,10 @@ class WelcomeFragment : Fragment() {
                 type = "application/octet-stream"
             }
             openFileLauncher.launch(intent)// Launch the file picker
+        }
+
+        if((requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES){
+            view.findViewById<TextView>(R.id.tv_greeting_message)?.setTextColor(requireContext().getColor(R.color.silver_sand))
         }
 
         return view

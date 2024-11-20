@@ -26,15 +26,14 @@
                 android:text="@string/welcome_to_wallettracker"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/dark_midnight_blue"
                 android:textSize="28sp"/>
             <TextView
+                android:id="@+id/tv_greeting_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/great_you_ve_taken_the_first_step_towards_organizing_your_finances_let_s_keep_going"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/darkened_slate_blue"
                 android:textSize="16sp"
                 android:fontFamily="@font/outfit_regular"
                 android:paddingHorizontal="16dp"/>

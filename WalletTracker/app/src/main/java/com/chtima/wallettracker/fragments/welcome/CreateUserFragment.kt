@@ -2,6 +2,7 @@ package com.chtima.wallettracker.fragments.welcome
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider;
 import autodispose2.AutoDispose
@@ -103,6 +105,10 @@ class CreateUserFragment : Fragment() {
                 )
 
             userVM.insert(user);
+        }
+
+        if((requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES){
+            v.findViewById<TextView>(R.id.tv_greeting_message)?.setTextColor(requireContext().getColor(R.color.silver_sand))
         }
 
         return v;

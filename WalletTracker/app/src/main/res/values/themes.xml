@@ -18,5 +18,11 @@
         <item name="android:backgroundTint">@color/light_ashen_35</item>
     </style>
 
+    <style name="Base.Theme.WalletTracker.Welcome" parent="Base.Theme.WalletTracker">
+
+    </style>
+
     <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker" />
+    <style name="Theme.WalletTracker.Welcome" parent="Base.Theme.WalletTracker.Welcome" />
+
 </resources>

@@ -29,6 +29,7 @@
                 android:textColor="@color/dark_midnight_blue"
                 android:textSize="28sp"/>
             <TextView
+                android:id="@+id/tv_greeting_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/great_let_s_continue_and_create_your_profile_note_this_will_be_a_local_profile"
