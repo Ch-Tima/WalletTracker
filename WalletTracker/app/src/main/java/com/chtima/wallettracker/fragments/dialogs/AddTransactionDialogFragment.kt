@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.components.SwitchTransactionView
+import com.chtima.wallettracker.models.AppConstants
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.DialogObserver
 import com.chtima.wallettracker.models.SharedPreferencesKeys
@@ -186,7 +187,7 @@ class AddTransactionDialogFragment constructor(): BottomSheetDialogFragment() {
             return null;
         }
 
-        val userID = SharedPreferencesKeys.getSharedPreferences(requireContext()).getLong(SharedPreferencesKeys.SELECTED_USER_ID, -1)
+        val userID = SharedPreferencesKeys.getSharedPreferences(requireContext()).getLong(AppConstants.SELECTED_USER_ID, -1)
 
         if(userID == -1L){
             Toast.makeText(requireContext(), "Who you?", Toast.LENGTH_LONG).show()
