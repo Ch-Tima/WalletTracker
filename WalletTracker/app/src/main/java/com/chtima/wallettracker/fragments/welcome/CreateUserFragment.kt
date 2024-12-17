@@ -1,7 +1,6 @@
 package com.chtima.wallettracker.fragments.welcome
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -9,7 +8,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AutoCompleteTextView
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
@@ -17,14 +15,14 @@ import androidx.lifecycle.ViewModelProvider;
 import autodispose2.AutoDispose
 import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
 import com.chtima.wallettracker.R
-import com.chtima.wallettracker.adapters.CurrencyAdapter
 import com.chtima.wallettracker.db.AppDatabase
-import com.chtima.wallettracker.models.Category
+import com.chtima.wallettracker.fragments.dialogs.SelectCurrencyDialogFragment
 import com.chtima.wallettracker.models.SharedPreferencesKeys
 import com.chtima.wallettracker.models.User
 import com.chtima.wallettracker.viewModels.CategoryViewModel
 import com.chtima.wallettracker.viewModels.UserViewModel
 import com.chtima.wallettracker.watchers.ErrorEmptyTextWatcher
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import io.reactivex.rxjava3.core.Completable
@@ -39,8 +37,7 @@ class CreateUserFragment : Fragment() {
     private lateinit var nameEditText : TextInputEditText
     private lateinit var nameEditTextLayout : TextInputLayout
     private lateinit var surnameEditText : TextInputEditText
-    private lateinit var currencyInputLayout: TextInputLayout
-    private lateinit var currencyDropdown: AutoCompleteTextView;
+    private lateinit var selectCurrencyBtn: MaterialButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,20 +56,21 @@ class CreateUserFragment : Fragment() {
         nameEditText.addTextChangedListener(ErrorEmptyTextWatcher(requireContext(), nameEditTextLayout, R.string.please_enter_first_name))
         surnameEditText = v.findViewById(R.id.lastname_input)
 
-        currencyDropdown = v.findViewById(R.id.currency_dropdown);
-        currencyInputLayout = v.findViewById(R.id.currency_input_layout);
-        currencyDropdown.dropDownHeight = resources.getDimensionPixelSize(R.dimen.dropdown_height)
-        currencyDropdown.dropDownVerticalOffset = resources.getDimensionPixelSize(R.dimen.m8)
+        selectCurrencyBtn = v.findViewById(R.id.select_currency_btn)
+        selectCurrencyBtn.setOnClickListener{
+                val d = SelectCurrencyDialogFragment.newInstance()
+                d.show(parentFragmentManager, SelectCurrencyDialogFragment::class.java.name)
+                d.setOnListener {
+                    if(it.isNotBlank()){
+                        selectCurrencyBtn.setIconResource(0)
+                        selectCurrencyBtn.text = getString(R.string.currency).plus(": $it")
+                        currencyName = it
+                        return@setOnListener
+                    }
 
-        val adapter = CurrencyAdapter(requireContext(), resources.getStringArray(R.array.currency_codes).toList())
-
-        currencyDropdown.setAdapter(adapter);
-        currencyDropdown.setOnItemClickListener { parent, view, position, id ->
-            currencyInputLayout.error = null;
-            currencyName = adapter.getItem(position).toString();
-            adapter.setSelectedItemPosition(position);
-            adapter.notifyDataSetChanged();
-        }
+                    Toast.makeText(requireContext(), R.string.please_select_a_currency, Toast.LENGTH_SHORT).show()
+                }
+            }
 
         // Handle the "Next" button click event
         v.findViewById<Button>(R.id.btn_next).setOnClickListener{
@@ -127,16 +125,17 @@ class CreateUserFragment : Fragment() {
 
         if(name.isEmpty()){// Validate name input
             nameEditTextLayout.setError(getString(R.string.please_enter_first_name));
-            err = true;
+            err = true
         }
 
         if(currencyName.isEmpty()){// Validate currency selection
-            currencyInputLayout.setError(getText(R.string.please_select_a_currency));
-            err = true;
+            Toast.makeText(requireContext(), R.string.please_select_a_currency, Toast.LENGTH_SHORT).show()
+            selectCurrencyBtn.setIconResource(R.drawable.ic_error24dp)
+            err = true
         }
 
         if(err){// If any validation error occurred, return null
-            return null;
+            return null
         }
 
         // Return a new User object with the input values
@@ -148,14 +147,11 @@ class CreateUserFragment : Fragment() {
         // Initialize the ViewModel after the view is created
         userVM = ViewModelProvider(requireActivity())[UserViewModel::class]
         categoryVM = ViewModelProvider(requireActivity())[CategoryViewModel::class]
-
     }
 
     companion object {
         @JvmStatic
         fun newInstance() =
-            CreateUserFragment().apply {
-
-            }
+            CreateUserFragment().apply {}
     }
 }

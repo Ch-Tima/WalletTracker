@@ -160,7 +160,7 @@
     <style name="AppEditTextMaterialDark" parent="AppEditTextMaterial">
         <item name="android:background">@drawable/custom_dark_input</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:textColorHint">@color/white</item>
+        <item name="android:textColorHint">@color/darkened_slate_blue</item>
     </style>
 
 </resources>
