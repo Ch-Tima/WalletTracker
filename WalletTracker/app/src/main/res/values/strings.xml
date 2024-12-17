@@ -231,5 +231,6 @@
     <string name="ok">Ok</string>
     <string name="this_backup_is_corrupted_or_isnt_part_of_this_app">This backup is corrupted or is not part of this application.</string>
     <string name="currency_usd_code">USD</string>
+    <string name="currency">Currency</string>
 
 </resources>

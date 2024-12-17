@@ -36,7 +36,6 @@ class SelectCurrencyDialogFragment : DialogFragment() {
         val adapter = CurrencyRecycleAdapters(requireContext(), resources.getStringArray(R.array.currency_codes).toList())
 
         adapter.setOnListener{
-            Toast.makeText(requireContext(), "Selected: $it", Toast.LENGTH_SHORT).show()
             onItemClickListener?.invoke(it)
             dismiss()
         }

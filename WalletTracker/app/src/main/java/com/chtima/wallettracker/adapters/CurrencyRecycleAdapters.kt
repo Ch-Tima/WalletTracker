@@ -39,7 +39,7 @@ class CurrencyRecycleAdapters(
 
     @SuppressLint("NotifyDataSetChanged")
     fun filter(q: String){
-        if(q.isEmpty()) {
+        if(q.isBlank()) {
             filteredList = originalList.toMutableList()
             return
         }
