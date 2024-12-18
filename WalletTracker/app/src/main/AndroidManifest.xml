@@ -20,8 +20,7 @@
             android:exported="false" />
         <activity
             android:name=".activities.WelcomeActivity"
-            android:exported="false"
-            android:theme="@style/Theme.WalletTracker.Welcome"/>
+            android:exported="false"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
