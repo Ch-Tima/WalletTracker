@@ -17,6 +17,8 @@ import autodispose2.androidx.lifecycle.AndroidLifecycleScopeProvider
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.db.AppDatabase
 import com.chtima.wallettracker.fragments.dialogs.SelectCurrencyDialogFragment
+import com.chtima.wallettracker.models.AppConstants
+import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.SharedPreferencesKeys
 import com.chtima.wallettracker.models.User
 import com.chtima.wallettracker.viewModels.CategoryViewModel
@@ -82,7 +84,7 @@ class CreateUserFragment : Fragment() {
                 .subscribe(
                     {id ->
                         user.id = id;// Set the user ID after insertion
-                        SharedPreferencesKeys.getSharedPreferences(requireContext()).edit().putLong(SharedPreferencesKeys.SELECTED_USER_ID, id).apply()
+                        SharedPreferencesKeys.getSharedPreferences(requireContext()).edit().putLong(AppConstants.SELECTED_USER_ID, id).apply()
 
                         categoryVM.insertAll(*AppDatabase.defaultCategories(requireContext()))
                             .to(AutoDispose.autoDisposable<Completable>(AndroidLifecycleScopeProvider.from(requireActivity())))

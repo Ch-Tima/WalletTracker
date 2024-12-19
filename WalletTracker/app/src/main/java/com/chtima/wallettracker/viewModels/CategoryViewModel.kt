@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.toLiveData
 import com.chtima.wallettracker.db.DatabaseUpdatedEvent
 import com.chtima.wallettracker.db.repositories.CategoryRepository
+import com.chtima.wallettracker.models.AppConstants
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.CategoryWithTransactions
 import com.chtima.wallettracker.models.SharedPreferencesKeys
@@ -32,7 +33,7 @@ class CategoryViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun getCategoriesWithTransactionsByUser(): LiveData<List<CategoryWithTransactions>>{
-        val userIdNow = SharedPreferencesKeys.getSharedPreferences(app).getLong(SharedPreferencesKeys.SELECTED_USER_ID, -1)
+        val userIdNow = SharedPreferencesKeys.getSharedPreferences(app).getLong(AppConstants.SELECTED_USER_ID, -1)
         if(categoriesWithTransactionsByUserLiveData == null || userID != userIdNow){
             userID = userIdNow
             categoriesWithTransactionsByUserLiveData = categoryRepository.getCategoriesWithTransactionsByUserId(userID).toLiveData()

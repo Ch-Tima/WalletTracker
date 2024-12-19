@@ -19,6 +19,7 @@ import com.chtima.wallettracker.MainActivity
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.db.AppDatabase
 import com.chtima.wallettracker.db.repositories.UserRepository
+import com.chtima.wallettracker.models.AppConstants
 import com.chtima.wallettracker.models.SharedPreferencesKeys
 import com.google.android.material.button.MaterialButton
 import com.google.rpc.Code
@@ -56,7 +57,7 @@ class WelcomeFragment : Fragment() {
                             } else {
                                 // Save the first user's ID to shared preferences and proceed to the main activity
                                 SharedPreferencesKeys.getSharedPreferences(requireContext()).edit()
-                                    .putLong(SharedPreferencesKeys.SELECTED_USER_ID, list[0].id).apply()
+                                    .putLong(AppConstants.SELECTED_USER_ID, list[0].id).apply()
                                 // Start the main activity and finish the current one
                                 requireActivity().startActivity(Intent(requireContext(), MainActivity::class.java))
                                 requireActivity().finish()

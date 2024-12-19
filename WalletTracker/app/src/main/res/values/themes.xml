@@ -23,6 +23,6 @@
     </style>
 
     <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker" />
-    <style name="Theme.WalletTracker.Welcome" parent="Base.Theme.WalletTracker.Welcome" />
+    <style name="Theme.WalletTracker.Light" parent="Base.Theme.WalletTracker" />
 
 </resources>

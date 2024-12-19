@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.WalletTracker" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -18,14 +18,8 @@
         <item name="android:backgroundTint">@color/dark_ashen_35</item>
     </style>
 
-    <!--WelcomeActivity-->
-    <style name="Base.Theme.WalletTracker.Welcome" parent="Base.Theme.WalletTracker">
-
-    </style>
-
     <!--def MainActivity-->
     <style name="Theme.WalletTracker" parent="Base.Theme.WalletTracker" />
-    <!--WelcomeActivity-->
-    <style name="Theme.WalletTracker.Welcome" parent="Base.Theme.WalletTracker.Welcome" />
+    <style name="Theme.WalletTracker.Dark" parent="Base.Theme.WalletTracker" />
 
 </resources>

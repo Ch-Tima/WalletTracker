@@ -6,8 +6,6 @@ import android.content.SharedPreferences
 
 object SharedPreferencesKeys {
 
-    const val SELECTED_USER_ID = "selected_user_id"
-
     private const val NAME = "com.chtima.wallettracker.sp"
 
     fun getSharedPreferences(application: Application) : SharedPreferences{

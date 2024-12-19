@@ -1,6 +1,7 @@
 package com.chtima.wallettracker.fragments
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.DocumentsContract
@@ -11,13 +12,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.activities.HelpActivity
 import com.chtima.wallettracker.db.AppDatabase
 import com.chtima.wallettracker.fragments.dialogs.TopUpBottomDialogFragment
+import com.chtima.wallettracker.models.AppConstants
+import com.chtima.wallettracker.models.SharedPreferencesKeys
 import com.chtima.wallettracker.utils.CurrencyUtils
 import com.chtima.wallettracker.viewModels.UserViewModel
 import com.google.android.material.button.MaterialButton
@@ -26,6 +31,7 @@ import com.google.rpc.Code
 class ProfileFragment : Fragment() {
 
     private lateinit var createFileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var spk: SharedPreferences
 
     //VM
     private lateinit var userViewModel: UserViewModel
@@ -34,6 +40,7 @@ class ProfileFragment : Fragment() {
     private lateinit var userName: TextView
     private lateinit var userEmail: TextView
     private lateinit var userBalance: TextView
+    private lateinit var themeBtn: MaterialButton
 
     companion object {
         fun newInstance() = ProfileFragment().apply {}
@@ -46,10 +53,13 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
         val v =  inflater.inflate(R.layout.fragment_profile, container, false)
 
+        spk = SharedPreferencesKeys.getSharedPreferences(requireContext())
+        var themeKey = spk.getInt(AppConstants.SELECTED_THEME_MODE, AppConstants.NOT_FOUND)
+
         //textView
-        userName = v.findViewById(R.id.user_name);
-        userEmail = v.findViewById(R.id.user_email);
-        userBalance = v.findViewById(R.id.user_balance);
+        userName = v.findViewById(R.id.user_name)
+        userEmail = v.findViewById(R.id.user_email)
+        userBalance = v.findViewById(R.id.user_balance)
 
         createFileLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
             result.data?.data?.let {
@@ -74,7 +84,38 @@ class ProfileFragment : Fragment() {
             dialogFragment.show(childFragmentManager, TopUpBottomDialogFragment::class.simpleName)
         }
 
+        themeBtn = v.findViewById(R.id.btn_theme)
+        themeBtn.setOnClickListener{
+            themeKey = when (themeKey) {
+                AppConstants.SYSTEM_MODE_KEY -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    AppConstants.LIGHT_MODE_KEY
+                }
+                AppConstants.LIGHT_MODE_KEY -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    AppConstants.DARK_MODE_KEY
+                }
+                else -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    AppConstants.SYSTEM_MODE_KEY
+                }
+            }
+            spk.edit().putInt(AppConstants.SELECTED_THEME_MODE, themeKey).apply()
+            setThemeBtnText(themeKey)
+        }
+
+        setThemeBtnText(themeKey)
+
         return v
+    }
+
+    private fun setThemeBtnText(themeKey:Int){
+        val themeName = when (themeKey) {
+            AppConstants.LIGHT_MODE_KEY -> "light"
+            AppConstants.DARK_MODE_KEY -> "dark"
+            else -> "system"
+        }
+        themeBtn.text = getString(R.string.theme).plus(": $themeName")
     }
 
     private fun createFile(pickerInitialUri: Uri) {
