@@ -14,7 +14,7 @@ import com.chtima.wallettracker.models.Category.CategoryType
 import com.chtima.wallettracker.models.DialogObserver
 
 
-class SelectCategoryDialogFragment private constructor() : DialogFragment() {
+class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
     private var selectCategoryListener:DialogObserver<Category>? = null
     private var categoryType:CategoryType? = null
@@ -94,7 +94,6 @@ class SelectCategoryDialogFragment private constructor() : DialogFragment() {
         val window = dialog!!.window
         val params: WindowManager.LayoutParams = window!!.attributes
         params.width = WindowManager.LayoutParams.MATCH_PARENT
-        window.setBackgroundDrawableResource(R.drawable.rounded_8dp_m16_ashen)
         window.attributes = params
     }
 

@@ -26,9 +26,9 @@
                 android:text="@string/create_your_local_profile"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/dark_midnight_blue"
                 android:textSize="28sp"/>
             <TextView
+                android:id="@+id/tv_greeting_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/great_let_s_continue_and_create_your_profile_note_this_will_be_a_local_profile"
@@ -57,7 +57,9 @@
                 android:layout_height="wrap_content"
                 android:minWidth="300dp"
                 app:errorEnabled="true"
-                android:layout_marginVertical="4dp">
+                android:layout_marginVertical="4dp"
+                app:endIconScaleType="center"
+                app:endIconMinSize="48dp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/name_input"
                     android:layout_width="match_parent"
@@ -83,23 +85,15 @@
                     android:hint="@string/last_name_request"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/currency_input_layout"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/select_currency_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="300dp"
-                app:errorEnabled="true"
-                android:layout_marginVertical="4dp"
-                style="@style/AppCompleteTextInputLayoutStyle">
-                <AutoCompleteTextView
-                    android:id="@+id/currency_dropdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textSize="17sp"
-                    android:inputType="none"
-                    android:hint="@string/currency_request"
-                    style="@style/AppCompleteTextStyle"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                android:minWidth="144dp"
+                android:minHeight="50dp"
+                android:text="@string/currency_request"
+                android:layout_gravity="left"
+                tools:ignore="RtlHardcoded"/>
 
         </LinearLayout>
 

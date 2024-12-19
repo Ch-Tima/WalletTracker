@@ -3,6 +3,7 @@ package com.chtima.wallettracker.components
 import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.ViewOutlineProvider
 import android.view.ViewTreeObserver
 import androidx.annotation.AttrRes
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -12,7 +13,7 @@ class ShadowConstraintLayout @JvmOverloads constructor(
     context: Context,
     attrRes: AttributeSet? = null,
     defStyleAttr: Int = 0,
-    defStyleRes: Int = 0
+    defStyleRes: Int = R.style.ShadowConstraintLayoutStyle
 ) : ConstraintLayout(context, attrRes, defStyleAttr, defStyleRes) {
 
     init {
@@ -23,9 +24,10 @@ class ShadowConstraintLayout @JvmOverloads constructor(
 
                 val params = layoutParams as ConstraintLayout.LayoutParams;
                 params.setMargins(dpToPx(16f), dpToPx(16f), dpToPx(16f), dpToPx(16f))
-                setBackgroundResource(R.drawable.rounded_8dp_ashen35);
-                elevation = dpToPx(5f).toFloat();
-                setLayoutParams(params);
+                elevation = dpToPx(10f).toFloat()
+                outlineProvider = ViewOutlineProvider.BACKGROUND
+                clipToOutline = true
+                setLayoutParams(params)
             }
         })
     }

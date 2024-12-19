@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.components.SwitchTransactionView
+import com.chtima.wallettracker.models.AppConstants
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.DialogObserver
 import com.chtima.wallettracker.models.SharedPreferencesKeys
@@ -27,7 +28,7 @@ import java.util.Locale
 
 
 /** BottomSheetDialogFragment for adding a new transaction. */
-class AddTransactionDialogFragment private constructor(): BottomSheetDialogFragment() {
+class AddTransactionDialogFragment constructor(): BottomSheetDialogFragment() {
 
     private var dialogObservers : MutableList<DialogObserver<Transaction>> = ArrayList()
     private lateinit var dateFromPicker: Date
@@ -128,7 +129,7 @@ class AddTransactionDialogFragment private constructor(): BottomSheetDialogFragm
      * Set the DialogObserver to subscribe to transaction events.
      * @param observer The observer to set.
      */
-    public fun addDialogObserver(observer: DialogObserver<Transaction>){
+    fun addDialogObserver(observer: DialogObserver<Transaction>){
         this.dialogObservers.add(observer)
     }
 
@@ -186,7 +187,7 @@ class AddTransactionDialogFragment private constructor(): BottomSheetDialogFragm
             return null;
         }
 
-        val userID = SharedPreferencesKeys.getSharedPreferences(requireContext()).getLong(SharedPreferencesKeys.SELECTED_USER_ID, -1)
+        val userID = SharedPreferencesKeys.getSharedPreferences(requireContext()).getLong(AppConstants.SELECTED_USER_ID, -1)
 
         if(userID == -1L){
             Toast.makeText(requireContext(), "Who you?", Toast.LENGTH_LONG).show()

@@ -6,10 +6,13 @@
 
     <color name="light_ashen">#E6E1DC</color> <!--main background-->
     <color name="light_ashen_35">#F1EEE4</color> <!--all containers-->
-
     <color name="dark_midnight_blue">#4C4C6B</color> <!--buttons & second containers-->
 
     <color name="light_slate_blue">#787DEB</color> <!--selected items-->
+
+
+    <color name="dark_ashen">#1E1E22</color> <!--main background-->
+    <color name="dark_ashen_35">#2F2F37</color> <!--all containers-->
 
     <!--helper colors-->
     <color name="silver_sand">#BBBDBE</color>

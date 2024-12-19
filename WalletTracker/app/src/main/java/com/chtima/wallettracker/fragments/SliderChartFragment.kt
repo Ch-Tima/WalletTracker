@@ -21,7 +21,7 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 
 
-class SliderChartFragment private constructor(): Fragment() {
+class SliderChartFragment constructor(): Fragment() {
 
     private val list: MutableList<Chart<*>> = ArrayList()
     private var currentIndex = 1

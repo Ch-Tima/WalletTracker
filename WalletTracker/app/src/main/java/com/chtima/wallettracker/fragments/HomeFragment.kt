@@ -42,7 +42,7 @@ import com.chtima.wallettracker.db.AppDatabase
 import com.chtima.wallettracker.models.User
 
 
-class HomeFragment private constructor(): Fragment() {
+class HomeFragment constructor(): Fragment() {
 
     //ViewModels
     private lateinit var userVM: UserViewModel

@@ -2,12 +2,15 @@ package com.chtima.wallettracker.fragments.welcome
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.TextureView
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +19,7 @@ import com.chtima.wallettracker.MainActivity
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.db.AppDatabase
 import com.chtima.wallettracker.db.repositories.UserRepository
+import com.chtima.wallettracker.models.AppConstants
 import com.chtima.wallettracker.models.SharedPreferencesKeys
 import com.google.android.material.button.MaterialButton
 import com.google.rpc.Code
@@ -53,7 +57,7 @@ class WelcomeFragment : Fragment() {
                             } else {
                                 // Save the first user's ID to shared preferences and proceed to the main activity
                                 SharedPreferencesKeys.getSharedPreferences(requireContext()).edit()
-                                    .putLong(SharedPreferencesKeys.SELECTED_USER_ID, list[0].id).apply()
+                                    .putLong(AppConstants.SELECTED_USER_ID, list[0].id).apply()
                                 // Start the main activity and finish the current one
                                 requireActivity().startActivity(Intent(requireContext(), MainActivity::class.java))
                                 requireActivity().finish()
@@ -84,6 +88,10 @@ class WelcomeFragment : Fragment() {
                 type = "application/octet-stream"
             }
             openFileLauncher.launch(intent)// Launch the file picker
+        }
+
+        if((requireContext().resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES){
+            view.findViewById<TextView>(R.id.tv_greeting_message)?.setTextColor(requireContext().getColor(R.color.silver_sand))
         }
 
         return view

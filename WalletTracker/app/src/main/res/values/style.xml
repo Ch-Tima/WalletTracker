@@ -1,69 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTextView" parent="Widget.AppCompat.TextView">
-        <item name="android:fontFamily">@font/outfit_medium</item>
-    </style>
-
-    <style name="AppEditText" parent="Widget.AppCompat.EditText">
-        <item name="android:background">@drawable/custom_input</item>
-        <item name="android:paddingLeft">18dp</item>
-        <item name="android:height">55dp</item>
-        <item name="fontFamily">@font/outfit_medium</item>
-    </style>
-
-    <style name="AppButton" parent="Widget.Material3.Button">
-        <item name="android:backgroundTint">@color/dark_midnight_blue</item>
-        <item name="android:fontFamily">@font/outfit_medium</item>
-    </style>
-
-    <style name="AppButtonTile8dp" parent="AppButton">
-        <item name="backgroundTint">@null</item>
-        <item name="android:background">@drawable/rounded_rectangle_21dp_blue</item>
-        <item name="android:textSize">19sp</item>
-        <item name="android:layout_margin">8dp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-
-    <style name="AppBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/CustomBottomSheetStyle</item>
-        <item name="android:backgroundDimAmount">0.7</item>
-    </style>
-
-    <style name="CustomBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/rounded_top_21dp_ashen</item>
-    </style>
-
-    <style name="DialogFragmentTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="android:backgroundDimAmount">0.7</item>
-    </style>
-
-    <!--AppEditTextMaterialLayoutStyle-->
-    <style name="AppEditTextMaterialLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        <item name="fontFamily">@font/outfit_medium</item>
-        <item name="errorEnabled">true</item>
-        <item name="hintEnabled">false</item>
-        <item name="materialThemeOverlay">@style/AppThemeOverlayTextInputEditTextOutlinedBox</item>
-        <item name="editTextStyle">@style/AppEditTextMaterial</item>
-        <item name="cursorErrorColor">@color/coral</item>
-        <item name="cursorColor">@color/light_slate_blue</item>
-    </style>
-
-    <style name="AppThemeOverlayTextInputEditTextOutlinedBox">
-        <item name="editTextStyle">@style/AppEditTextMaterial</item>
-    </style>
-
-    <style name="AppEditTextMaterial" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
-        <item name="android:background">@drawable/custom_input</item>
-        <item name="fontFamily">@font/outfit_medium</item>
-        <item name="android:inputType">text</item>
-        <item name="maxLines">1</item>
-        <item name="singleLine">true</item>
-        <item name="android:maxLength">99</item>
-        <item name="android:textColor">@color/dark_midnight_blue</item>
-    </style>
-
     <!-- -->
     <style name="AppCompleteTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeWidth">0dp</item>
@@ -87,6 +24,143 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+    
 
+    <!--DialogFragmentTheme-->
+    <style name="DialogFragmentTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="android:windowBackground">@drawable/rounded_8dp_m16_ashen</item>
+    </style>
+
+    <style name="DialogFragmentThemeDark" parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="android:windowBackground">@drawable/rounded_8dp_m16_dark</item>
+    </style>
+
+    <!--ShadowConstraintLayoutStyleOverlay-->
+    <style name="ShadowConstraintLayoutStyleOverlay">
+        <item name="android:background">@drawable/rounded_8dp_ashen35</item>
+        <item name="android:elevation">8dp</item>
+    </style>
+
+
+    <!--ButtonStyleOverlay-->
+    <style name="ButtonStyleOverlay" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/dark_midnight_blue</item>
+        <item name="android:fontFamily">@font/outfit_medium</item>
+        <item name="iconTint">@color/light_ashen</item>
+        <item name="android:textColor">@color/light_ashen_35</item>
+    </style>
+
+    <style name="AppButton" parent="ButtonStyleOverlay" />
+
+    <style name="AppButtonDark" parent="ButtonStyleOverlay">
+        <item name="android:backgroundTint">@color/light_slate_blue</item>
+    </style>
+
+    <style name="AppButtonTile8dp" parent="ButtonStyleOverlay">
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/rounded_rectangle_21dp_blue</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppButtonTile8dpDark" parent="AppButtonTile8dp">
+        <item name="backgroundTint">@color/light_slate_blue</item>
+    </style>
+
+
+    <!--ImageButtonStyleOverlay-->
+    <style name="ImageButtonStyleOverlay"/>
+
+    <style name="AppImageButton" parent="ImageButtonStyleOverlay">
+        <item name="android:backgroundTint">@color/dark_midnight_blue</item>
+        <item name="android:tint">@color/dark_midnight_blue</item>
+    </style>
+
+    <style name="AppImageButtonDark" parent="ImageButtonStyleOverlay">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:tint">@color/white</item>
+    </style>
+
+
+    <!--TextView-->
+    <style name="AppTextViewStyleOverlay" parent="Widget.AppCompat.TextView">
+        <item name="android:fontFamily">@font/outfit_medium</item>
+    </style>
+
+    <style name="AppTextView" parent="AppTextViewStyleOverlay">
+        <item name="android:textColor">@color/dark_midnight_blue</item>
+    </style>
+
+    <style name="AppTextViewDark" parent="AppTextViewStyleOverlay">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <!--BottomSheetDialog-->
+    <style name="AppBottomSheetDialogDarkStyleOverlay" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:backgroundDimAmount">0.7</item>
+    </style>
+
+    <style name="AppBottomSheetDialog" parent="AppBottomSheetDialogDarkStyleOverlay">
+        <item name="bottomSheetStyle">@style/AppBottomSheet</item>
+        <item name="android:textColor">@color/dark_midnight_blue</item>
+    </style>
+
+    <style name="AppBottomSheetDialogDark" parent="AppBottomSheetDialogDarkStyleOverlay">
+        <item name="bottomSheetStyle">@style/AppBottomSheetDark</item>
+        <item name="android:textColor">@color/light_ashen_35</item>
+    </style>
+
+    <style name="AppBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/rounded_top_21dp_ashen</item>
+    </style>
+
+    <style name="AppBottomSheetDark" parent="AppBottomSheet">
+        <item name="android:backgroundTint">@color/dark_ashen_35</item>
+    </style>
+
+
+    <!--AppEditTextMaterialLayoutStyle-->
+    <style name="AppEditTextMaterialLayoutTheme" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="fontFamily">@font/outfit_medium</item>
+        <item name="errorEnabled">true</item>
+        <item name="hintEnabled">false</item>
+        <item name="materialThemeOverlay">@style/AppThemeOverlayTextInputEditTextOutlinedBox</item>
+        <item name="editTextStyle">@style/AppEditTextMaterial</item>
+        <item name="cursorErrorColor">@color/coral</item>
+        <item name="cursorColor">@color/light_slate_blue</item>
+    </style>
+
+    <style name="AppEditTextMaterialLayoutThemeDark" parent="AppEditTextMaterialLayoutTheme">
+        <item name="materialThemeOverlay">@style/AppThemeOverlayTextInputEditTextOutlinedBoxDark</item>
+        <item name="editTextStyle">@style/AppEditTextMaterialDark</item>
+    </style>
+
+    <style name="AppThemeOverlayTextInputEditTextOutlinedBox">
+        <item name="editTextStyle">@style/AppEditTextMaterial</item>
+    </style>
+
+    <style name="AppThemeOverlayTextInputEditTextOutlinedBoxDark">
+        <item name="editTextStyle">@style/AppEditTextMaterialDark</item>
+    </style>
+
+    <style name="AppEditTextMaterial" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:background">@drawable/custom_input</item>
+        <item name="fontFamily">@font/outfit_medium</item>
+        <item name="android:inputType">text</item>
+        <item name="maxLines">1</item>
+        <item name="singleLine">true</item>
+        <item name="android:maxLength">99</item>
+        <item name="android:textColor">@color/dark_midnight_blue</item>
+    </style>
+
+    <style name="AppEditTextMaterialDark" parent="AppEditTextMaterial">
+        <item name="android:background">@drawable/custom_dark_input</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textColorHint">@color/darkened_slate_blue</item>
+    </style>
 
 </resources>
