@@ -46,8 +46,8 @@ class MainActivity : AppCompatActivity() {
 
         if(AppDatabase.isExist(this)){
             homeFragment = HomeFragment.newInstance()
-            //activityFragment = TransactionReportFragment.newInstance(user.id);
-            profileFragment = ProfileFragment.newInstance();
+            activityFragment = TransactionReportFragment.newInstance()
+            profileFragment = ProfileFragment.newInstance()
 
             supportFragmentManager.beginTransaction()
                 .replace(R.id.main_fragment_container, homeFragment)
