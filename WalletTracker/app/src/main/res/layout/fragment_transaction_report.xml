@@ -61,11 +61,10 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/transaction_recycle"
+            <FrameLayout
+                android:id="@+id/display_transactions"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                android:layout_height="match_parent"/>
 
         </com.chtima.wallettracker.components.ShadowConstraintLayout>
 
