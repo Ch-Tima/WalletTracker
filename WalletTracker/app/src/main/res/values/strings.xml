@@ -234,5 +234,6 @@
     <string name="currency">Currency</string>
     <string name="search">Search</string>
     <string name="filter">Filter</string>
+    <string name="test_small_date">12.08.11-12.08.24</string>
 
 </resources>
