@@ -6,7 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.FrameLayout
 import com.chtima.wallettracker.R
+import com.chtima.wallettracker.models.Category
+import com.chtima.wallettracker.models.DisplayType
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
@@ -26,7 +29,12 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filter_dialog, container, false)
+        val v = inflater.inflate(R.layout.fragment_filter_dialog, container, false)
+        val selectCategoryDF = SelectCategoryDialogFragment.newInstance(null, true, DisplayType.GRID)
+        childFragmentManager.beginTransaction()
+            .replace(R.id.category_fragment, selectCategoryDF)
+            .commit()
+        return v
     }
 
     override fun onStart() {

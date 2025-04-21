@@ -8,18 +8,21 @@ import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.chtima.wallettracker.R
+import com.chtima.wallettracker.domain.BaseSelectCategoryLogic
+import com.chtima.wallettracker.domain.SelectCategoryGridLogic
 import com.chtima.wallettracker.domain.SelectCategoryLogic
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.Category.CategoryType
 import com.chtima.wallettracker.models.DialogObserver
-
+import com.chtima.wallettracker.models.DisplayType
 
 class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
     private var selectCategoryListener:DialogObserver<Category>? = null
     private var categoryType:CategoryType? = null
     private var isShowSelectCategory = false
-    private lateinit var selectCategoryLogic: SelectCategoryLogic
+    private lateinit var selectCategoryLogic: BaseSelectCategoryLogic
+    private lateinit var displayType: DisplayType
 
     //UI
     private lateinit var recyclerView: RecyclerView
@@ -27,13 +30,14 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
     companion object {
         private const val CATEGORY_TYPE = "CATEGORY_TYPE";
         private const val IS_SHOW_SELECTED_CATEGORY = "IS_SHOW_SELECTED_CATEGORY";
+        private const val DISPLAY_LIST_TYPE = "DISPLAY_OF_LIST_TYPE"
 
         /**
          * Static factory method to create a new instance of SelectCategoryDialogFragment.
          * @return A new instance of SelectCategoryDialogFragment.
          */
         public fun newInstance(): SelectCategoryDialogFragment {
-            return newInstance(null, false);
+            return newInstance(null, false, DisplayType.LIST);
         }
 
         /**
@@ -41,11 +45,12 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
          * @param categoryType - use to filter and show only a specific type category
          * @return A new instance of SelectCategoryDialogFragment.
          */
-        public fun newInstance(categoryType: CategoryType?, isShowSelectCategory: Boolean): SelectCategoryDialogFragment {
+        public fun newInstance(categoryType: CategoryType?, isShowSelectCategory: Boolean, displayType: DisplayType): SelectCategoryDialogFragment {
             val fragment = SelectCategoryDialogFragment()
             val bundle = Bundle()
             bundle.putString(CATEGORY_TYPE, categoryType?.name)
             bundle.putBoolean(IS_SHOW_SELECTED_CATEGORY, isShowSelectCategory)
+            bundle.putString(DISPLAY_LIST_TYPE, displayType.name)
             fragment.arguments = bundle
             return fragment
 
@@ -58,6 +63,8 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
         if(ct != null) categoryType = CategoryType.valueOf(ct)
         isShowSelectCategory = arguments?.getBoolean(IS_SHOW_SELECTED_CATEGORY, false) ?: false
+
+        displayType = DisplayType.valueOf(arguments?.getString(DISPLAY_LIST_TYPE, DisplayType.LIST.name) ?: DisplayType.LIST.name)
     }
 
     override fun onCreateView(
@@ -70,13 +77,27 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
         recyclerView = v.findViewById(R.id.list_category)
 
-        selectCategoryLogic = SelectCategoryLogic(
-            this,
-            recyclerView,
-            selectCategoryListener,
-            categoryType,
-            isShowSelectCategory
-        )
+        when(displayType){
+            DisplayType.GRID -> {
+                selectCategoryLogic = SelectCategoryGridLogic(
+                    this,
+                    recyclerView,
+                    selectCategoryListener,
+                    categoryType,
+                    isShowSelectCategory
+                )
+            }else ->{
+                selectCategoryLogic = SelectCategoryLogic(
+                    this,
+                    recyclerView,
+                    selectCategoryListener,
+                    categoryType,
+                    isShowSelectCategory
+                )
+            }
+        }
+
+
 
         return v
     }

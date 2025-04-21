@@ -23,7 +23,7 @@ class CategoryRecycleAdapter (
     private var selectedCategory: Category? = null
     private var onClickListener: OnClickListener? = null
 
-    private val pageSize = 4
+    private val pageSize = 6
     private var currentPage = 0
     private var currentData = mutableListOf<Category>()
 
@@ -83,8 +83,8 @@ class CategoryRecycleAdapter (
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateData() {//show all
-        val startIndex = 0//currentPage * pageSize
-        val endIndex = list.size//minOf(startIndex + pageSize, list.size)
+        val startIndex = currentPage * pageSize
+        val endIndex = minOf(startIndex + pageSize, list.size)
         currentData.clear()
         currentData.addAll(list.subList(startIndex, endIndex))
         notifyDataSetChanged()
@@ -110,21 +110,20 @@ class CategoryRecycleAdapter (
         this.onClickListener = onClickListener
     }
 
-    //NOT WORK! JUST SHOW ALL ITEMS
     fun nextPage() {
-//        return
-//        if ((currentPage + 1) * pageSize < list.size) {
-//            currentPage++
-//            updateData()
-//        }
+        if ((currentPage + 1) * pageSize < list.size) {
+            currentPage++
+            updateData()
+        }
     }
 
     fun previousPage() {
-//        if (currentPage > 0) {
-//            currentPage--
-//            updateData()
-//        }
+        if (currentPage > 0) {
+            currentPage--
+            updateData()
+        }
     }
+
 
     /**
      * ViewHolder class for caching views in each RecyclerView item.
