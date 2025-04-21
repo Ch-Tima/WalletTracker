@@ -72,6 +72,7 @@ class SelectionCategoryFragment : Fragment() {
             this,
             recyclerView,
             selectCategoryListener,
+            null,
             categoryType,
             isShowSelectCategory
         )

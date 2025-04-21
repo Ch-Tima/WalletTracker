@@ -1,21 +1,21 @@
 package com.chtima.wallettracker.fragments.dialogs
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.chtima.wallettracker.R
+import com.chtima.wallettracker.models.Category
+import com.chtima.wallettracker.models.DialogObserver
+import com.chtima.wallettracker.models.DisplayType
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 /**
- * A simple [Fragment] subclass.
- * Use the [FilterDialogFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * FilterDialogFragment is a BottomSheetDialogFragment that displays
+ * a category filter UI using a nested fragment (SelectCategoryDialogFragment).
  */
 class FilterDialogFragment : BottomSheetDialogFragment() {
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +26,18 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_filter_dialog, container, false)
+        val v = inflater.inflate(R.layout.fragment_filter_dialog, container, false)
+        //creating a "Select Category DialogFragment" as a grid with multiple selections
+        val selectCategoryDF = SelectCategoryDialogFragment.newInstance(null, true, DisplayType.GRID)
+        selectCategoryDF.setSelectCategoryListListener(object: DialogObserver<List<Category>>{
+            override fun onSuccess(result: List<Category>) {
+                //!here we get the list of selected categories!
+            }
+        })
+        childFragmentManager.beginTransaction()
+            .replace(R.id.category_fragment, selectCategoryDF)
+            .commit()
+        return v
     }
 
     override fun onStart() {
@@ -40,8 +51,7 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
 
     companion object {
         /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
+         * Factory method to create a new instance of FilterDialogFragment.
          */
         @JvmStatic
         fun newInstance() = FilterDialogFragment().apply {}
