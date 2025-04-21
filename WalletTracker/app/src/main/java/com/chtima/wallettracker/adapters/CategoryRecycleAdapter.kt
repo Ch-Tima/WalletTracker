@@ -15,6 +15,10 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.models.Category
 
+/**
+ * RecyclerView Adapter for displaying a list of categories as selectable items.
+ * Supports item selection highlighting and pagination.
+ */
 class CategoryRecycleAdapter (
     private val context: Context,
     private val list: ArrayList<Category>,
@@ -92,7 +96,6 @@ class CategoryRecycleAdapter (
 
     /**
      * Get the Drawable icon for a category.
-     *
      * @param category The category object containing icon information.
      * @return Drawable representing the category icon.
      */
@@ -102,21 +105,32 @@ class CategoryRecycleAdapter (
         return context.getDrawable(id)
     }
 
+    /**
+     * Returns the resource ID for the category icon.
+     */
     fun getCategoryIconResId(category: Category): Int {
         return context.resources.getIdentifier(category.icon, "drawable", context.packageName)
     }
 
+    /**
+     * Sets the click listener for category items.
+     */
     fun setOnClickListener(onClickListener: OnClickListener) {
         this.onClickListener = onClickListener
     }
 
+    /**
+     * Move to the next page of category items (if available).
+     */
     fun nextPage() {
         if ((currentPage + 1) * pageSize < list.size) {
             currentPage++
             updateData()
         }
     }
-
+    /**
+     * Move to the previous page of category items (if available).
+     */
     fun previousPage() {
         if (currentPage > 0) {
             currentPage--
@@ -177,7 +191,9 @@ class CategoryRecycleAdapter (
             }
         }
     }
-
+    /**
+     * ItemDecoration class for Flexbox layout spacing between items.
+     */
     class FlexboxItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             outRect.left = spacing

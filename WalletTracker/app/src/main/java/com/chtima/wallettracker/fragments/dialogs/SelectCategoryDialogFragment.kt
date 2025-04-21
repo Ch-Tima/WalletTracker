@@ -44,6 +44,7 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
          * Static factory method to create a new instance of SelectCategoryDialogFragment.
          * @param categoryType - use to filter and show only a specific type category
          * @return A new instance of SelectCategoryDialogFragment.
+         * @param displayType Display layout type (GRID or LIST)
          */
         public fun newInstance(categoryType: CategoryType?, isShowSelectCategory: Boolean, displayType: DisplayType): SelectCategoryDialogFragment {
             val fragment = SelectCategoryDialogFragment()
@@ -59,6 +60,7 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Retrieve arguments passed to the fragment and initialize fields
         val ct = arguments?.getString(CATEGORY_TYPE)
 
         if(ct != null) categoryType = CategoryType.valueOf(ct)
@@ -74,9 +76,9 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
     ): View {
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_category_selection, container, false)
-
+        // Initialize RecyclerView for showing categories
         recyclerView = v.findViewById(R.id.list_category)
-
+        // Choose logic class based on selected display type (GRID or LIST)
         when(displayType){
             DisplayType.GRID -> {
                 selectCategoryLogic = SelectCategoryGridLogic(
@@ -96,15 +98,12 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
                 )
             }
         }
-
-
-
         return v
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        selectCategoryLogic.setupUI()
+        selectCategoryLogic.setupUI()// Set up UI components and data binding
     }
 
     override fun onStart() {

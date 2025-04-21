@@ -15,6 +15,10 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 
+/**
+ * This class handles the logic for displaying categories in a flexible list (using FlexboxLayoutManager).
+ * It connects the UI with the ViewModel and sets up click interactions and item decorations.
+ */
 class SelectCategoryLogic(
     f: Fragment,
     rv: RecyclerView,

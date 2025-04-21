@@ -37,7 +37,7 @@ class SelectCategoryGridLogic(
             )
         )
 
-
+        //just processing swipe left/right
         onSwipeTouchListener = OnSwipeTouchListener(fragment.requireContext(), object : OnSwipeTouchListener.onSwipe {
             override fun onSwipeLeft() {
                 adapter.nextPage()

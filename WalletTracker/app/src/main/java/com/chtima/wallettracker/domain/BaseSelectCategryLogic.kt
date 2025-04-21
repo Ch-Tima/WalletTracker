@@ -16,9 +16,14 @@ abstract class BaseSelectCategoryLogic constructor(
     protected val isShowSelectCategory: Boolean
 ) {
 
+    // Adapter responsible for rendering categories in the RecyclerView
     protected open lateinit var adapter: CategoryRecycleAdapter
+    // ViewModel to fetch categories from the data layer
     protected open lateinit var categoryViewModel: CategoryViewModel
     protected open lateinit var onSwipeTouchListener: OnSwipeTouchListener
 
+    /**
+     * Set up UI components: layout manager, adapter, item click listener, and data binding via ViewModel.
+     */
     public abstract fun setupUI();
 }
