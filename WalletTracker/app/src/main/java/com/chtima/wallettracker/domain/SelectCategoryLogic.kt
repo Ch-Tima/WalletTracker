@@ -23,13 +23,15 @@ class SelectCategoryLogic(
     f: Fragment,
     rv: RecyclerView,
     scl: DialogObserver<Category>?,
+    selectedListCategoryListener: DialogObserver<List<Category>>?,
     cType: Category.CategoryType?,
     isShowSelect: Boolean
 ) : BaseSelectCategoryLogic(fragment = f,
     recyclerView = rv,
     selectCategoryListener = scl,
     categoryType = cType,
-    isShowSelectCategory = isShowSelect){
+    isShowSelectCategory = isShowSelect,
+    selectedListCategoryListener = selectedListCategoryListener) {
 
     override fun setupUI() {
         adapter = CategoryRecycleAdapter(fragment.requireContext(), ArrayList(), isShowSelectCategory)

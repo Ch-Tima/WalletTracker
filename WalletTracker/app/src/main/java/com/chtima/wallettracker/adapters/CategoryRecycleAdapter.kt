@@ -24,8 +24,8 @@ class CategoryRecycleAdapter (
     private val list: ArrayList<Category>,
     private val isShowSelectedItem: Boolean) : RecyclerView.Adapter<CategoryRecycleAdapter.ViewHolder>() {
 
-    private var selectedCategory: Category? = null
     private var onClickListener: OnClickListener? = null
+    private val selectedCategories = mutableSetOf<Category>()
 
     private val pageSize = 6
     private var currentPage = 0
@@ -48,17 +48,21 @@ class CategoryRecycleAdapter (
         //holder.icon.setBackgroundResource(getCategoryIconResId(it).let { if(it == -1) R.drawable.help_24dp else it })
 
         holder.itemView.setOnClickListener { _ ->
-            selectedCategory = it //set new selected category
+            //set new/delete selected category
+            if (selectedCategories.contains(it))
+                selectedCategories.remove(it)
+            else selectedCategories.add(it)
             notifyDataSetChanged() //update ui
             onClickListener?.onClick(it)
         }
 
         if(!isShowSelectedItem) return;
 
-        if(it.equals(selectedCategory)){ //Set the style for a selected item
+        if(selectedCategories.contains(it)){ //Set the style for a selected item
             holder.itemView.setBackgroundResource(R.drawable.rounded_blue_8dp)
             holder.icon.setImageTintList(context.getColorStateList(R.color.white))
             holder.title.setTextColor(context.getColor(R.color.white))
+            this.selectedCategories.add(it)
         }
         else {
             holder.itemView.setBackgroundResource(R.drawable.rounded_8dp_ashen35)
@@ -138,6 +142,9 @@ class CategoryRecycleAdapter (
         }
     }
 
+    fun getSelectedCategories() : List<Category>{
+        return this.selectedCategories.toList()
+    }
 
     /**
      * ViewHolder class for caching views in each RecyclerView item.

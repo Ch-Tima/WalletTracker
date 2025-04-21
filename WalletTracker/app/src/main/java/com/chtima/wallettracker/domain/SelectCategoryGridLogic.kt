@@ -1,6 +1,7 @@
 package com.chtima.wallettracker.domain
 
 import android.annotation.SuppressLint
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -15,14 +16,15 @@ class SelectCategoryGridLogic(
     f: Fragment,
     rv: RecyclerView,
     scl: DialogObserver<Category>?,
+    selectedListCategoryListener: DialogObserver<List<Category>>?,
     cType: Category.CategoryType?,
     isShowSelect: Boolean
 ) : BaseSelectCategoryLogic(fragment = f,
     recyclerView = rv,
     selectCategoryListener = scl,
     categoryType = cType,
-    isShowSelectCategory = isShowSelect) {
-
+    isShowSelectCategory = isShowSelect,
+    selectedListCategoryListener = selectedListCategoryListener) {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun setupUI() {
@@ -36,7 +38,11 @@ class SelectCategoryGridLogic(
                 true // include edge spacing
             )
         )
-
+        adapter.setOnClickListener(object : CategoryRecycleAdapter.OnClickListener{
+            override fun onClick(category: Category) {
+                selectedListCategoryListener?.onSuccess(adapter.getSelectedCategories())
+            }
+        })
         //just processing swipe left/right
         onSwipeTouchListener = OnSwipeTouchListener(fragment.requireContext(), object : OnSwipeTouchListener.onSwipe {
             override fun onSwipeLeft() {
@@ -48,7 +54,8 @@ class SelectCategoryGridLogic(
         })
 
         recyclerView.setOnTouchListener(onSwipeTouchListener)
-
+        recyclerView.isNestedScrollingEnabled = false
+        recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
         categoryViewModel = ViewModelProvider(fragment.requireActivity())[CategoryViewModel::class.java]
         categoryViewModel.getByType(this.categoryType).observe(fragment) {
             adapter.updateList(it)

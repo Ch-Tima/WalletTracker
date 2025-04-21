@@ -12,6 +12,7 @@ abstract class BaseSelectCategoryLogic constructor(
     protected val fragment: Fragment,
     protected val recyclerView: RecyclerView,
     protected val selectCategoryListener: DialogObserver<Category>?,
+    protected val selectedListCategoryListener: DialogObserver<List<Category>>?,
     protected val categoryType: Category.CategoryType?,
     protected val isShowSelectCategory: Boolean
 ) {
@@ -25,5 +26,5 @@ abstract class BaseSelectCategoryLogic constructor(
     /**
      * Set up UI components: layout manager, adapter, item click listener, and data binding via ViewModel.
      */
-    public abstract fun setupUI();
+    public abstract fun setupUI()
 }

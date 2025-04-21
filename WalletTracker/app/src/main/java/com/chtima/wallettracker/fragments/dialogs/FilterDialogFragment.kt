@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import com.chtima.wallettracker.R
+import com.chtima.wallettracker.models.Category
+import com.chtima.wallettracker.models.DialogObserver
 import com.chtima.wallettracker.models.DisplayType
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -27,6 +29,11 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         val v = inflater.inflate(R.layout.fragment_filter_dialog, container, false)
         //creating a "Select Category DialogFragment" as a grid with multiple selections
         val selectCategoryDF = SelectCategoryDialogFragment.newInstance(null, true, DisplayType.GRID)
+        selectCategoryDF.setSelectCategoryListListener(object: DialogObserver<List<Category>>{
+            override fun onSuccess(result: List<Category>) {
+                //!here we get the list of selected categories!
+            }
+        })
         childFragmentManager.beginTransaction()
             .replace(R.id.category_fragment, selectCategoryDF)
             .commit()

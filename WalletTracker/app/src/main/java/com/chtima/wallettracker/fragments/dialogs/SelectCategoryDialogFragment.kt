@@ -18,7 +18,8 @@ import com.chtima.wallettracker.models.DisplayType
 
 class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
-    private var selectCategoryListener:DialogObserver<Category>? = null
+    private var selectedLastCategoryListener:DialogObserver<Category>? = null
+    private var selectedListCategoryListener:DialogObserver<List<Category>>? = null
     private var categoryType:CategoryType? = null
     private var isShowSelectCategory = false
     private lateinit var selectCategoryLogic: BaseSelectCategoryLogic
@@ -84,7 +85,8 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
                 selectCategoryLogic = SelectCategoryGridLogic(
                     this,
                     recyclerView,
-                    selectCategoryListener,
+                    selectedLastCategoryListener,
+                    selectedListCategoryListener,
                     categoryType,
                     isShowSelectCategory
                 )
@@ -92,7 +94,8 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
                 selectCategoryLogic = SelectCategoryLogic(
                     this,
                     recyclerView,
-                    selectCategoryListener,
+                    selectedLastCategoryListener,
+                    null,
                     categoryType,
                     isShowSelectCategory
                 )
@@ -122,7 +125,11 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
      * @param selectCategoryListener The listener to be set.
      */
     fun setSelectCategoryListener(selectCategoryListener : DialogObserver<Category>){
-        this.selectCategoryListener = selectCategoryListener;
+        this.selectedLastCategoryListener = selectCategoryListener
+    }
+
+    fun setSelectCategoryListListener(selectCategoriesListener : DialogObserver<List<Category>>){
+        this.selectedListCategoryListener = selectCategoriesListener
     }
 
 }
