@@ -235,5 +235,6 @@
     <string name="search">Search</string>
     <string name="filter">Filter</string>
     <string name="test_small_date">12.08.11-12.08.24</string>
+    <string name="tag_page">tpagex</string>
 
 </resources>

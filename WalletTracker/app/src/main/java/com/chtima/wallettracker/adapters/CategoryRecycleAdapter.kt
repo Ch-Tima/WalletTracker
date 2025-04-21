@@ -30,6 +30,7 @@ class CategoryRecycleAdapter (
     private val pageSize = 6
     private var currentPage = 0
     private var currentData = mutableListOf<Category>()
+    private var showAll: Boolean = true
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -90,9 +91,13 @@ class CategoryRecycleAdapter (
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateData() {//show all
-        val startIndex = currentPage * pageSize
-        val endIndex = minOf(startIndex + pageSize, list.size)
+    private fun updateData() {
+        var startIndex = 0
+        var endIndex = list.size
+        if(!showAll){
+            startIndex = currentPage * pageSize
+            endIndex = minOf(startIndex + pageSize, list.size)
+        }
         currentData.clear()
         currentData.addAll(list.subList(startIndex, endIndex))
         notifyDataSetChanged()
@@ -142,8 +147,21 @@ class CategoryRecycleAdapter (
         }
     }
 
+    fun setShowAll(o: Boolean){
+        showAll = o
+        updateData()
+    }
+
     fun getSelectedCategories() : List<Category>{
         return this.selectedCategories.toList()
+    }
+
+    fun getCountPages(): Int {
+        return if (list.isEmpty()) 1 else ((list.size - 1) / pageSize)+1
+    }
+
+    fun getCurrentPage() : Int {
+        return this.currentPage
     }
 
     /**
