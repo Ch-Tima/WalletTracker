@@ -78,7 +78,7 @@
                         android:id="@+id/text_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/test_small_date"
+                        android:text="@string/date"
                         android:layout_marginStart="5dp"
                         android:fontFamily="@font/outfit_medium"
                         app:layout_constraintLeft_toRightOf="@id/btn_date_picker"

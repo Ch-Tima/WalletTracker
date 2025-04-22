@@ -11,6 +11,7 @@ import android.view.inputmethod.EditorInfo.*
 import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 import com.chtima.wallettracker.fragments.simples.DisplayTransactionListFragment
@@ -40,6 +41,12 @@ class TransactionReportFragment : Fragment() {
             val existing = childFragmentManager.findFragmentByTag("FilterDialog") as? FilterDialogFragment
             if (existing == null || !existing.isVisible) {
                 val dialog = FilterDialogFragment.newInstance()
+                dialog.setOnChangedListener({result ->
+                    Toast.makeText(requireContext(), "OK", Toast.LENGTH_SHORT).show()
+
+                }, {
+                    Toast.makeText(requireContext(), "Clear", Toast.LENGTH_SHORT).show()
+                })
                 dialog.show(childFragmentManager, "FilterDialog")
             }
         }
@@ -47,17 +54,12 @@ class TransactionReportFragment : Fragment() {
         titleEditText = view.findViewById(R.id.title_edit)//TextInputEditText
         titleEditText.setOnEditorActionListener { v, actionId, keyEv ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                setFilter()
                 true
             }
             false
         }
 
         return view
-    }
-
-    fun setFilter(){
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
