@@ -59,7 +59,6 @@ class DisplayTransactionListFragment : Fragment() {
             f = TransactionFilter(categoryWithTransactions, {
                 adapter.updateList(toTransactionList(it))
             })
-            //f.byTitle("c").apply()//TEST
         }
     }
 
@@ -102,7 +101,7 @@ class DisplayTransactionListFragment : Fragment() {
         }
 
 
-        public fun apply(){
+        fun apply(){
             callback(filtered)
         }
 
