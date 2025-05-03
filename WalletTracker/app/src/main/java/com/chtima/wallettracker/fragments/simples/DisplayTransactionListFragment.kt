@@ -9,13 +9,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.adapters.TransactionAdapter
-import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.CategoryWithTransactions
 import com.chtima.wallettracker.models.Transaction
 import com.chtima.wallettracker.viewModels.CategoryViewModel
+import java.util.Collections
 import java.util.Date
-
+import java.util.stream.Collector
+import java.util.stream.Collectors
 
 /**
  * Fragment для вывода спика транзакций с возможностью влияния на выводимую информацию через @
@@ -57,9 +58,9 @@ class DisplayTransactionListFragment : Fragment() {
         categoryVM = ViewModelProvider(this)[CategoryViewModel::class]
         categoryVM.getCategoriesWithTransactionsByUser().observe(viewLifecycleOwner){
             categoryWithTransactions = it.toList()
-            f = TransactionFilter(categoryWithTransactions, {
-                adapter.updateList(toTransactionList(it))
-            })
+            f = TransactionFilter(categoryWithTransactions) { l ->
+                adapter.updateList(toTransactionList(l))
+            }
             f.apply()
         }
     }
@@ -74,7 +75,9 @@ class DisplayTransactionListFragment : Fragment() {
     class TransactionFilter constructor(
         private val categoryWithTransactions: List<CategoryWithTransactions>,
         private val callback: (List<CategoryWithTransactions>) -> Unit){
+
         private var filtered: List<CategoryWithTransactions> = categoryWithTransactions.toList()
+
         fun byTitle(text: String): TransactionFilter {
             filtered = filtered.map { cwt ->
                 cwt.copy(
@@ -100,18 +103,28 @@ class DisplayTransactionListFragment : Fragment() {
             return this
         }
         fun byCategory(list: List<Category>): TransactionFilter{
+            if(list.isNotEmpty())
+                filtered = filtered.filter { list.any{ l -> l.id == it.category.id } }
             return this
         }
         fun byDate(dS: Date, dE: Date): TransactionFilter{
+            filtered = filtered.map { cwt ->
+                cwt.copy(transactions = cwt.transactions.filter {
+                    it.dateTime.after(dS) && it.dateTime.before(dE)
+                })
+            }
             return this
         }
         fun byType(type: Transaction.TransactionType): TransactionFilter{
+            filtered.forEach{ it.transactions.toMutableList().removeIf {x -> x.type != type} }
             return this
         }
         fun clear(): TransactionFilter{
+            filtered = categoryWithTransactions
             return this
         }
         fun apply(){
+            filtered = filtered.filter { it.transactions.isNotEmpty() }
             callback(filtered)
         }
     }

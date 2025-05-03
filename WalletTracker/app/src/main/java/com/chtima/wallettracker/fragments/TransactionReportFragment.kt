@@ -15,7 +15,6 @@ import android.widget.Toast
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 import com.chtima.wallettracker.fragments.simples.DisplayTransactionListFragment
-import com.chtima.wallettracker.viewModels.CategoryViewModel
 import com.google.android.material.textfield.TextInputEditText
 
 class TransactionReportFragment : Fragment() {
@@ -47,6 +46,8 @@ class TransactionReportFragment : Fragment() {
                         val f = this.displayTransactionListFragment.filter()
                         result.getListOfCategory().isNotEmpty().let { f.byCategory(result.getListOfCategory()) }
                         result.getTransactionType()?.let { f.byType(it) }
+                        if(result.getDateStart()!=null && result.getDateEnd()!=null)
+                            f.byDate(result.getDateStart()!!, result.getDateEnd()!!)
                         f.apply()
                     }
                 }, {
