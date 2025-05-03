@@ -131,7 +131,7 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
             this.listOfCategory = listOfCategory
         }
 
-        private fun getTransactionType(): Transaction.TransactionType? {
+        fun getTransactionType(): Transaction.TransactionType? {
             return transactionType
         }
 
@@ -139,7 +139,7 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
             this.transactionType = transactionType
         }
 
-        public fun getDateStart(): Date? {
+        fun getDateStart(): Date? {
             return dateStart
         }
 

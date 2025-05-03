@@ -43,9 +43,15 @@ class TransactionReportFragment : Fragment() {
                 val dialog = FilterDialogFragment.newInstance()
                 dialog.setOnChangedListener({result ->
                     Toast.makeText(requireContext(), "OK", Toast.LENGTH_SHORT).show()
-
+                    result?.let {
+                        val f = this.displayTransactionListFragment.filter()
+                        result.getListOfCategory().isNotEmpty().let { f.byCategory(result.getListOfCategory()) }
+                        result.getTransactionType()?.let { f.byType(it) }
+                        f.apply()
+                    }
                 }, {
                     Toast.makeText(requireContext(), "Clear", Toast.LENGTH_SHORT).show()
+                    this.displayTransactionListFragment.filter().clear().apply()
                 })
                 dialog.show(childFragmentManager, "FilterDialog")
             }

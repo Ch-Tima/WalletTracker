@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.adapters.TransactionAdapter
+import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.CategoryWithTransactions
 import com.chtima.wallettracker.models.Transaction
@@ -59,6 +60,7 @@ class DisplayTransactionListFragment : Fragment() {
             f = TransactionFilter(categoryWithTransactions, {
                 adapter.updateList(toTransactionList(it))
             })
+            f.apply()
         }
     }
 
@@ -69,11 +71,10 @@ class DisplayTransactionListFragment : Fragment() {
 
     public fun filter() = f
 
-    class TransactionFilter (private val categoryWithTransactions: List<CategoryWithTransactions>,
-               private val callback: (List<CategoryWithTransactions>) -> Unit){
-
+    class TransactionFilter constructor(
+        private val categoryWithTransactions: List<CategoryWithTransactions>,
+        private val callback: (List<CategoryWithTransactions>) -> Unit){
         private var filtered: List<CategoryWithTransactions> = categoryWithTransactions.toList()
-
         fun byTitle(text: String): TransactionFilter {
             filtered = filtered.map { cwt ->
                 cwt.copy(
@@ -82,7 +83,6 @@ class DisplayTransactionListFragment : Fragment() {
             }.filter { it.transactions.isNotEmpty() }
             return this
         }
-
         fun byNote(note: String): TransactionFilter {
             filtered = filtered.map { categoryWithTransactions ->
                 categoryWithTransactions.copy(
@@ -99,12 +99,21 @@ class DisplayTransactionListFragment : Fragment() {
             }.filter { it.transactions.isNotEmpty() }
             return this
         }
-
-
+        fun byCategory(list: List<Category>): TransactionFilter{
+            return this
+        }
+        fun byDate(dS: Date, dE: Date): TransactionFilter{
+            return this
+        }
+        fun byType(type: Transaction.TransactionType): TransactionFilter{
+            return this
+        }
+        fun clear(): TransactionFilter{
+            return this
+        }
         fun apply(){
             callback(filtered)
         }
-
     }
     /**
      * @return all Transaction from List&lt;CategoryWithTransactions&gt;
@@ -116,12 +125,5 @@ class DisplayTransactionListFragment : Fragment() {
         return l.flatMap { it.transactions }
     }
 
-    class SortingCriteria{
-        var title: String = ""
-        var note: String = ""
-        var categories: List<Category> = ArrayList()
-        var date: Date? = null
-        var transactionType : Transaction.TransactionType? = null
-    }
 
 }
