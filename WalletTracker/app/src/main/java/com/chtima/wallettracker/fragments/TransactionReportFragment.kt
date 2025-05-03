@@ -1,16 +1,12 @@
 package com.chtima.wallettracker.fragments
 
 import android.os.Bundle
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.EditorInfo.*
-import android.widget.FrameLayout
 import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
@@ -23,6 +19,7 @@ class TransactionReportFragment : Fragment() {
     private lateinit var titleEditText : TextInputEditText
     private lateinit var displayTransactionListFragment: DisplayTransactionListFragment
     private lateinit var filterDialogFragment: FilterDialogFragment
+    private var filterParams: FilterDialogFragment.FilterParams? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,17 +39,10 @@ class TransactionReportFragment : Fragment() {
                 val dialog = FilterDialogFragment.newInstance()
                 dialog.setOnChangedListener({result ->
                     Toast.makeText(requireContext(), "OK", Toast.LENGTH_SHORT).show()
-                    result?.let {
-                        val f = this.displayTransactionListFragment.filter()
-                        result.getListOfCategory().isNotEmpty().let { f.byCategory(result.getListOfCategory()) }
-                        result.getTransactionType()?.let { f.byType(it) }
-                        if(result.getDateStart()!=null && result.getDateEnd()!=null)
-                            f.byDate(result.getDateStart()!!, result.getDateEnd()!!)
-                        f.apply()
-                    }
+                    setFilter(result)
                 }, {
                     Toast.makeText(requireContext(), "Clear", Toast.LENGTH_SHORT).show()
-                    this.displayTransactionListFragment.filter().clear().apply()
+                    setFilter(null)
                 })
                 dialog.show(childFragmentManager, "FilterDialog")
             }
@@ -61,12 +51,34 @@ class TransactionReportFragment : Fragment() {
         titleEditText = view.findViewById(R.id.title_edit)//TextInputEditText
         titleEditText.setOnEditorActionListener { v, actionId, keyEv ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
+                setFilter()
+                displayTransactionListFragment.filter().byText(v.text.toString()).apply()
                 true
             }
             false
         }
 
         return view
+    }
+
+    private fun setFilter(fp : FilterDialogFragment.FilterParams?){
+        filterParams = fp
+        setFilter()
+    }
+
+    private fun setFilter(){
+        val f = this.displayTransactionListFragment.filter()
+        f.clear().apply()
+        val filterParams = this.filterParams
+        filterParams?.let {
+            filterParams.getListOfCategory().isNotEmpty().let { f.byCategory(filterParams.getListOfCategory()) }
+            filterParams.getTransactionType()?.let { f.byType(it) }
+            if(filterParams.getDateStart()!=null && filterParams.getDateEnd()!=null)
+                f.byDate(filterParams.getDateStart()!!, filterParams.getDateEnd()!!)
+            f.apply()
+        }?:run {
+            f.clear().apply()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

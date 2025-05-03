@@ -78,20 +78,15 @@ class DisplayTransactionListFragment : Fragment() {
 
         private var filtered: List<CategoryWithTransactions> = categoryWithTransactions.toList()
 
-        fun byTitle(text: String): TransactionFilter {
+        fun byText(text: String): TransactionFilter {
             filtered = filtered.map { cwt ->
-                cwt.copy(
-                    transactions = cwt.transactions.filter { it.title.contains(text, ignoreCase = true) }
-                )
-            }.filter { it.transactions.isNotEmpty() }
-            return this
-        }
-        fun byNote(note: String): TransactionFilter {
-            filtered = filtered.map { categoryWithTransactions ->
-                categoryWithTransactions.copy(
-                    transactions = categoryWithTransactions.transactions.filter { it.note?.contains(note, ignoreCase = true) == true }
-                )
-            }.filter { it.transactions.isNotEmpty() }
+                cwt.copy(transactions = cwt.transactions.filter {
+                    val title = it.title.lowercase()
+                    val note = it.note.orEmpty().take(50).lowercase()
+                    val words = ("$title $note").split("\\s+".toRegex())
+                    words.any { word -> word.contains(text.lowercase()) }
+                })
+            }
             return this
         }
         fun bySum(min: Double, max: Double): TransactionFilter {
