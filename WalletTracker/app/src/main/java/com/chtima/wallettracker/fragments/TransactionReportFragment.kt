@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
-import android.widget.Toast
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 import com.chtima.wallettracker.fragments.simples.DisplayTransactionListFragment
@@ -23,6 +22,13 @@ class TransactionReportFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        filterDialogFragment = FilterDialogFragment.newInstance(
+            { result ->
+                setFilter(result)
+            }, {
+                setFilter(null)
+            }
+        )
     }
 
     override fun onCreateView(
@@ -32,19 +38,13 @@ class TransactionReportFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_transaction_report, container, false)
 
-        filterBtn = view.findViewById<ImageButton>(R.id.btn_filter)
+        filterBtn = view.findViewById<ImageButton>(R.id.btn_filter)//-F* предется делать логику помещения данных в FilterDialogFragment
+            /// 17.05.25  -F* ты очем  ?
         filterBtn.setOnClickListener {
-            val existing = childFragmentManager.findFragmentByTag("FilterDialog") as? FilterDialogFragment
-            if (existing == null || !existing.isVisible) {
-                val dialog = FilterDialogFragment.newInstance()
-                dialog.setOnChangedListener({result ->
-                    Toast.makeText(requireContext(), "OK", Toast.LENGTH_SHORT).show()
-                    setFilter(result)
-                }, {
-                    Toast.makeText(requireContext(), "Clear", Toast.LENGTH_SHORT).show()
-                    setFilter(null)
-                })
-                dialog.show(childFragmentManager, "FilterDialog")
+            if (!filterDialogFragment.isAdded) {
+                filterDialogFragment.show(childFragmentManager, "FilterDialog")
+            } else {
+                filterDialogFragment.dialog?.show()
             }
         }
 
@@ -72,7 +72,7 @@ class TransactionReportFragment : Fragment() {
         val filterParams = this.filterParams
         filterParams?.let {
             filterParams.getListOfCategory().isNotEmpty().let { f.byCategory(filterParams.getListOfCategory()) }
-            filterParams.getTransactionType()?.let { f.byType(it) }
+            filterParams.getTransactionType()?.let { t -> f.byType(t) }
             if(filterParams.getDateStart()!=null && filterParams.getDateEnd()!=null)
                 f.byDate(filterParams.getDateStart()!!, filterParams.getDateEnd()!!)
             f.apply()
@@ -84,8 +84,6 @@ class TransactionReportFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         displayTransactionListFragment = DisplayTransactionListFragment.newInstance()
-        filterDialogFragment = FilterDialogFragment.newInstance()
-
         childFragmentManager.beginTransaction()
             .replace(R.id.display_transactions, displayTransactionListFragment)
             .commit()

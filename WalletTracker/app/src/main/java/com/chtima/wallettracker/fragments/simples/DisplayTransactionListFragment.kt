@@ -111,7 +111,11 @@ class DisplayTransactionListFragment : Fragment() {
             return this
         }
         fun byType(type: Transaction.TransactionType): TransactionFilter{
-            filtered.forEach{ it.transactions.toMutableList().removeIf {x -> x.type != type} }
+            filtered = filtered.map { cwt ->
+                cwt.copy(transactions = cwt.transactions.filter {
+                    it.type == type
+                })
+            }
             return this
         }
         fun clear(): TransactionFilter{

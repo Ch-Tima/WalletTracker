@@ -1,6 +1,7 @@
 package com.chtima.wallettracker.fragments.dialogs
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -84,15 +85,21 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         //Button to clear filters
         v.findViewById<Button>(R.id.btn_clear).setOnClickListener({_ ->
             sendClear()
-            filterParams = FilterParams()
+            dismiss()
         })
         //Button to accept filters & close
         v.findViewById<Button>(R.id.btn_done).setOnClickListener({_ ->
             sendСhanges(filterParams)
-            this.dismiss()
+            this.dialog?.hide()
         })
+        this.isCancelable = false
 
         return v
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        //super.onCancel(dialog)
+        this.dialog?.hide()
     }
 
     public fun setOnChangedListener(filter: (fp: FilterParams?) -> Unit, clear: () -> Unit){
@@ -114,7 +121,12 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
          * Factory method to create a new instance of FilterDialogFragment.
          */
         @JvmStatic
-        fun newInstance() = FilterDialogFragment().apply {}
+        fun newInstance(onFilterChanged: (FilterParams?) -> Unit,
+                        onFilterCleared: () -> Unit) : FilterDialogFragment{
+            return FilterDialogFragment().apply {
+                setOnChangedListener(onFilterChanged, onFilterCleared)
+            }
+        }
     }
 
     public class FilterParams(){
