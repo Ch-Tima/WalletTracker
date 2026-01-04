@@ -11,12 +11,14 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.components.SwitchTransactionView
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.DialogObserver
 import com.chtima.wallettracker.models.DisplayType
 import com.chtima.wallettracker.models.Transaction
+import com.chtima.wallettracker.viewModels.TransactionReportViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -31,10 +33,20 @@ import java.util.Locale
  */
 class FilterDialogFragment : BottomSheetDialogFragment() {
 
-    private lateinit var dateRangePickerTextView: TextView
+
     private lateinit var sendСhanges : (f: FilterParams) -> Unit
     private lateinit var sendClear : () -> Unit
-    private var filterParams: FilterParams = FilterParams()
+    private lateinit var filterParams: FilterParams
+    private lateinit var transactionReportVM : TransactionReportViewModel
+    private lateinit var selectCategoryDF: SelectCategoryDialogFragment
+
+    //UI
+    private lateinit var switchTransactionView: SwitchTransactionView
+    private lateinit var dateRangePickerTextView: TextView
+    private lateinit var btnDatePicker: ImageButton
+    private lateinit var btnClear: Button
+    private lateinit var btnDone: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,27 +57,48 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
         val v = inflater.inflate(R.layout.fragment_filter_dialog, container, false)
+
+        //Get SwitchTransactionView
+        switchTransactionView = v.findViewById<SwitchTransactionView>(R.id.swicher_transaction_type)
+        //DateTextView
+        dateRangePickerTextView = v.findViewById<TextView>(R.id.text_date)
+        //DatePicker
+        btnDatePicker = v.findViewById<ImageButton>(R.id.btn_date_picker);
+        //Button to clear filters
+        btnClear = v.findViewById<Button>(R.id.btn_clear)
+        //Button to accept filters & close
+        btnDone = v.findViewById<Button>(R.id.btn_done)
+
+        return v
+    }
+
+    @SuppressLint("SetTextI18n")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        transactionReportVM = ViewModelProvider(requireActivity())[TransactionReportViewModel::class]
+        filterParams = transactionReportVM.getFilter() ?: FilterParams()
+
         //creating a "Select Category DialogFragment" as a grid with multiple selections
-        val selectCategoryDF = SelectCategoryDialogFragment.newInstance(null, true, DisplayType.GRID)
-        selectCategoryDF.setSelectCategoryListListener(object: DialogObserver<List<Category>>{
-            override fun onSuccess(result: List<Category>) {
-               filterParams.setListOfCategory(result)
-            }
-        })
+        selectCategoryDF = SelectCategoryDialogFragment.newInstance(null, true, DisplayType.GRID)
         childFragmentManager.beginTransaction()
             .replace(R.id.category_fragment, selectCategoryDF)
             .commit()
-        //
-        dateRangePickerTextView = v.findViewById<TextView>(R.id.text_date)
-        //Get SwitchTransactionView and subscription to wiretapping
-        val switchTransactionView = v.findViewById<SwitchTransactionView>(R.id.swicher_transaction_type)
+
+        //SwitchTransactionView subscription to wiretapping
+        filterParams.getTransactionType()?.let {
+            switchTransactionView.setSelectedType(it)
+        }
         switchTransactionView.addSwitchTransactionListener(object: SwitchTransactionView.SwitchTransactionListener{
             override fun onChangedSelection(type: Transaction.TransactionType) {
                 filterParams.setTransactionType(type)
             }
         })
+
+        //
+
         val dateRangePicker = MaterialDatePicker.Builder.dateRangePicker()
         dateRangePicker.setTitleText("Select dates")
         //
@@ -74,27 +107,31 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         //
         val picker = dateRangePicker.build()
         val sdf = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+        filterParams.getDateStart()?.let { s ->
+            filterParams.getDateEnd()?.let { e ->
+                dateRangePickerTextView.text ="${sdf.format(s)}-${sdf.format(e)}"
+            }
+        }
         picker.addOnPositiveButtonClickListener { selection ->
             filterParams.setDate(Date(selection.first), Date(selection.second))
             dateRangePickerTextView.text ="${sdf.format(Date(selection.first))}-${sdf.format(Date(selection.second))}"
         }
-        //
-        v.findViewById<ImageButton>(R.id.btn_date_picker).setOnClickListener({ _ ->
+        btnDatePicker.setOnClickListener({ _ ->
             picker.show((requireContext() as AppCompatActivity).supportFragmentManager, picker.toString())
         })
-        //Button to clear filters
-        v.findViewById<Button>(R.id.btn_clear).setOnClickListener({_ ->
+
+        btnClear.setOnClickListener{_ ->
             sendClear()
             dismiss()
-        })
-        //Button to accept filters & close
-        v.findViewById<Button>(R.id.btn_done).setOnClickListener({_ ->
+        }
+
+        btnDone.setOnClickListener{_ ->
             sendСhanges(filterParams)
             this.dialog?.hide()
-        })
+        }
+
         this.isCancelable = false
 
-        return v
     }
 
     override fun onCancel(dialog: DialogInterface) {

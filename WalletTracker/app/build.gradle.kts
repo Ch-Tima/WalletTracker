@@ -79,6 +79,7 @@ dependencies {
     //SqlCipher
     implementation(libs.zetetic.android.database.sqlcipher)
     implementation(libs.androidx.sqlite.framework)
+    //implementation(com.github.smarteist:autoimageslider:1.4.0)
 
     //EventBus
     implementation(libs.eventbus)

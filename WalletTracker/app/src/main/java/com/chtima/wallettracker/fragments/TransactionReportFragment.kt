@@ -7,28 +7,39 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
+import androidx.lifecycle.ViewModelProvider
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 import com.chtima.wallettracker.fragments.simples.DisplayTransactionListFragment
+import com.chtima.wallettracker.viewModels.TransactionReportViewModel
 import com.google.android.material.textfield.TextInputEditText
 
+
+/*
+*
+* */
 class TransactionReportFragment : Fragment() {
 
     private lateinit var filterBtn: ImageButton
     private lateinit var titleEditText : TextInputEditText
     private lateinit var displayTransactionListFragment: DisplayTransactionListFragment
     private lateinit var filterDialogFragment: FilterDialogFragment
-    private var filterParams: FilterDialogFragment.FilterParams? = null
+
+    private lateinit var transactionReportVM : TransactionReportViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        transactionReportVM = ViewModelProvider(requireActivity())[TransactionReportViewModel::class]
         filterDialogFragment = FilterDialogFragment.newInstance(
             { result ->
-                setFilter(result)
+                transactionReportVM.setFilterParams(result)
+                setFilter()
             }, {
-                setFilter(null)
+                transactionReportVM.setFilterParams(null)
+                setFilter()
             }
         )
+        setFilter()
     }
 
     override fun onCreateView(
@@ -38,8 +49,10 @@ class TransactionReportFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_transaction_report, container, false)
 
-        filterBtn = view.findViewById<ImageButton>(R.id.btn_filter)//-F* предется делать логику помещения данных в FilterDialogFragment
-            /// 17.05.25  -F* ты очем  ?
+        filterBtn = view.findViewById<ImageButton>(R.id.btn_filter)
+        //-F* предется делать логику помещения данных в FilterDialogFragment
+        // 17.05.25  -F* ты очем  ?
+        // 01/04/26 ок пон:)
         filterBtn.setOnClickListener {
             if (!filterDialogFragment.isAdded) {
                 filterDialogFragment.show(childFragmentManager, "FilterDialog")
@@ -61,15 +74,17 @@ class TransactionReportFragment : Fragment() {
         return view
     }
 
-    private fun setFilter(fp : FilterDialogFragment.FilterParams?){
-        filterParams = fp
-        setFilter()
-    }
-
     private fun setFilter(){
+
+        if (!::displayTransactionListFragment.isInitialized) {
+            return
+        }
+
         val f = this.displayTransactionListFragment.filter()
         f.clear().apply()
-        val filterParams = this.filterParams
+
+        val filterParams = this.transactionReportVM.getFilter()
+
         filterParams?.let {
             filterParams.getListOfCategory().isNotEmpty().let { f.byCategory(filterParams.getListOfCategory()) }
             filterParams.getTransactionType()?.let { t -> f.byType(t) }

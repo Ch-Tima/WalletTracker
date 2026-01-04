@@ -47,7 +47,10 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
          * @return A new instance of SelectCategoryDialogFragment.
          * @param displayType Display layout type (GRID or LIST)
          */
-        public fun newInstance(categoryType: CategoryType?, isShowSelectCategory: Boolean, displayType: DisplayType): SelectCategoryDialogFragment {
+        public fun newInstance(categoryType: CategoryType?,
+                               isShowSelectCategory: Boolean,
+                               displayType: DisplayType,
+                               ): SelectCategoryDialogFragment {
             val fragment = SelectCategoryDialogFragment()
             val bundle = Bundle()
             bundle.putString(CATEGORY_TYPE, categoryType?.name)
