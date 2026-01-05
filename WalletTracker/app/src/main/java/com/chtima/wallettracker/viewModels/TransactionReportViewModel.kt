@@ -2,11 +2,12 @@ package com.chtima.wallettracker.viewModels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 
 /**
- *   TransactionReportViewModel
+ *  TransactionReportViewModel
  * Был создан для сохронения filterParams вовремя перехода между Fragments
  *
  * Управление состоянием фильтров в диалоге FilterDialogFragment
@@ -15,23 +16,18 @@ import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 * */
 class TransactionReportViewModel(var app: Application): AndroidViewModel(app){
 
-    private var filterParamsLiveData: MutableLiveData<FilterDialogFragment.FilterParams> = MutableLiveData<FilterDialogFragment.FilterParams>()
-
+    private var _filterParams: MutableLiveData<FilterDialogFragment.FilterParams> = MutableLiveData<FilterDialogFragment.FilterParams>()
+    val filterParams: LiveData<FilterDialogFragment.FilterParams> = _filterParams
     init {
-        filterParamsLiveData.value = FilterDialogFragment.FilterParams()
+        _filterParams.value = FilterDialogFragment.FilterParams()
     }
-
 
     fun setFilterParams(params: FilterDialogFragment.FilterParams?) {
-        if(params == null){
-            filterParamsLiveData = MutableLiveData<FilterDialogFragment.FilterParams>();
-        }else{
-            this.filterParamsLiveData.value = params
-        }
+        _filterParams.value = params ?: FilterDialogFragment.FilterParams()
     }
 
-    fun getFilter(): FilterDialogFragment.FilterParams? {
-        return this.filterParamsLiveData.value
+    fun clear(){
+        _filterParams.value = FilterDialogFragment.FilterParams()
     }
 
 

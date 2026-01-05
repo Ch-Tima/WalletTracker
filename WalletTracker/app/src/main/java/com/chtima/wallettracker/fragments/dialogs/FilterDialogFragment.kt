@@ -40,7 +40,6 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
 
     //Units
     private lateinit var sendСhanges : (f: FilterParams) -> Unit
-    private lateinit var sendClear : () -> Unit
 
     //DialogFragments
     private lateinit var selectCategoryDF: SelectCategoryDialogFragment
@@ -84,7 +83,7 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         transactionReportVM = ViewModelProvider(requireActivity())[TransactionReportViewModel::class]
-        filterParams = transactionReportVM.getFilter() ?: FilterParams()
+        filterParams = transactionReportVM.filterParams.value ?: FilterParams()
 
         //creating a "Select Category DialogFragment" as a grid with multiple selections
         selectCategoryDF = SelectCategoryDialogFragment.newInstance(null, true, DisplayType.GRID)
@@ -133,12 +132,15 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         })
 
         btnClear.setOnClickListener{_ ->
-            sendClear()
+            filterParams = FilterParams()
+            transactionReportVM.setFilterParams(filterParams)
+            sendСhanges(filterParams)
             dismiss()
         }
 
         btnDone.setOnClickListener{_ ->
             sendСhanges(filterParams)
+            transactionReportVM.setFilterParams(filterParams)
             this.dialog?.hide()
         }
 
@@ -160,9 +162,8 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
         this.dialog?.hide()
     }
 
-    public fun setOnChangedListener(filter: (fp: FilterParams?) -> Unit, clear: () -> Unit){
+    public fun setOnChangedListener(filter: (fp: FilterParams?) -> Unit){
         this.sendСhanges = filter
-        this.sendClear = clear
     }
 
     override fun onStart() {
@@ -179,10 +180,9 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
          * Factory method to create a new instance of FilterDialogFragment.
          */
         @JvmStatic
-        fun newInstance(onFilterChanged: (FilterParams?) -> Unit,
-                        onFilterCleared: () -> Unit) : FilterDialogFragment{
+        fun newInstance(onFilterChanged: (FilterParams?) -> Unit) : FilterDialogFragment{
             return FilterDialogFragment().apply {
-                setOnChangedListener(onFilterChanged, onFilterCleared)
+                setOnChangedListener(onFilterChanged)
             }
         }
     }

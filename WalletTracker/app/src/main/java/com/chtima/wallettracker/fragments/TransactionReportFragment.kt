@@ -7,17 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
-import androidx.lifecycle.ViewModelProvider
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.fragments.dialogs.FilterDialogFragment
 import com.chtima.wallettracker.fragments.simples.DisplayTransactionListFragment
-import com.chtima.wallettracker.viewModels.TransactionReportViewModel
 import com.google.android.material.textfield.TextInputEditText
 
-
-/*
-*
-* */
 class TransactionReportFragment : Fragment() {
 
     private lateinit var filterBtn: ImageButton
@@ -25,21 +19,9 @@ class TransactionReportFragment : Fragment() {
     private lateinit var displayTransactionListFragment: DisplayTransactionListFragment
     private lateinit var filterDialogFragment: FilterDialogFragment
 
-    private lateinit var transactionReportVM : TransactionReportViewModel
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        transactionReportVM = ViewModelProvider(requireActivity())[TransactionReportViewModel::class]
-        filterDialogFragment = FilterDialogFragment.newInstance(
-            { result ->
-                transactionReportVM.setFilterParams(result)
-                setFilter()
-            }, {
-                transactionReportVM.setFilterParams(null)
-                setFilter()
-            }
-        )
-        setFilter()
+        filterDialogFragment = FilterDialogFragment.newInstance { updateList() }
     }
 
     override fun onCreateView(
@@ -64,8 +46,8 @@ class TransactionReportFragment : Fragment() {
         titleEditText = view.findViewById(R.id.title_edit)//TextInputEditText
         titleEditText.setOnEditorActionListener { v, actionId, keyEv ->
             if(actionId == EditorInfo.IME_ACTION_DONE){
-                setFilter()
-                displayTransactionListFragment.filter().byText(v.text.toString()).apply()
+                updateList()
+                displayTransactionListFragment.getFilter().byText(v.text.toString()).apply()
                 true
             }
             false
@@ -74,26 +56,11 @@ class TransactionReportFragment : Fragment() {
         return view
     }
 
-    private fun setFilter(){
-
+    private fun updateList(){
         if (!::displayTransactionListFragment.isInitialized) {
             return
         }
-
-        val f = this.displayTransactionListFragment.filter()
-        f.clear().apply()
-
-        val filterParams = this.transactionReportVM.getFilter()
-
-        filterParams?.let {
-            filterParams.getListOfCategory().isNotEmpty().let { f.byCategory(filterParams.getListOfCategory()) }
-            filterParams.getTransactionType()?.let { t -> f.byType(t) }
-            if(filterParams.getDateStart()!=null && filterParams.getDateEnd()!=null)
-                f.byDate(filterParams.getDateStart()!!, filterParams.getDateEnd()!!)
-            f.apply()
-        }?:run {
-            f.clear().apply()
-        }
+        displayTransactionListFragment.filter()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

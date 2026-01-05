@@ -13,10 +13,9 @@ import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.CategoryWithTransactions
 import com.chtima.wallettracker.models.Transaction
 import com.chtima.wallettracker.viewModels.CategoryViewModel
-import java.util.Collections
+import com.chtima.wallettracker.viewModels.TransactionReportViewModel
 import java.util.Date
-import java.util.stream.Collector
-import java.util.stream.Collectors
+
 
 /**
  * Fragment для вывода спика транзакций с возможностью влияния на выводимую информацию через @
@@ -26,11 +25,13 @@ class DisplayTransactionListFragment : Fragment() {
 
     //ViewModels
     private lateinit var categoryVM: CategoryViewModel
+    private lateinit var transactionReportVM : TransactionReportViewModel
 
     //other
     private lateinit var adapter: TransactionAdapter
     private var categoryWithTransactions: List<CategoryWithTransactions> = emptyList()
     private lateinit var f: TransactionFilter
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +56,7 @@ class DisplayTransactionListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //содания VM и зпрос данных
+        transactionReportVM = ViewModelProvider(requireActivity())[TransactionReportViewModel::class]
         categoryVM = ViewModelProvider(this)[CategoryViewModel::class]
         categoryVM.getCategoriesWithTransactionsByUser().observe(viewLifecycleOwner){
             categoryWithTransactions = it.toList()
@@ -62,6 +64,7 @@ class DisplayTransactionListFragment : Fragment() {
                 adapter.updateList(toTransactionList(l))
             }
             f.apply()
+            filter()
         }
     }
 
@@ -70,7 +73,20 @@ class DisplayTransactionListFragment : Fragment() {
         fun newInstance() = DisplayTransactionListFragment().apply {}
     }
 
-    public fun filter() = f
+    fun filter(){
+        val filterParams = this.transactionReportVM.filterParams.value ?: return
+        f.clear().apply()
+        filterParams.let {
+            filterParams.getListOfCategory().isNotEmpty().let { f.byCategory(filterParams.getListOfCategory()) }
+            filterParams.getTransactionType()?.let { t -> f.byType(t) }
+            if(filterParams.getDateStart()!=null && filterParams.getDateEnd()!=null)
+                f.byDate(filterParams.getDateStart()!!, filterParams.getDateEnd()!!)
+            f.apply()
+        }?:run {
+            f.clear().apply()
+        }
+    }
+    fun getFilter() = f
 
     class TransactionFilter constructor(
         private val categoryWithTransactions: List<CategoryWithTransactions>,
