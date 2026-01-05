@@ -33,11 +33,16 @@ import java.util.Locale
  */
 class FilterDialogFragment : BottomSheetDialogFragment() {
 
+    private lateinit var filterParams: FilterParams
 
+    //VM
+    private lateinit var transactionReportVM : TransactionReportViewModel
+
+    //Units
     private lateinit var sendСhanges : (f: FilterParams) -> Unit
     private lateinit var sendClear : () -> Unit
-    private lateinit var filterParams: FilterParams
-    private lateinit var transactionReportVM : TransactionReportViewModel
+
+    //DialogFragments
     private lateinit var selectCategoryDF: SelectCategoryDialogFragment
 
     //UI
@@ -83,6 +88,13 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
 
         //creating a "Select Category DialogFragment" as a grid with multiple selections
         selectCategoryDF = SelectCategoryDialogFragment.newInstance(null, true, DisplayType.GRID)
+        selectCategoryDF.setSelectCategoryListListener(object : DialogObserver<List<Category>>{
+            override fun onSuccess(result: List<Category>) {
+                filterParams.setListOfCategory(result)
+            }
+            override fun onCancel() {}
+        })
+
         childFragmentManager.beginTransaction()
             .replace(R.id.category_fragment, selectCategoryDF)
             .commit()
@@ -134,6 +146,15 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
 
     }
 
+    override fun onViewStateRestored(savedInstanceState: Bundle?) {
+        super.onViewStateRestored(savedInstanceState)
+        filterParams.getListOfCategory().let {
+            if(it.isNotEmpty())
+                selectCategoryDF.setSelectedCategories(it)
+        }
+
+    }
+
     override fun onCancel(dialog: DialogInterface) {
         //super.onCancel(dialog)
         this.dialog?.hide()
@@ -176,6 +197,8 @@ class FilterDialogFragment : BottomSheetDialogFragment() {
             return listOfCategory
         }
 
+        //АААА он даже не используется вот это прикол
+        //05/01/26
         fun setListOfCategory(listOfCategory: List<Category>) {
             this.listOfCategory = listOfCategory
         }

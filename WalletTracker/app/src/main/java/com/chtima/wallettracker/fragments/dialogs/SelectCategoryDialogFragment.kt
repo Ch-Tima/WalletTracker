@@ -94,15 +94,15 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
                     isShowSelectCategory
                 )
             }else ->{
-                selectCategoryLogic = SelectCategoryLogic(
-                    this,
-                    recyclerView,
-                    selectedLastCategoryListener,
-                    null,
-                    categoryType,
-                    isShowSelectCategory
-                )
-            }
+            selectCategoryLogic = SelectCategoryLogic(
+                this,
+                recyclerView,
+                selectedLastCategoryListener,
+                null,
+                categoryType,
+                isShowSelectCategory
+            )
+        }
         }
         return v
     }
@@ -133,6 +133,10 @@ class SelectCategoryDialogFragment constructor() : DialogFragment() {
 
     fun setSelectCategoryListListener(selectCategoriesListener : DialogObserver<List<Category>>){
         this.selectedListCategoryListener = selectCategoriesListener
+    }
+
+    fun setSelectedCategories(it: List<Category>) {
+        selectCategoryLogic.setPreSelectedCategories(it)
     }
 
 }

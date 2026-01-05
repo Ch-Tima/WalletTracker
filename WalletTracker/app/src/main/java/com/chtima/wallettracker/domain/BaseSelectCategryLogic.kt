@@ -22,9 +22,13 @@ abstract class BaseSelectCategoryLogic constructor(
     // ViewModel to fetch categories from the data layer
     protected open lateinit var categoryViewModel: CategoryViewModel
     protected open lateinit var onSwipeTouchListener: OnSwipeTouchListener
+    protected open var preSelectedList: List<Category>? = null
 
     /**
      * Set up UI components: layout manager, adapter, item click listener, and data binding via ViewModel.
      */
     public abstract fun setupUI()
+    public open fun setPreSelectedCategories(it: List<Category>){
+        preSelectedList = it
+    }
 }

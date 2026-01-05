@@ -164,6 +164,16 @@ class CategoryRecycleAdapter (
         return this.currentPage
     }
 
+    fun setSelectedItems(l : List<Category>){
+        val selectedIds = selectedCategories.map { it.id }.toSet()
+        l.forEach { item ->
+            list.firstOrNull{ it.id == item.id }//czy w list jest taki element
+                ?.takeIf { it.id !in selectedIds }//czy ten element jest wybrany
+                ?.let { selectedCategories.add(it) }//jeśli nie to musimy go zaznaczyć
+        }
+        updateData()
+    }
+
     /**
      * ViewHolder class for caching views in each RecyclerView item.
      */

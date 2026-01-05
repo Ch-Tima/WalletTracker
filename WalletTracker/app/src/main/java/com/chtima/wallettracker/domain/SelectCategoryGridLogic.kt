@@ -32,8 +32,10 @@ class SelectCategoryGridLogic(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun setupUI() {
+        // create CategoryRecycleAdapter
         adapter = CategoryRecycleAdapter(fragment.requireContext(), ArrayList(), isShowSelectCategory)
-        adapter.setShowAll(false)
+        adapter.setShowAll(false) // not show all (use pages)
+        //set up pages
         recyclerView.adapter = adapter
         recyclerView.layoutManager = GridLayoutManager(fragment.requireContext(), 3) // 3 col
         recyclerView.addItemDecoration(
@@ -49,9 +51,6 @@ class SelectCategoryGridLogic(
             }
         })
         this.pageIndicator = fragment.requireView().findViewById<LinearLayout>(R.id.page_indicator)
-
-
-        val pageString = fragment.requireContext().getText(R.string.tag_page).toString()
         //just processing swipe left/right
         onSwipeTouchListener = OnSwipeTouchListener(fragment.requireContext(), object : OnSwipeTouchListener.onSwipe {
             override fun onSwipeLeft() {
@@ -69,10 +68,12 @@ class SelectCategoryGridLogic(
                 }
             }
         })
-
         recyclerView.setOnTouchListener(onSwipeTouchListener)
         recyclerView.isNestedScrollingEnabled = false
         recyclerView.overScrollMode = View.OVER_SCROLL_NEVER
+
+        //Creating CategoryVM to fetch all categories
+        //Pobieranie CategoryVM dla otrzymania kategorii
         categoryViewModel = ViewModelProvider(fragment.requireActivity())[CategoryViewModel::class.java]
         categoryViewModel.getByType(this.categoryType).observe(fragment) {
             adapter.updateList(it)
@@ -84,7 +85,14 @@ class SelectCategoryGridLogic(
                 pageIndicator.addView(dot)
             }
             setParamForBigDot(pageIndicator.getChildAt(0))
+            //jeśli preSelectedList nie jest pusty, tczeba ustawić go do Adapter
+            preSelectedList?.takeIf { it.isNotEmpty() }?.let { adapter.setSelectedItems(it) }
         }
+
+    }
+
+    override fun setPreSelectedCategories(it: List<Category>){
+        preSelectedList = it
     }
 
     private fun setParamForDot(v: View) {
