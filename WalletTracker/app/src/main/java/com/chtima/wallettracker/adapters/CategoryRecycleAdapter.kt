@@ -15,17 +15,22 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.chtima.wallettracker.R
 import com.chtima.wallettracker.models.Category
 
+/**
+ * RecyclerView Adapter for displaying a list of categories as selectable items.
+ * Supports item selection highlighting and pagination.
+ */
 class CategoryRecycleAdapter (
     private val context: Context,
     private val list: ArrayList<Category>,
     private val isShowSelectedItem: Boolean) : RecyclerView.Adapter<CategoryRecycleAdapter.ViewHolder>() {
 
-    private var selectedCategory: Category? = null
     private var onClickListener: OnClickListener? = null
+    private val selectedCategories = mutableSetOf<Category>()
 
-    private val pageSize = 4
+    private val pageSize = 6
     private var currentPage = 0
     private var currentData = mutableListOf<Category>()
+    private var showAll: Boolean = true
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -44,17 +49,21 @@ class CategoryRecycleAdapter (
         //holder.icon.setBackgroundResource(getCategoryIconResId(it).let { if(it == -1) R.drawable.help_24dp else it })
 
         holder.itemView.setOnClickListener { _ ->
-            selectedCategory = it //set new selected category
+            //set new/delete selected category
+            if (selectedCategories.contains(it))
+                selectedCategories.remove(it)
+            else selectedCategories.add(it)
             notifyDataSetChanged() //update ui
             onClickListener?.onClick(it)
         }
 
         if(!isShowSelectedItem) return;
 
-        if(it.equals(selectedCategory)){ //Set the style for a selected item
+        if(selectedCategories.contains(it)){ //Set the style for a selected item
             holder.itemView.setBackgroundResource(R.drawable.rounded_blue_8dp)
             holder.icon.setImageTintList(context.getColorStateList(R.color.white))
             holder.title.setTextColor(context.getColor(R.color.white))
+            this.selectedCategories.add(it)
         }
         else {
             holder.itemView.setBackgroundResource(R.drawable.rounded_8dp_ashen35)
@@ -82,9 +91,13 @@ class CategoryRecycleAdapter (
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateData() {//show all
-        val startIndex = 0//currentPage * pageSize
-        val endIndex = list.size//minOf(startIndex + pageSize, list.size)
+    private fun updateData() {
+        var startIndex = 0
+        var endIndex = list.size
+        if(!showAll){
+            startIndex = currentPage * pageSize
+            endIndex = minOf(startIndex + pageSize, list.size)
+        }
         currentData.clear()
         currentData.addAll(list.subList(startIndex, endIndex))
         notifyDataSetChanged()
@@ -92,7 +105,6 @@ class CategoryRecycleAdapter (
 
     /**
      * Get the Drawable icon for a category.
-     *
      * @param category The category object containing icon information.
      * @return Drawable representing the category icon.
      */
@@ -102,28 +114,54 @@ class CategoryRecycleAdapter (
         return context.getDrawable(id)
     }
 
+    /**
+     * Returns the resource ID for the category icon.
+     */
     fun getCategoryIconResId(category: Category): Int {
         return context.resources.getIdentifier(category.icon, "drawable", context.packageName)
     }
 
+    /**
+     * Sets the click listener for category items.
+     */
     fun setOnClickListener(onClickListener: OnClickListener) {
         this.onClickListener = onClickListener
     }
 
-    //NOT WORK! JUST SHOW ALL ITEMS
+    /**
+     * Move to the next page of category items (if available).
+     */
     fun nextPage() {
-//        return
-//        if ((currentPage + 1) * pageSize < list.size) {
-//            currentPage++
-//            updateData()
-//        }
+        if ((currentPage + 1) * pageSize < list.size) {
+            currentPage++
+            updateData()
+        }
+    }
+    /**
+     * Move to the previous page of category items (if available).
+     */
+    fun previousPage() {
+        if (currentPage > 0) {
+            currentPage--
+            updateData()
+        }
     }
 
-    fun previousPage() {
-//        if (currentPage > 0) {
-//            currentPage--
-//            updateData()
-//        }
+    fun setShowAll(o: Boolean){
+        showAll = o
+        updateData()
+    }
+
+    fun getSelectedCategories() : List<Category>{
+        return this.selectedCategories.toList()
+    }
+
+    fun getCountPages(): Int {
+        return if (list.isEmpty()) 1 else ((list.size - 1) / pageSize)+1
+    }
+
+    fun getCurrentPage() : Int {
+        return this.currentPage
     }
 
     /**
@@ -178,7 +216,9 @@ class CategoryRecycleAdapter (
             }
         }
     }
-
+    /**
+     * ItemDecoration class for Flexbox layout spacing between items.
+     */
     class FlexboxItemDecoration(private val spacing: Int) : RecyclerView.ItemDecoration() {
         override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
             outRect.left = spacing

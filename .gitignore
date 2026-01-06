@@ -1,0 +1,73 @@
+# Android Studio
+/.idea/
+/*.iml
+/local.properties
+/.gradle
+/build
+/captures
+/.externalNativeBuild
+.DS_Store
+*.log
+*.hprof
+
+# Firebase
+firebase-debug.log
+firebase-analytics-events
+firebase-analytics-logs
+
+# Android/Gradle specific
+.gradle/
+/build/
+/local.properties
+/.idea/
+*.apk
+*.ap_
+*.db
+*.bin
+*.class
+*.jar
+*.war
+*.ear
+*.keystore
+*.jks
+*.ww
+*.wwk
+
+# Android Studio - Generated files
+*.iml
+.gradle/
+.idea/
+*.log
+*.class
+*.dex
+*.apk
+*.ap_
+*.aar
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# JetBrains Rider
+.idea/
+
+# macOS
+.DS_Store
+
+# Linux
+*~
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Other files to ignore
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Other
+.tt
+nohup.out
