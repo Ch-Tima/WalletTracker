@@ -129,6 +129,10 @@ class SwitchTransactionView @JvmOverloads constructor (
         listeners.add(s)
     }
 
+    fun setSelectedType(type: TransactionType) {
+        isChecked = (type == TransactionType.INCOME)
+    }
+
     interface SwitchTransactionListener {
         fun onChangedSelection(type: TransactionType)
     }
