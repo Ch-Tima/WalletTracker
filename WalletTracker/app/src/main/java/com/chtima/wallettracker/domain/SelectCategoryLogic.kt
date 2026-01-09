@@ -1,11 +1,10 @@
 package com.chtima.wallettracker.domain
 
+import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chtima.wallettracker.R
 import com.chtima.wallettracker.adapters.CategoryRecycleAdapter
 import com.chtima.wallettracker.models.Category
 import com.chtima.wallettracker.models.DialogObserver
@@ -17,19 +16,25 @@ import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 
+/**
+ * This class handles the logic for displaying categories in a flexible list (using FlexboxLayoutManager).
+ * It connects the UI with the ViewModel and sets up click interactions and item decorations.
+ */
 class SelectCategoryLogic(
-    private val fragment: Fragment,
-    private val recyclerView: RecyclerView,
-    private val selectCategoryListener: DialogObserver<Category>?,
-    private val categoryType: Category.CategoryType?,
-    private val isShowSelectCategory: Boolean
-){
+    f: Fragment,
+    rv: RecyclerView,
+    scl: DialogObserver<Category>?,
+    selectedListCategoryListener: DialogObserver<List<Category>>?,
+    cType: Category.CategoryType?,
+    isShowSelect: Boolean
+) : BaseSelectCategoryLogic(fragment = f,
+    recyclerView = rv,
+    selectCategoryListener = scl,
+    categoryType = cType,
+    isShowSelectCategory = isShowSelect,
+    selectedListCategoryListener = selectedListCategoryListener) {
 
-    private lateinit var adapter: CategoryRecycleAdapter
-    private lateinit var categoryViewModel: CategoryViewModel
-    private lateinit var onSwipeTouchListener: OnSwipeTouchListener
-
-    fun setupUI() {
+    override fun setupUI() {
         adapter = CategoryRecycleAdapter(fragment.requireContext(), ArrayList(), isShowSelectCategory)
 
         recyclerView.setAdapter(adapter)
@@ -50,21 +55,13 @@ class SelectCategoryLogic(
             }
         })
 
-        onSwipeTouchListener = OnSwipeTouchListener(fragment.requireContext(), object: OnSwipeTouchListener.onSwipe{
-            override fun onSwipeLeft() {
-                adapter.nextPage()
-            }
-
-            override fun onSwipeRight() {
-                adapter.previousPage()
-            }
-        })
-
         categoryViewModel = ViewModelProvider(fragment.requireActivity())[CategoryViewModel::class]
         categoryViewModel.getByType(this.categoryType).observe(fragment){
             adapter.updateList(it)
         }
 
+        recyclerView.layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+        recyclerView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
     }
 
 }

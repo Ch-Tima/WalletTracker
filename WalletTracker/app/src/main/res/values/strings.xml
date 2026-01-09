@@ -59,7 +59,7 @@
     <string name="privacy_policy">Privacy Policy</string>
     <string name="done">Done</string>
     <string name="number_btn">number_btn</string>
-    <string name="clear">clear_btn</string>
+    <string name="clear">clear</string>
     <string name="replenishment_message">Replenishment</string>
     <string name="incorrect_data">Incorrect data</string>
 
@@ -232,5 +232,9 @@
     <string name="this_backup_is_corrupted_or_isnt_part_of_this_app">This backup is corrupted or is not part of this application.</string>
     <string name="currency_usd_code">USD</string>
     <string name="currency">Currency</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="test_small_date">12.08.11-12.08.24</string>
+    <string name="tag_page">tpagex</string>
 
 </resources>
